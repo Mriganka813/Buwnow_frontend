@@ -7,10 +7,12 @@ import 'package:gofoods/screens/bottombar/profile.dart';
 import 'package:gofoods/screens/enablelocation.dart';
 import 'package:gofoods/screens/home.dart';
 import 'package:gofoods/screens/orderconfirmation.dart';
+import 'package:gofoods/screens/search_screen/search_screen.dart';
 import 'package:gofoods/screens/yourorder/yourorder.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+
     case CreateAccount.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const CreateAccount());
@@ -18,6 +20,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case PhoneNumber.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const PhoneNumber());
+
+    case SearchScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => SearchScreen());
 
     case HomePage.routeName:
       return MaterialPageRoute(

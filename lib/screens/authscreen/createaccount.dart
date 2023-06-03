@@ -161,6 +161,7 @@ class _CreateAccountState extends State<CreateAccount> {
               Icons.person,
               notifier.getbgfildcolor,
               nameController,
+              false
             ),
             SizedBox(height: height / 40),
             Row(
@@ -184,6 +185,7 @@ class _CreateAccountState extends State<CreateAccount> {
               Icons.email,
               notifier.getbgfildcolor,
               emailController,
+              false
             ),
             SizedBox(height: height / 40),
             Row(
@@ -207,6 +209,7 @@ class _CreateAccountState extends State<CreateAccount> {
               Icons.call,
               notifier.getbgfildcolor,
               phoneController,
+              false
             ),
             SizedBox(height: height / 40),
             Row(
@@ -230,6 +233,7 @@ class _CreateAccountState extends State<CreateAccount> {
               Icons.lock,
               notifier.getbgfildcolor,
               passwordController,
+              true
             ),
             SizedBox(height: height / 15),
             GestureDetector(

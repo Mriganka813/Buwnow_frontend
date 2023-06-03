@@ -519,7 +519,7 @@ class _OnbondingState extends State<Onbonding> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(PhoneNumber.routeName);
+                                    Navigator.of(context).pushNamedAndRemoveUntil(PhoneNumber.routeName, (route) => false);
                                   },
                                   child: Container(
                                     color: Colors.transparent,
@@ -548,7 +548,7 @@ class _OnbondingState extends State<Onbonding> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(PhoneNumber.routeName);
+                                    Navigator.of(context).pushNamedAndRemoveUntil(PhoneNumber.routeName, (route) => false);
                                   },
                                   child: Container(
                                       height: height / 16,

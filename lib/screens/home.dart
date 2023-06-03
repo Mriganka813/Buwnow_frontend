@@ -4,12 +4,14 @@ import 'package:gofoods/custtomscreens/custtompopularfoodlist.dart';
 import 'package:gofoods/custtomscreens/custtomrecommended.dart';
 import 'package:gofoods/custtomscreens/custtomrestorent.dart';
 import 'package:gofoods/custtomscreens/textfild.dart';
+import 'package:gofoods/providers/user_provider.dart';
 import 'package:gofoods/screens/bottombar/profilesetting.dart';
 import 'package:gofoods/screens/homeseeall/explorecategories.dart';
 import 'package:gofoods/screens/homeseeall/nearbyrestorent.dart';
 import 'package:gofoods/screens/homeseeall/popularviewmore.dart';
 import 'package:gofoods/screens/homeseeall/recommendedshowall.dart';
 import 'package:gofoods/screens/restorentdeal.dart';
+import 'package:gofoods/screens/search_screen/search_screen.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -26,6 +28,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ColorNotifier notifier;
+  final searchController = TextEditingController();
+
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
@@ -60,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       SizedBox(width: width / 20),
                       Text(
-                        LanguageEn.deliveryto,
+                        LanguageEn.showresult,
                         style: TextStyle(
                           fontFamily: 'GilroyBold',
                           color: notifier.getblackcolor,
@@ -71,15 +75,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Row(
                     children: [
-                      SizedBox(width: width / 25),
-                      Icon(Icons.location_on_outlined,
-                          color: notifier.getgrey, size: height / 40),
-                      Text(
-                        LanguageEn.hanoivietname,
-                        style: TextStyle(
-                          color: notifier.getgrey,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyMedium',
+                      SizedBox(width: width / 10),
+                      // Icon(Icons.location_on_outlined,
+                      //     color: notifier.getgrey, size: height / 40),
+                      Consumer<UserProvider>(
+                        builder: (context, value, child) => InkWell(
+                          onTap: (){
+                            Navigator.of(context).pushNamed(SearchScreen.routeName);
+                          },
+                          child: Text(
+                            value.result,
+                            style: TextStyle(
+                              color: notifier.getgrey,
+                              fontSize: height / 60,
+                              fontFamily: 'GilroyMedium',
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -115,7 +126,8 @@ class _HomePageState extends State<HomePage> {
                         Customsearchtextfild.textField(
                           LanguageEn.searchfordish,
                           notifier.getblackcolor,
-                          width / 1.13,notifier.getbgfildcolor
+                          width / 1.13,notifier.getbgfildcolor,
+                          searchController
                         ),
                         SizedBox(height: height / 40),
                         Container(

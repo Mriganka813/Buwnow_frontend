@@ -176,6 +176,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
               Icons.email_rounded,
               notifier.getbgfildcolor,
               emailController,
+              false
             ),
             SizedBox(height: height / 40),
             Row(
@@ -199,6 +200,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
               Icons.lock,
               notifier.getbgfildcolor,
               passwordController,
+              true
             ),
             Row(
               children: [

@@ -131,6 +131,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   width / 1.13,
                   Icons.person,notifier.getbgfildcolor,
                 firstNameController,
+                false
               ),
               SizedBox(height: height/25),
               Customtextfild.textField(
@@ -139,6 +140,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   width / 1.13,
                   Icons.person,notifier.getbgfildcolor,
                 lastNameController,
+                false
               ),
               SizedBox(height: height/25),
               Customtextfild.textField(
@@ -147,6 +149,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   width / 1.13,
                   Icons.email,notifier.getbgfildcolor,
                 emailController,
+                false
               ),
               SizedBox(height: height/4.3),
               GestureDetector(

@@ -107,6 +107,8 @@ class LanguageEn {
 
   static String get skipfornow => "Skip for now";
 
+  static String get showresult => "Showing results for";
+
   static String get deliveryto => "Delivery to";
 
   static String get hanoivietname => "Hanoi,Vietname";

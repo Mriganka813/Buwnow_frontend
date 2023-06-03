@@ -3,8 +3,7 @@ import 'package:gofoods/utils/mediaqury.dart';
 
 class Customtextfild {
   static Widget textField(
-      name1, textcolor, wi, icon, fillcolor, TextEditingController controller,
-      {obscureText = false}) {
+      String name1, Color textcolor, double wi, IconData icon, Color fillcolor, TextEditingController controller,bool obscureText) {
     return Container(
       height: height / 16,
       width: wi,
@@ -16,6 +15,8 @@ class Customtextfild {
       ),
       child: TextField(
         controller: controller,
+        obscureText: obscureText,
+        obscuringCharacter: '*',
         style: TextStyle(color: textcolor),
         decoration: InputDecoration(
           fillColor: fillcolor,
@@ -45,7 +46,7 @@ class Customtextfild {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 class Customsearchtextfild {
-  static Widget textField(name1, textcolor, wi, textbgcolor) {
+  static Widget textField(String name1, Color textcolor,double wi, Color textbgcolor,TextEditingController controller) {
     return Container(
       height: height / 16,
       width: wi,
@@ -54,8 +55,10 @@ class Customsearchtextfild {
         borderRadius: const BorderRadius.all(
           Radius.circular(13),
         ),
+        border: Border.all(width: 0.5,color: Colors.grey)
       ),
       child: TextField(
+        controller: controller,
         style: TextStyle(color: textcolor),
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.search_rounded, size: height / 35),

@@ -87,22 +87,22 @@ class _AddressState extends State<Address> {
               child: Column(
                 children: [
                   Customtextfild.textField(LanguageEn.enteryourfullname,
-                      notifire.getblackcolor, width / 1.13, Icons.person,notifire.getbgfildcolor,nameController),
+                      notifire.getblackcolor, width / 1.13, Icons.person,notifire.getbgfildcolor,nameController,false),
                   SizedBox(height: height / 40),
                   Customtextfild.textField(LanguageEn.enteryourphonenumber,
-                      notifire.getblackcolor, width / 1.13, Icons.call,notifire.getbgfildcolor,phoneController),
+                      notifire.getblackcolor, width / 1.13, Icons.call,notifire.getbgfildcolor,phoneController,false),
                   SizedBox(height: height / 40),
                   Customtextfild.textField(
                       LanguageEn.adresslineone,
                       notifire.getblackcolor,
                       width / 1.13,
-                      Icons.location_on_outlined,notifire.getbgfildcolor,address1Controller),
+                      Icons.location_on_outlined,notifire.getbgfildcolor,address1Controller,false),
                   SizedBox(height: height / 40),
                   Customtextfild.textField(
                       LanguageEn.adresslinetwo,
                       notifire.getblackcolor,
                       width / 1.13,
-                      Icons.location_on_outlined,notifire.getbgfildcolor,address2Controller),
+                      Icons.location_on_outlined,notifire.getbgfildcolor,address2Controller,false),
                   SizedBox(height: height / 60),
                   Row(
                     children: [
