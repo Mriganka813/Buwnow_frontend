@@ -5,6 +5,7 @@ import 'package:gofoods/router.dart';
 import 'package:gofoods/screens/admin_screen/admin_screen.dart';
 import 'package:gofoods/screens/bottombar/bottombar.dart';
 import 'package:gofoods/screens/onbonding/onbonding.dart';
+import 'package:gofoods/screens/search_screen/search_screen.dart';
 import 'package:gofoods/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
@@ -32,13 +33,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   AuthServices authServices = AuthServices();
+  bool isLoading = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   authServices.getUserData(context);
-  // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +46,20 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'GoFoods',
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-            ? Provider.of<UserProvider>(context).user.role == 'user'
-            ? const BottomHome()
-            : const AdminScreen()
-            :  Onbonding(),
+        home: FutureBuilder(
+          future: authServices.getUserData(context),
+          builder:(context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return Center(child:CircularProgressIndicator());
+            }
+            return Provider.of<UserProvider>(context).token!.isNotEmpty
+                ? Provider.of<UserProvider>(context).user.role == 'user'
+                ? SearchScreen()
+                : const AdminScreen()
+                : Onbonding();
+
+          }
+        ),
     );
   }
 }

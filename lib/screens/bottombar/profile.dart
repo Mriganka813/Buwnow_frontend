@@ -1,11 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:gofoods/constants/utils.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/auth_services.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile';
@@ -17,9 +20,11 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   late ColorNotifier notifier;
+  final AuthServices authServices = AuthServices();
+
 
   getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs =  await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
     if (previusstate == null) {
       notifier.setIsDark = false;
@@ -32,6 +37,13 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     getdarkmodepreviousstate();
+  }
+
+  void logout() async{
+    showSnackBar('logging out...');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth-token');
+    authServices.logout(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -105,8 +117,7 @@ class _ProfileState extends State<Profile> {
             darkmode(),
             SizedBox(height: height / 30),
             GestureDetector(
-
-
+              onTap: logout,
               child: profiletype("assets/Logout.png", LanguageEn.logout),
             ),
           ],

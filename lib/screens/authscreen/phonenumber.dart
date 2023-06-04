@@ -63,9 +63,11 @@ class _PhoneNumberState extends State<PhoneNumber> {
       showSnackBar('Invalid password');
       return;
     }
-    setState(() {
-      isLoading = true;
-    });
+    if(mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     authServices
         .signInUser(
       context: context,
@@ -73,9 +75,11 @@ class _PhoneNumberState extends State<PhoneNumber> {
       password: password,
     )
         .then((value) {
-      setState(() {
-        isLoading = false;
-      });
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
     });
   }
 
@@ -261,9 +265,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
               onTap: () {
                 signIn();
               },
-              child: isLoading
-                  ? CircularProgressIndicator()
-                  : button(
+              child:isLoading ? CircularProgressIndicator() : button(
                       notifier.getred,
                       notifier.getwhite,
                       LanguageEn.signin,

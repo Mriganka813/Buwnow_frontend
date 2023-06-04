@@ -15,6 +15,10 @@ class UserProvider extends ChangeNotifier {
 
   String result = '';
 
+  String? token = '';
+
+  bool isLoading = false;
+
   User get user => _user;
 
   void setUser(String user) {
@@ -29,6 +33,16 @@ class UserProvider extends ChangeNotifier {
 
   void setKeyword(String text){
     result = text;
+    notifyListeners();
+  }
+
+  void setToken(String tok){
+    token = tok;
+    notifyListeners();
+  }
+
+  void loading(){
+    isLoading = !isLoading;
     notifyListeners();
   }
 }

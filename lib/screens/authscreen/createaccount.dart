@@ -73,10 +73,11 @@ class _CreateAccountState extends State<CreateAccount> {
       showSnackBar('Password is too short.');
       return;
     }
-
-    setState(() {
-      isLoading = true;
-    });
+    if(mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     authServices
         .signUpUser(
       name: name,
@@ -86,9 +87,11 @@ class _CreateAccountState extends State<CreateAccount> {
       context: context,
     )
         .then((value) {
-      setState(() {
-        isLoading = false;
-      });
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
     });
   }
 

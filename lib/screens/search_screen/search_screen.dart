@@ -20,12 +20,34 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final searchController = TextEditingController();
+  bool isLoading = false;
+
+  void submit(){
+    if(searchController.text.isEmpty){
+      showSnackBar('Please enter city or country.');
+      return;
+    }
+    if(mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    Provider.of<UserProvider>(context,listen: false).setKeyword(searchController.text.trim());
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BottomHome(),)).then((value) {
+      if(mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
     super.dispose();
     searchController.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +86,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               InkWell(
                 onTap: (){
-                  if(searchController.text.isEmpty){
-                    showSnackBar('Please enter city or country.');
-                    return;
-                  }
-                  Provider.of<UserProvider>(context,listen: false).setKeyword(searchController.text.trim());
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => BottomHome(),));
+                  submit();
                 },
-                child: button(
+                child: isLoading ? CircularProgressIndicator() : button(
                   Colors.green,
                   notifier.getwhite,
                   'Search',
