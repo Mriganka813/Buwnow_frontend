@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/orderconfirmation.dart';
+import 'package:gofoods/screens/order_confirmation.dart/screens/orderconfirmation.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -10,7 +10,8 @@ class CusttomGriadeFoodIteam extends StatefulWidget {
   final String? image;
   final String? name;
 
-  const CusttomGriadeFoodIteam(this.image, this.name,{Key? key}) : super(key: key);
+  const CusttomGriadeFoodIteam(this.image, this.name, {Key? key})
+      : super(key: key);
 
   @override
   State<CusttomGriadeFoodIteam> createState() => _CusttomGriadeFoodIteamState();
@@ -38,6 +39,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -46,9 +48,9 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
     return Container(
       height: height / 3.24,
       width: width / 2.45,
-      decoration:  BoxDecoration(
-        color:notifier.getbgfildcolor,
-        borderRadius:  const BorderRadius.all(
+      decoration: BoxDecoration(
+        color: notifier.getbgfildcolor,
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
       ),
@@ -66,9 +68,10 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                   fit: BoxFit.cover),
             ),
           ),
-          SizedBox(height: height/70),
+          SizedBox(height: height / 70),
           Text(
-            widget.name!,textAlign: TextAlign.center,
+            widget.name!,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: notifier.getblackcolor,
               fontSize: height / 60,
@@ -77,17 +80,18 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
           ),
           SizedBox(height: height / 100),
           Text(
-            LanguageEn.shrimponion,textAlign: TextAlign.center,
+            LanguageEn.shrimponion,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: notifier.getgrey,
               fontSize: height / 73,
               fontFamily: 'GilroyMedium',
             ),
           ),
-          SizedBox(height: height/55),
+          SizedBox(height: height / 55),
           Row(
             children: [
-              SizedBox(width: width/25),
+              SizedBox(width: width / 25),
               Text(
                 "\$8.60",
                 style: TextStyle(
@@ -116,7 +120,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                   ),
                 ),
               ),
-              SizedBox(width: width/35),
+              SizedBox(width: width / 35),
             ],
           )
         ],
@@ -124,9 +128,9 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
     );
   }
 
-
   Future showmodelbottomsheet() {
-    return showModalBottomSheet(backgroundColor: notifier.getwhite,
+    return showModalBottomSheet(
+      backgroundColor: notifier.getwhite,
       isScrollControlled: true,
       context: context,
       shape: const RoundedRectangleBorder(
@@ -210,9 +214,8 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                           ],
                         ),
                         const Spacer(),
-
                         Checkbox(
-                          activeColor:notifier.getred,
+                          activeColor: notifier.getred,
                           checkColor: notifier.getblackcolor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
@@ -224,7 +227,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -274,7 +277,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -320,11 +323,11 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                           value: check3,
                           onChanged: (bool? value) {
                             setState(() {
-                              check3= value!;
+                              check3 = value!;
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 50),
@@ -387,7 +390,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -425,7 +428,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                         ),
                         const Spacer(),
                         Checkbox(
-                          activeColor:notifier.getred,
+                          activeColor: notifier.getred,
                           checkColor: notifier.getblackcolor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
@@ -437,7 +440,7 @@ class _CusttomGriadeFoodIteamState extends State<CusttomGriadeFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 50),

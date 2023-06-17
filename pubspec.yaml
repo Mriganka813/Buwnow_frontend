@@ -41,6 +41,10 @@ dependencies:
   http: ^1.0.0
   fluttertoast: ^8.2.2
   shared_preferences: ^2.1.1
+  google_fonts: ^4.0.4
+  geolocator: ^9.0.2
+  numberpicker: ^2.1.2
+  
 
 dev_dependencies:
   flutter_test:

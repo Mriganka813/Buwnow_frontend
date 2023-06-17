@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gofoods/custtomscreens/custtombutton.dart';
 import 'package:gofoods/screens/yourorder/adress.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressUpdates extends StatefulWidget {
+  static const routeName = '/old-addresses';
   const AddressUpdates({Key? key}) : super(key: key);
 
   @override
@@ -31,9 +33,11 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     notifire = Provider.of<ColorNotifier>(context, listen: true);
+
     return Scaffold(
       backgroundColor: notifire.getwhite,
       appBar: AppBar(
@@ -58,42 +62,13 @@ class _AddressUpdatesState extends State<AddressUpdates> {
               fontSize: height / 43),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: height / 40),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / 20),
-              child: Column(
-                children: [
-                  con(
-                    LanguageEn.add1,
-                  ),
-                  SizedBox(
-                    height: height / 50,
-                  ),
-                  con(
-                    LanguageEn.add2,
-                  ),
-                  SizedBox(
-                    height: height / 50,
-                  ),
-                  con(
-                    LanguageEn.add3,
-                  ),
-                  SizedBox(
-                    height: height / 50,
-                  ),
-                  con(
-                    LanguageEn.add4,
-                  ),
-                  SizedBox(
-                    height: height / 50,
-                  ),
-                ],
-              ),
-            ),
-          ],
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(Address.routeName);
+          },
+          child: button(notifire.getred, notifire.getwhite,
+              LanguageEn.newaddress, width / 1.1),
         ),
       ),
     );
@@ -112,8 +87,8 @@ class _AddressUpdatesState extends State<AddressUpdates> {
       child: Container(
         height: height / 9,
         width: width,
-        decoration:   BoxDecoration(
-          color:notifire.getbgfildcolor,
+        decoration: BoxDecoration(
+          color: notifire.getbgfildcolor,
           borderRadius: const BorderRadius.all(
             Radius.circular(15),
           ),

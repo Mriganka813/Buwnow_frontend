@@ -6,10 +6,16 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CusttomRestorent extends StatefulWidget {
-  final String? image;
-  final String? title;
-  final String? subtitle;
-  const CusttomRestorent(this.image,this.title,this.subtitle,{Key? key}) : super(key: key);
+  final String id;
+  final String address;
+  final String title;
+  final String subtitle;
+  const CusttomRestorent({
+    required this.id,
+    required this.address,
+    required this.title,
+    required this.subtitle,
+  });
 
   @override
   State<CusttomRestorent> createState() => _CusttomRestorentState();
@@ -32,6 +38,7 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -39,17 +46,18 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        Navigator.of(context).pushNamed(RestorentDeal.routeName, arguments: {
+          'id': widget.id,
+          'name': widget.title,
+          'category': widget.subtitle,
+          'address': widget.address,
+        });
       },
       child: Container(
         height: height / 9,
         width: width / 1.1,
-        decoration:   BoxDecoration(color: notifier.getwhite,
+        decoration: BoxDecoration(
+          color: notifier.getwhite,
           borderRadius: const BorderRadius.all(
             Radius.circular(11),
           ),
@@ -59,7 +67,9 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
             SizedBox(width: width / 60),
             ClipRRect(
               borderRadius: BorderRadius.circular(14),
-              child: Image.asset(widget.image!),
+              child: Image.asset(
+                "assets/foodmenu.png",
+              ),
             ),
             SizedBox(width: width / 30),
             Column(
@@ -67,27 +77,34 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
               children: [
                 SizedBox(height: height / 70),
                 Text(
-                  widget.title!,
+                  widget.title,
                   style: TextStyle(
                       color: notifier.getblackcolor,
                       fontSize: height / 50,
                       fontFamily: 'GilroyBold'),
                 ),
-                Text(widget.subtitle!,    style: TextStyle(
-                    color: notifier.getgrey,
-                    fontSize: height / 60,
-                    fontFamily: 'GilroyMedium'),),
-                SizedBox(height: height/70),
+                Text(
+                  widget.subtitle,
+                  style: TextStyle(
+                      color: notifier.getgrey,
+                      fontSize: height / 60,
+                      fontFamily: 'GilroyMedium'),
+                ),
+                SizedBox(height: height / 70),
                 Row(
                   children: [
-                    Icon(Icons.star, size: height / 40, color:notifier.getstarcolor),
-                    Icon(Icons.star, size: height / 40, color: notifier.getstarcolor),
-                    Icon(Icons.star, size: height / 40, color:notifier.getstarcolor),
-                    Icon(Icons.star, size: height / 40, color:notifier.getstarcolor),
-                    SizedBox(width: width/12),
-                    kmtime(width / 6,Icons.location_on_outlined, "254m"),
+                    Icon(Icons.star,
+                        size: height / 40, color: notifier.getstarcolor),
+                    Icon(Icons.star,
+                        size: height / 40, color: notifier.getstarcolor),
+                    Icon(Icons.star,
+                        size: height / 40, color: notifier.getstarcolor),
+                    Icon(Icons.star,
+                        size: height / 40, color: notifier.getstarcolor),
+                    SizedBox(width: width / 12),
+                    kmtime(width / 6, Icons.location_on_outlined, "254m"),
                     SizedBox(width: width / 50),
-                    kmtime(width / 8,Icons.timer,"27'"),
+                    kmtime(width / 8, Icons.timer, "27'"),
                   ],
                 ),
               ],
@@ -97,7 +114,8 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
       ),
     );
   }
-  Widget kmtime(w,icon,txt) {
+
+  Widget kmtime(w, icon, txt) {
     return Container(
       height: height / 30,
       width: w,

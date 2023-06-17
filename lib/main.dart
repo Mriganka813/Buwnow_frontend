@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gofoods/providers/user_provider.dart';
 import 'package:gofoods/router.dart';
-import 'package:gofoods/screens/admin_screen/admin_screen.dart';
-import 'package:gofoods/screens/bottombar/bottombar.dart';
 import 'package:gofoods/screens/onbonding/onbonding.dart';
-import 'package:gofoods/screens/search_screen/search_screen.dart';
+import 'package:gofoods/screens/search_screen/screens/search_screen.dart';
 import 'package:gofoods/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
@@ -15,12 +13,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ColorNotifier()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-      ],
-      child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => ColorNotifier()),
+    ChangeNotifierProvider(create: (context) => UserProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -31,9 +27,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   AuthServices authServices = AuthServices();
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -42,24 +36,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'GoFoods',
-        onGenerateRoute: (settings) => generateRoute(settings),
-        home: FutureBuilder(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'GoFoods',
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!);
+      },
+      onGenerateRoute: (settings) => generateRoute(settings),
+      home: FutureBuilder(
           future: authServices.getUserData(context),
-          builder:(context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child:CircularProgressIndicator());
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
             }
             return Provider.of<UserProvider>(context).token!.isNotEmpty
-                ? Provider.of<UserProvider>(context).user.role == 'user'
                 ? SearchScreen()
-                : const AdminScreen()
                 : Onbonding();
-
-          }
-        ),
+          }),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gofoods/constants/utils.dart';
 import 'package:gofoods/custtomscreens/custtombutton.dart';
 import 'package:gofoods/custtomscreens/textfild.dart';
+import 'package:gofoods/screens/order_confirmation.dart/screens/orderconfirmation.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -8,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Address extends StatefulWidget {
+  static const routeName = '/address';
   const Address({Key? key}) : super(key: key);
 
   @override
@@ -16,13 +19,16 @@ class Address extends StatefulWidget {
 
 class _AddressState extends State<Address> {
   late ColorNotifier notifire;
-  bool isChecked = false;
+  bool isLoading = false;
 
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
-  final address1Controller = TextEditingController();
-  final address2Controller = TextEditingController();
+  final flatController = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
 
+  final pincodeController = TextEditingController();
+  final additonalController = TextEditingController();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -45,8 +51,43 @@ class _AddressState extends State<Address> {
     super.dispose();
     nameController.dispose();
     phoneController.dispose();
-    address1Controller.dispose();
-    address2Controller.dispose();
+    flatController.dispose();
+    cityController.dispose();
+    stateController.dispose();
+    additonalController.dispose();
+    pincodeController.dispose();
+  }
+
+  confirmAddress() async {
+    final name = nameController.text.trim();
+    final phone = phoneController.text.trim();
+    final street = flatController.text.trim();
+    final city = cityController.text.trim();
+    final state = stateController.text.trim();
+    final pincode = pincodeController.text.trim();
+    final additional = additonalController.text.trim();
+
+    if (name.isEmpty ||
+        phone.isEmpty ||
+        street.isEmpty ||
+        city.isEmpty ||
+        state.isEmpty ||
+        pincode.isEmpty) {
+      showSnackBar('Please fill all the fields');
+      return;
+    }
+
+    Navigator.pushNamedAndRemoveUntil(
+        context, OrderConformation.routeName, (route) => false,
+        arguments: {
+          'name': name,
+          'phoneNumber': phone,
+          'street': street,
+          'city': city,
+          'state': state,
+          'pincode': pincode,
+          'additonal': additional,
+        });
   }
 
   @override
@@ -76,87 +117,135 @@ class _AddressState extends State<Address> {
         ),
       ),
       backgroundColor: notifire.getwhite,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: height / 50),
-            Container(
-              color: Colors.transparent,
-              height: height / 1.6,
-              width: width / 1.1,
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
               child: Column(
                 children: [
-                  Customtextfild.textField(LanguageEn.enteryourfullname,
-                      notifire.getblackcolor, width / 1.13, Icons.person,notifire.getbgfildcolor,nameController,false),
-                  SizedBox(height: height / 40),
-                  Customtextfild.textField(LanguageEn.enteryourphonenumber,
-                      notifire.getblackcolor, width / 1.13, Icons.call,notifire.getbgfildcolor,phoneController,false),
-                  SizedBox(height: height / 40),
-                  Customtextfild.textField(
-                      LanguageEn.adresslineone,
-                      notifire.getblackcolor,
-                      width / 1.13,
-                      Icons.location_on_outlined,notifire.getbgfildcolor,address1Controller,false),
-                  SizedBox(height: height / 40),
-                  Customtextfild.textField(
-                      LanguageEn.adresslinetwo,
-                      notifire.getblackcolor,
-                      width / 1.13,
-                      Icons.location_on_outlined,notifire.getbgfildcolor,address2Controller,false),
-                  SizedBox(height: height / 60),
-                  Row(
-                    children: [
-                      SizedBox(width: width / 50),
-                      Transform.scale(
-                        scale: 1,
-                        child: Checkbox(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
-                            ),
-                          ),
-                          activeColor: notifire.getred,
-                          side: BorderSide(color: notifire.getred),
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                LanguageEn.selects,
-                                style: TextStyle(
-                                    fontSize: height / 55, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                  SizedBox(height: height / 50),
+                  Container(
+                    color: Colors.transparent,
+                    width: width / 1.1,
+                    child: Column(
+                      children: [
+                        Customtextfild.textField(
+                            LanguageEn.enteryourfullname,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.person,
+                            notifire.getbgfildcolor,
+                            nameController,
+                            false),
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.enteryourphonenumber,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.call,
+                            notifire.getbgfildcolor,
+                            phoneController,
+                            false),
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.adresslineone,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.location_on_outlined,
+                            notifire.getbgfildcolor,
+                            flatController,
+                            false),
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.adresslinetwo,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.location_on_outlined,
+                            notifire.getbgfildcolor,
+                            cityController,
+                            false),
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.adresslinethree,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.location_on_outlined,
+                            notifire.getbgfildcolor,
+                            stateController,
+                            false),
+
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.pincode,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.location_on_outlined,
+                            notifire.getbgfildcolor,
+                            pincodeController,
+                            false),
+                        SizedBox(height: height / 40),
+                        Customtextfild.textField(
+                            LanguageEn.additional,
+                            notifire.getblackcolor,
+                            width / 1.13,
+                            Icons.location_on_outlined,
+                            notifire.getbgfildcolor,
+                            additonalController,
+                            false),
+
+                        // Row(
+                        //   children: [
+                        //     SizedBox(width: width / 50),
+                        //     // Transform.scale(
+                        //     //   scale: 1,
+                        //     //   child: Checkbox(
+                        //     //     shape: const RoundedRectangleBorder(
+                        //     //       borderRadius: BorderRadius.all(
+                        //     //         Radius.circular(5),
+                        //     //       ),
+                        //     //     ),
+                        //     //     activeColor: notifire.getred,
+                        //     //     side: BorderSide(color: notifire.getred),
+                        //     //     value: isChecked,
+                        //     //     onChanged: (bool? value) {
+                        //     //       setState(() {
+                        //     //         isChecked = value!;
+                        //     //       });
+                        //     //     },
+                        //     //   ),
+                        //     // ),
+                        //     // Column(
+                        //     //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //     //   children: [
+                        //     //     Row(
+                        //     //       children: [
+                        //     //         Text(
+                        //     //           LanguageEn.selects,
+                        //     //           style: TextStyle(
+                        //     //               fontSize: height / 55, color: Colors.grey),
+                        //     //         ),
+                        //     //       ],
+                        //     //     ),
+                        //     //   ],
+                        //     // ),
+                        //   ],
+                        // ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height / 9.5),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / 15),
+                    child: GestureDetector(
+                      onTap: confirmAddress,
+                      child: button(notifire.getred, notifire.getwhite,
+                          LanguageEn.confirm, width / 1.1),
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: height / 9.5),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / 15),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: button(notifire.getred, notifire.getwhite,
-                      LanguageEn.confirm, width / 1.1)),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

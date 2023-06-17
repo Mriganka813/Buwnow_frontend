@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Categories extends StatefulWidget {
-  const Categories({Key? key}) : super(key: key);
+  static const routeName = '/categories';
 
   @override
   State<Categories> createState() => _CategoriesState();
@@ -30,6 +30,7 @@ class _CategoriesState extends State<Categories> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   List img = [
     "assets/f1.png",
     "assets/f2.png",
@@ -40,20 +41,11 @@ class _CategoriesState extends State<Categories> {
     "assets/chiken.png",
     "assets/eggiteam.png",
   ];
-  List name = [
-    LanguageEn.milkshake,
-    LanguageEn.omelette,
-    LanguageEn.tomatosup,
-    LanguageEn.shake,
-    LanguageEn.fruitdish,
-    LanguageEn.dalfry,
-    LanguageEn.chicken,
-    LanguageEn.eggitem,
-  ];
 
   @override
   Widget build(BuildContext context) {
     notifire = Provider.of<ColorNotifier>(context, listen: true);
+    final catName = ModalRoute.of(context)!.settings.arguments as List<String>;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: notifire.getwhite,
@@ -86,14 +78,13 @@ class _CategoriesState extends State<Categories> {
               height: height / 1,
               child: GridView.builder(
                 padding: EdgeInsets.symmetric(horizontal: width / 20),
-                itemCount: img.length,
+                itemCount: catName.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: height / 40),
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.all(
@@ -102,8 +93,9 @@ class _CategoriesState extends State<Categories> {
                       border: Border.all(color: notifire.getwhite),
                     ),
                     child: ExploreCategories(
-                   img[index],
-                      name[index],   height/10,
+                      img[index],
+                      catName[index],
+                      height / 10,
                     ),
                   );
                 },

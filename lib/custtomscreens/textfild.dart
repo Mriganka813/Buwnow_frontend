@@ -15,6 +15,7 @@ class Customtextfild {
       ),
       child: TextField(
         controller: controller,
+        textCapitalization: TextCapitalization.sentences,
         obscureText: obscureText,
         obscuringCharacter: '*',
         style: TextStyle(color: textcolor),

@@ -29,6 +29,7 @@ class _MyOrderState extends State<MyOrder> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -36,7 +37,6 @@ class _MyOrderState extends State<MyOrder> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getwhite,
-
     );
   }
 

@@ -43,6 +43,7 @@ class _ProfileState extends State<Profile> {
     showSnackBar('logging out...');
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth-token');
+    await prefs.remove('id');
     authServices.logout(context);
   }
   @override

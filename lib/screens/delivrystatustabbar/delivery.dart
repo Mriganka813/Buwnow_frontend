@@ -6,7 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Delivery extends StatefulWidget {
-  const Delivery({Key? key}) : super(key: key);
+  final String shopName;
+  final String shopCategory;
+  final String shopAddress;
+
+  Delivery(
+      {required this.shopName,
+      required this.shopCategory,
+      required this.shopAddress});
 
   @override
   State<Delivery> createState() => _DeliveryState();
@@ -29,65 +36,77 @@ class _DeliveryState extends State<Delivery> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     notifier = Provider.of<ColorNotifier>(context, listen: true);
-    return Scaffold(backgroundColor: notifier.getwhite,
-      body: Padding(
-        padding: EdgeInsets.only(left: width / 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: height / 90),
-            Text(
-              LanguageEn.burgerking,
-              style: TextStyle(
-                  color: notifier.getblackcolor,
-                  fontSize: height / 45,
-                  fontFamily: 'GilroyBold'),
-            ),
-            Text(
-              LanguageEn.westernburger,
-              style: TextStyle(
-                  color: notifier.getgrey,
-                  fontSize: height / 65,
-                  fontFamily: 'GilroyBold'),
-            ),
-            SizedBox(height: height / 100),
-            Row(
-              children: [
-                Icon(Icons.star,
-                    size: height / 40, color: notifier.getstarcolor),
-                Icon(Icons.star,
-                    size: height / 40, color: notifier.getstarcolor),
-                Icon(Icons.star,
-                    size: height / 40, color: notifier.getstarcolor),
-                Icon(Icons.star,
-                    size: height / 40, color: notifier.getstarcolor),
-                SizedBox(width: width / 3.5),
-                kmtime(width / 6, Icons.location_on_outlined, "254m"),
-                SizedBox(width: width / 50),
-                kmtime(width / 8, Icons.timer, "27'"),
-              ],
-            ),
-            SizedBox(height: height / 50),
-            tags(Icons.check_box_outline_blank_outlined,LanguageEn.freeshipwithin),
-            SizedBox(height: height / 100),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Divider(color: notifier.getgrey),
-            ),
-            SizedBox(height: height / 100),
-            tags(Icons.discount,LanguageEn.offonallmenuitems),
-          ],
+    return Scaffold(
+      backgroundColor: notifier.getwhite,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: width / 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: height / 90),
+              Text(
+                widget.shopName,
+                style: TextStyle(
+                    color: notifier.getblackcolor,
+                    fontSize: height / 45,
+                    fontFamily: 'GilroyBold'),
+              ),
+              Text(
+                widget.shopCategory,
+                style: TextStyle(
+                    color: notifier.getgrey,
+                    fontSize: height / 65,
+                    fontFamily: 'GilroyBold'),
+              ),
+              SizedBox(height: height / 100),
+              Text(
+                widget.shopAddress,
+                style: TextStyle(
+                    color: notifier.getblackcolor,
+                    fontSize: height / 55,
+                    fontFamily: 'GilroyMedium'),
+              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.star,
+              //         size: height / 40, color: notifier.getstarcolor),
+              //     Icon(Icons.star,
+              //         size: height / 40, color: notifier.getstarcolor),
+              //     Icon(Icons.star,
+              //         size: height / 40, color: notifier.getstarcolor),
+              //     Icon(Icons.star,
+              //         size: height / 40, color: notifier.getstarcolor),
+              //     SizedBox(width: width / 3.5),
+              //     kmtime(width / 6, Icons.location_on_outlined, "254m"),
+              //     SizedBox(width: width / 50),
+              //     kmtime(width / 8, Icons.timer, "27'"),
+              //   ],
+              // ),
+              SizedBox(height: height / 50),
+              tags(Icons.check_box_outline_blank_outlined,
+                  LanguageEn.freeshipwithin),
+              SizedBox(height: height / 100),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Divider(color: notifier.getgrey),
+              ),
+              SizedBox(height: height / 100),
+              tags(Icons.discount, LanguageEn.offonallmenuitems),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget tags(icon,txt) {
+  Widget tags(icon, txt) {
     return Row(
       children: [
         Container(
@@ -99,8 +118,7 @@ class _DeliveryState extends State<Delivery> {
               Radius.circular(13),
             ),
           ),
-          child: Icon(icon,
-              color: notifier.getwhite, size: height / 33),
+          child: Icon(icon, color: notifier.getwhite, size: height / 33),
         ),
         SizedBox(width: width / 40),
         Text(

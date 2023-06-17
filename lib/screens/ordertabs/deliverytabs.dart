@@ -16,6 +16,7 @@ class Deliverytabs extends StatefulWidget {
 
 class _DeliverytabsState extends State<Deliverytabs> {
   late ColorNotifier notifier;
+
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
@@ -31,6 +32,7 @@ class _DeliverytabsState extends State<Deliverytabs> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -46,7 +48,8 @@ class _DeliverytabsState extends State<Deliverytabs> {
               builder: (context) => const MyOrder(),
             ),
           ),
-          child: Container(color: Colors.transparent,
+          child: Container(
+            color: Colors.transparent,
             child: Column(
               children: [
                 SizedBox(height: height / 30),
@@ -78,7 +81,13 @@ class _DeliverytabsState extends State<Deliverytabs> {
                 ),
                 SizedBox(height: height / 50),
                 CusttomDeliverdOrder(
-                    "assets/foodmenu.png", LanguageEn.steakbeet, "\$230"),
+                  id: '',
+                  image: "assets/foodmenu.png",
+                  txt: LanguageEn.steakbeet,
+                  rate: "\$230",
+                  qty: 1,
+                  totalAmount: '20',
+                ),
                 SizedBox(height: height / 50),
                 Row(
                   children: [
@@ -120,7 +129,13 @@ class _DeliverytabsState extends State<Deliverytabs> {
                 ),
                 SizedBox(height: height / 50),
                 CusttomDeliverdOrder(
-                    "assets/pizzachicago.jpg", LanguageEn.hambuger, "\$230"),
+                  id: '',
+                  image: "assets/pizzachicago.jpg",
+                  txt: LanguageEn.hambuger,
+                  rate: "\$230",
+                  qty: 1,
+                  totalAmount: '20',
+                ),
                 SizedBox(height: height / 50),
                 Row(
                   children: [
@@ -162,7 +177,13 @@ class _DeliverytabsState extends State<Deliverytabs> {
                 ),
                 SizedBox(height: height / 50),
                 CusttomDeliverdOrder(
-                    "assets/foodmenu.png", LanguageEn.steakbeet, "\$230"),
+                  id: '',
+                  image: "assets/foodmenu.png",
+                  txt: LanguageEn.steakbeet,
+                  rate: "\$230",
+                  qty: 1,
+                  totalAmount: '20',
+                ),
                 SizedBox(height: height / 50),
                 Row(
                   children: [

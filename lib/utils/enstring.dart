@@ -11,9 +11,17 @@ class LanguageEn {
 
   static String get hotdeliveryhome => "Hot Delivery to Home";
 
-  static String get adresslineone => "Address Line 1";
+  static String get adresslineone => "House No / Street Address";
 
-  static String get adresslinetwo => "Address Line 2";
+  static String get adresslinetwo => "Area / City";
+
+  static String get adresslinethree => "State";
+
+  static String get pincode => "Pincode";
+
+  static String get additional => "Additional (optional)";
+
+  static String get country => "Country";
 
   static String get selects => "Make default shipping address";
 
@@ -146,7 +154,7 @@ class LanguageEn {
   static String get orderfood =>
       "Order food delivery online\nfrom hundreds of\nrestaurants";
 
-  static String get nearbyrestorent => "Near by Restorent";
+  static String get nearbyrestorent => "Near by Businesses";
 
   static String get showthemyoucare =>
       "Show them you care. We're\nready to deliver to your\nloved one.";
@@ -160,6 +168,8 @@ class LanguageEn {
   static String get vietnamese => "Vietnamese cuisine, Chicken rice";
 
   static String get delivery => "Delivery";
+
+  static String get products => "Products";
 
   static String get menu => "Menu";
 
@@ -200,6 +210,8 @@ class LanguageEn {
 
   static String get adnew => "Add new";
 
+  static String get newaddress => "Add Address";
+
   static String get choiceofsize => "Choice of size";
 
   static String get choiceoftopping => "Choice of topping";
@@ -210,11 +222,11 @@ class LanguageEn {
 
   static String get steakbeet => "Steak Beet";
 
-  static String get pieces => "2 pieces";
+  static String get pieces => "1 pieces";
 
   static String get hambuger => "Hambuger hot";
 
-  static String get subtotal => "Subtotal 12 iteam";
+  static String get subtotal => "Subtotal 12 items";
 
   static String get subtotals => "Subtotal";
 

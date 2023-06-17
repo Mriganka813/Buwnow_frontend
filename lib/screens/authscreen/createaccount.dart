@@ -60,7 +60,7 @@ class _CreateAccountState extends State<CreateAccount> {
     final phoneNo = phoneController.text.trim();
     final password = passwordController.text.trim();
 
-    if (name.isEmpty) {
+    if (name.isEmpty || name.length < 4) {
       showSnackBar('Invalid name');
       return;
     } else if (email.isEmpty || !email.contains('@')) {
@@ -73,7 +73,7 @@ class _CreateAccountState extends State<CreateAccount> {
       showSnackBar('Password is too short.');
       return;
     }
-    if(mounted) {
+    if (mounted) {
       setState(() {
         isLoading = true;
       });
@@ -87,11 +87,11 @@ class _CreateAccountState extends State<CreateAccount> {
       context: context,
     )
         .then((value) {
-          if(mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 
@@ -158,14 +158,13 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
             SizedBox(height: height / 50),
             Customtextfild.textField(
-              LanguageEn.enteryourfullname,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.person,
-              notifier.getbgfildcolor,
-              nameController,
-              false
-            ),
+                LanguageEn.enteryourfullname,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.person,
+                notifier.getbgfildcolor,
+                nameController,
+                false),
             SizedBox(height: height / 40),
             Row(
               children: [
@@ -182,14 +181,13 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
             SizedBox(height: height / 50),
             Customtextfild.textField(
-              LanguageEn.enteryouremail,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.email,
-              notifier.getbgfildcolor,
-              emailController,
-              false
-            ),
+                LanguageEn.enteryouremail,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.email,
+                notifier.getbgfildcolor,
+                emailController,
+                false),
             SizedBox(height: height / 40),
             Row(
               children: [
@@ -206,14 +204,13 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
             SizedBox(height: height / 50),
             Customtextfild.textField(
-              LanguageEn.enteryourphonenumber,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.call,
-              notifier.getbgfildcolor,
-              phoneController,
-              false
-            ),
+                LanguageEn.enteryourphonenumber,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.call,
+                notifier.getbgfildcolor,
+                phoneController,
+                false),
             SizedBox(height: height / 40),
             Row(
               children: [
@@ -230,14 +227,13 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
             SizedBox(height: height / 50),
             Customtextfild.textField(
-              LanguageEn.enteryourpassword,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.lock,
-              notifier.getbgfildcolor,
-              passwordController,
-              true
-            ),
+                LanguageEn.enteryourpassword,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.lock,
+                notifier.getbgfildcolor,
+                passwordController,
+                true),
             SizedBox(height: height / 15),
             GestureDetector(
               onTap: () {

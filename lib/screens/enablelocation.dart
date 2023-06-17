@@ -31,6 +31,7 @@ class _EnableLocationState extends State<EnableLocation> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -66,7 +67,7 @@ class _EnableLocationState extends State<EnableLocation> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BottomHome(),
+                    builder: (context) => BottomHome(),
                   ),
                 );
               },
@@ -78,7 +79,7 @@ class _EnableLocationState extends State<EnableLocation> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BottomHome(),
+                    builder: (context) => BottomHome(),
                   ),
                 );
               },

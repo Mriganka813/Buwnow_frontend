@@ -9,14 +9,21 @@ class CusttomRecommended extends StatefulWidget {
   final String? bgimage;
   final String? name;
   final String? adressredto;
-  const CusttomRecommended(this.bgimage,this.name,this.adressredto,{Key? key}) : super(key: key);
+  final String id;
+  final String category;
+  const CusttomRecommended({
+    required this.bgimage,
+    required this.name,
+    required this.adressredto,
+    required this.id,
+    required this.category,
+  });
 
   @override
   State<CusttomRecommended> createState() => _CusttomRecommendedState();
 }
 
 class _CusttomRecommendedState extends State<CusttomRecommended> {
-
   late ColorNotifier notifier;
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,6 +40,7 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -40,12 +48,12 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        Navigator.of(context).pushNamed(RestorentDeal.routeName, arguments: {
+          'id': widget.id,
+          'name': widget.name,
+          'category': widget.category,
+          'address': widget.adressredto,
+        });
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -54,7 +62,8 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
         child: Container(
           height: height / 2.6,
           width: width / 2.3,
-          decoration:   BoxDecoration(color: notifier.getbgfildcolor,
+          decoration: BoxDecoration(
+            color: notifier.getbgfildcolor,
             borderRadius: const BorderRadius.all(
               Radius.circular(15),
             ),
@@ -67,7 +76,10 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
                 width: width / 2.2,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(widget.bgimage!, fit: BoxFit.cover),
+                  child: Image.asset(
+                    widget.bgimage!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Row(
@@ -122,6 +134,7 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
       ),
     );
   }
+
   Widget kmtime(w, icon, txt) {
     return GestureDetector(
       onTap: () {

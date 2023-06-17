@@ -32,6 +32,7 @@ class _PizzaState extends State<Pizza> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   int selectedindex = -1;
   String dropdownvalue = 'Best match';
   String filterbydropdownvalue = 'Open';
@@ -63,159 +64,162 @@ class _PizzaState extends State<Pizza> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     notifier = Provider.of<ColorNotifier>(context, listen: true);
-    return Container(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          SizedBox(height: height / 70),
-          Row(
-            children: [
-              SizedBox(width: width / 20),
-              Container(
-                height: height / 20,
-                width: width / 3.4,
-                decoration: BoxDecoration(
-                  color: notifier.getbgfildcolor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            SizedBox(height: height / 70),
+            Row(
+              children: [
+                SizedBox(width: width / 20),
+                Container(
+                  height: height / 20,
+                  width: width / 3.4,
+                  decoration: BoxDecoration(
+                    color: notifier.getbgfildcolor,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: DropdownButton(
+                    dropdownColor: notifier.getbgfildcolor,
+                    underline: const SizedBox(),
+                    value: dropdownvalue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: items.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: width / 50),
+                          child: Text(
+                            items,
+                            style: TextStyle(
+                                color: notifier.getblackcolor,
+                                fontSize: height / 60),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownvalue = newValue!;
+                      });
+                    },
                   ),
                 ),
-                child: DropdownButton(
-                  dropdownColor: notifier.getbgfildcolor,
-                  underline: const SizedBox(),
-                  value: dropdownvalue,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: items.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: width / 50),
-                        child: Text(
-                          items,
-                          style: TextStyle(
-                              color: notifier.getblackcolor,
-                              fontSize: height / 60),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
                     setState(() {
-                      dropdownvalue = newValue!;
+                      hide = !hide;
                     });
                   },
+                  child: Container(
+                    height: height / 20,
+                    width: width / 10,
+                    decoration: BoxDecoration(
+                      color: notifier.getbgfildcolor,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(11),
+                      ),
+                    ),
+                    child: hide == true
+                        ? Icon(
+                            Icons.widgets_outlined,
+                            color: notifier.getblackcolor,
+                            size: height / 35,
+                          )
+                        : Icon(
+                            Icons.list,
+                            color: notifier.getblackcolor,
+                            size: height / 35,
+                          ),
+                  ),
                 ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    hide = !hide;
-                  });
-                },
-                child: Container(
-                  height: height / 20,
-                  width: width / 10,
-                  decoration: BoxDecoration(
-                    color: notifier.getbgfildcolor,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(11),
+                SizedBox(width: width / 40),
+                GestureDetector(
+                  onTap: () {
+                    filtershowmodelbottomsheet();
+                  },
+                  child: Container(
+                    height: height / 20,
+                    width: width / 10,
+                    decoration: BoxDecoration(
+                      color: notifier.getbgfildcolor,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(11),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.filter_list_sharp,
+                      color: notifier.getblackcolor,
+                      size: height / 35,
                     ),
                   ),
-                  child: hide == true
-                      ? Icon(
-                          Icons.widgets_outlined,
-                          color: notifier.getblackcolor,
-                          size: height / 35,
-                        )
-                      : Icon(
-                          Icons.list,
-                          color: notifier.getblackcolor,
-                          size: height / 35,
-                        ),
                 ),
-              ),
-              SizedBox(width: width / 40),
-              GestureDetector(
-                onTap: () {
-                  filtershowmodelbottomsheet();
-                },
-                child: Container(
-                  height: height / 20,
-                  width: width / 10,
-                  decoration: BoxDecoration(
-                    color: notifier.getbgfildcolor,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(11),
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.filter_list_sharp,
-                    color: notifier.getblackcolor,
-                    size: height / 35,
-                  ),
-                ),
-              ),
-              SizedBox(width: width / 20),
-            ],
-          ),
-          SizedBox(height: height / 50),
-          if (hide == true)
-            Container(
-                color: Colors.transparent,
-                child: Container(
+                SizedBox(width: width / 20),
+              ],
+            ),
+            SizedBox(height: height / 50),
+            if (hide == true)
+              Container(
                   color: Colors.transparent,
-                  height: height,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: width / 20),
+                  child: Container(
+                    color: Colors.transparent,
+                    height: height,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: width / 20),
                             CusttomGriadeFoodIteam(
-                              "assets/pizzachicago.jpg",LanguageEn.cheesy),
-                          SizedBox(width: width / 20),
+                                "assets/pizzachicago.jpg", LanguageEn.cheesy),
+                            SizedBox(width: width / 20),
+                            CusttomGriadeFoodIteam("assets/pizzachicago.jpg",
+                                LanguageEn.sevenchess),
+                            SizedBox(width: width / 20),
+                          ],
+                        ),
+                        SizedBox(height: height / 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(width: width / 20),
                             CusttomGriadeFoodIteam(
-                              "assets/pizzachicago.jpg",LanguageEn.sevenchess),
-                          SizedBox(width: width / 20),
-                        ],
-                      ),
-                      SizedBox(height: height / 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: width / 20),
-                            CusttomGriadeFoodIteam(
-                              "assets/pizzachicago.jpg",LanguageEn.calzne),
-                          SizedBox(width: width / 20),
-                            CusttomGriadeFoodIteam(
-                              "assets/pizzachicago.jpg",LanguageEn.margarita),
-                          SizedBox(width: width / 20),
-                        ],
-                      ),
-                      SizedBox(height: height / 50),
-                      SizedBox(height: height / 2.8),
-                    ],
-                  ),
-                ))
-          else
-            Container(
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  SizedBox(height: height / 50),
-                    CusttomFoodIteam("assets/pizzachicago.jpg",LanguageEn.cheesy),
-                  SizedBox(height: height / 100),
-                    CusttomFoodIteam("assets/Salad.png",LanguageEn.margarita),
-                  SizedBox(height: height / 100),
-                    CusttomFoodIteam("assets/pizzachicago.jpg",LanguageEn.sevenchess),
-                  SizedBox(height: height / 100),
-                    CusttomFoodIteam("assets/Salad.png",LanguageEn.calzne),
-                  SizedBox(height: height / 5),
-                ],
-              ),
-            )
-        ],
+                                "assets/pizzachicago.jpg", LanguageEn.calzne),
+                            SizedBox(width: width / 20),
+                            CusttomGriadeFoodIteam("assets/pizzachicago.jpg",
+                                LanguageEn.margarita),
+                            SizedBox(width: width / 20),
+                          ],
+                        ),
+                        SizedBox(height: height / 3),
+                      ],
+                    ),
+                  ))
+            else
+              Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    SizedBox(height: height / 50),
+                    CusttomFoodIteam(
+                        "assets/pizzachicago.jpg", LanguageEn.cheesy),
+                    SizedBox(height: height / 100),
+                    CusttomFoodIteam("assets/Salad.png", LanguageEn.margarita),
+                    SizedBox(height: height / 100),
+                    CusttomFoodIteam(
+                        "assets/pizzachicago.jpg", LanguageEn.sevenchess),
+                    SizedBox(height: height / 100),
+                    CusttomFoodIteam("assets/Salad.png", LanguageEn.calzne),
+                    SizedBox(height: height / 5),
+                  ],
+                ),
+              )
+          ],
+        ),
       ),
     );
   }

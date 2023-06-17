@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/orderconfirmation.dart';
+import 'package:gofoods/screens/order_confirmation.dart/screens/orderconfirmation.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CusttomFoodIteam extends StatefulWidget {
   final String? image;
   final String? name;
-  const CusttomFoodIteam(this.image,this.name,{Key? key}) : super(key: key);
+  const CusttomFoodIteam(this.image, this.name, {Key? key}) : super(key: key);
 
   @override
   State<CusttomFoodIteam> createState() => _CusttomFoodIteamState();
@@ -37,6 +37,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -51,7 +52,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
           SizedBox(width: width / 50),
           Container(
             width: width / 5,
-            decoration:   BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
                   image: AssetImage(
@@ -66,7 +67,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
             children: [
               SizedBox(height: height / 110),
               Text(
-               widget.name!,
+                widget.name!,
                 style: TextStyle(
                   color: notifier.getblackcolor,
                   fontSize: height / 44,
@@ -123,7 +124,8 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
   }
 
   Future showmodelbottomsheet() {
-    return showModalBottomSheet(backgroundColor: notifier.getwhite,
+    return showModalBottomSheet(
+      backgroundColor: notifier.getwhite,
       isScrollControlled: true,
       context: context,
       shape: const RoundedRectangleBorder(
@@ -207,9 +209,8 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                           ],
                         ),
                         const Spacer(),
-
                         Checkbox(
-                          activeColor:notifier.getred,
+                          activeColor: notifier.getred,
                           checkColor: notifier.getblackcolor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
@@ -221,7 +222,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -271,7 +272,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -317,11 +318,11 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                           value: check3,
                           onChanged: (bool? value) {
                             setState(() {
-                              check3= value!;
+                              check3 = value!;
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 50),
@@ -384,7 +385,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 80),
@@ -422,7 +423,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                         ),
                         const Spacer(),
                         Checkbox(
-                          activeColor:notifier.getred,
+                          activeColor: notifier.getred,
                           checkColor: notifier.getblackcolor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
@@ -434,7 +435,7 @@ class _CusttomFoodIteamState extends State<CusttomFoodIteam> {
                             });
                           },
                         ),
-                        SizedBox(width: width/30),
+                        SizedBox(width: width / 30),
                       ],
                     ),
                     SizedBox(height: height / 50),

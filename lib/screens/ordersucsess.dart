@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderSucsess extends StatefulWidget {
+  static const routeName = '/order-success';
   const OrderSucsess({Key? key}) : super(key: key);
 
   @override
@@ -32,6 +33,7 @@ class _OrderSucsessState extends State<OrderSucsess> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -75,43 +77,43 @@ class _OrderSucsessState extends State<OrderSucsess> {
               ),
             ),
             SizedBox(height: height / 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyOrder(),
-                  ),
-                );
-              },
-              child: Container(
-                height: height / 14,
-                width: width / 1.1,
-                decoration: BoxDecoration(
-                  border: Border.all(color: notifier.getred),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(13),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    LanguageEn.myorder,
-                    style: TextStyle(
-                      color: notifier.getred,
-                      fontFamily: 'GilroyBold',
-                      fontSize: height / 50,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     // Navigator.push(
+            //     //   context,
+            //     //   MaterialPageRoute(
+            //     //     builder: (context) => const MyOrder(),
+            //     //   ),
+            //     // );
+            //   },
+            //   child: Container(
+            //     height: height / 14,
+            //     width: width / 1.1,
+            //     decoration: BoxDecoration(
+            //       border: Border.all(color: notifier.getred),
+            //       borderRadius: const BorderRadius.all(
+            //         Radius.circular(13),
+            //       ),
+            //     ),
+            //     child: Center(
+            //       child: Text(
+            //         LanguageEn.myorder,
+            //         style: TextStyle(
+            //           color: notifier.getred,
+            //           fontFamily: 'GilroyBold',
+            //           fontSize: height / 50,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: height / 50),
             GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const BottomHome(),
+                      builder: (context) => BottomHome(),
                     ),
                   );
                 },

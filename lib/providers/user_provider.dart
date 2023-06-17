@@ -4,21 +4,22 @@ import '../models/user.dart';
 
 class UserProvider extends ChangeNotifier {
   User _user = User(
-      id: '',
-      name: '',
-      email: '',
-      password: '',
-      address: '',
-      role: 'user',
-      token: '',
-      phoneNo: '');
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    address: '',
+    role: 'user',
+    token: '',
+    phoneNo: '',
+    cart: [],
+  );
 
   String result = '';
 
   String? token = '';
 
-  bool isLoading = false;
-
+  String? id = '';
   User get user => _user;
 
   void setUser(String user) {
@@ -31,18 +32,18 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setKeyword(String text){
+  void setKeyword(String text) {
     result = text;
     notifyListeners();
   }
 
-  void setToken(String tok){
+  void setToken(String tok) {
     token = tok;
     notifyListeners();
   }
 
-  void loading(){
-    isLoading = !isLoading;
+  void setId(String idd) {
+    id = idd;
     notifyListeners();
   }
 }

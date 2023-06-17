@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gofoods/services/cart_services.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -9,9 +10,18 @@ class CusttomDeliverdOrder extends StatefulWidget {
   final String? image;
   final String txt;
   final String rate;
+  final int qty;
+  final String totalAmount;
+  final String id;
 
-  const CusttomDeliverdOrder(this.image, this.txt, this.rate, {Key? key})
-      : super(key: key);
+  const CusttomDeliverdOrder({
+    required this.id,
+    required this.image,
+    required this.txt,
+    required this.rate,
+    required this.qty,
+    required this.totalAmount,
+  });
 
   @override
   State<CusttomDeliverdOrder> createState() => _CusttomDeliverdOrderState();
@@ -19,6 +29,9 @@ class CusttomDeliverdOrder extends StatefulWidget {
 
 class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
   late ColorNotifier notifier;
+
+  final CartServices cartServices = CartServices();
+
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
@@ -34,6 +47,7 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -43,19 +57,19 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
       children: [
         Container(
           height: height / 13,
-          width: width/6,
-          margin: EdgeInsets.only(left: width/20),
+          width: width / 6,
+          margin: EdgeInsets.only(left: width / 20),
           decoration: BoxDecoration(
-
-              borderRadius: const BorderRadius.all(Radius.circular(10),),
-            image: DecorationImage(
-              image: AssetImage(widget.image!),fit: BoxFit.fill
+            borderRadius: const BorderRadius.all(
+              Radius.circular(10),
             ),
+            image: DecorationImage(
+                image: AssetImage(widget.image!), fit: BoxFit.fill),
           ),
         ),
         SizedBox(width: width / 30),
         Text(
-          "1 x",
+          "${widget.qty} x",
           style: TextStyle(
             color: notifier.getblackcolor,
             fontSize: height / 40,
@@ -89,7 +103,7 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              widget.rate,
+              "₹${widget.totalAmount}",
               style: TextStyle(
                 color: notifier.getblackcolor,
                 fontSize: height / 50,
@@ -97,7 +111,7 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
               ),
             ),
             Text(
-              "\$280",
+              "${widget.rate}",
               style: TextStyle(
                 color: notifier.getgrey,
                 fontSize: height / 70,

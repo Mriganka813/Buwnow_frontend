@@ -32,6 +32,7 @@ class _YourOrderState extends State<YourOrder> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -69,7 +70,7 @@ class _YourOrderState extends State<YourOrder> {
           SizedBox(height: height / 50),
           Expanded(
             child: DefaultTabController(
-              length: 2,
+              length: 1,
               child: Column(
                 children: [
                   Container(
@@ -90,17 +91,17 @@ class _YourOrderState extends State<YourOrder> {
                         ),
                       ),
                       tabs: [
-                        Tab(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              LanguageEn.delivery,
-                              style: TextStyle(
-                                  fontSize: height / 50,
-                                  fontFamily: 'GilroyBold'),
-                            ),
-                          ),
-                        ),
+                        // Tab(
+                        //   child: Align(
+                        //     alignment: Alignment.center,
+                        //     child: Text(
+                        //       LanguageEn.delivery,
+                        //       style: TextStyle(
+                        //           fontSize: height / 50,
+                        //           fontFamily: 'GilroyBold'),
+                        //     ),
+                        //   ),
+                        // ),
                         Tab(
                           child: Align(
                             alignment: Alignment.center,
@@ -117,7 +118,10 @@ class _YourOrderState extends State<YourOrder> {
                   ),
                   const Expanded(
                     child: TabBarView(
-                      children: <Widget>[Deliverytabs(), Historytabs()],
+                      children: <Widget>[
+                        // Deliverytabs(),
+                        Historytabs(),
+                      ],
                     ),
                   ),
                 ],

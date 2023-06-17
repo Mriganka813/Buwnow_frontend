@@ -30,7 +30,6 @@
 //
 //   @override
 //   void initState() {
-//     // TODO: implement initState
 //     super.initState();
 //     mySLides = getSlides();
 //     controller = PageController();
@@ -232,7 +231,6 @@ class _OnbondingState extends State<Onbonding> {
     }
   }
 
-
   late ColorNotifier notifire;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
@@ -250,12 +248,6 @@ class _OnbondingState extends State<Onbonding> {
   @override
   void initState() {
     getdarkmodepreviousstate();
-    isLoading = true;
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
     super.initState();
   }
 
@@ -448,7 +440,10 @@ class _OnbondingState extends State<Onbonding> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(PhoneNumber.routeName);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            PhoneNumber.routeName,
+                                            (route) => false);
                                   },
                                   child: Container(
                                     color: Colors.transparent,
@@ -519,7 +514,10 @@ class _OnbondingState extends State<Onbonding> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(PhoneNumber.routeName, (route) => false);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            PhoneNumber.routeName,
+                                            (route) => false);
                                   },
                                   child: Container(
                                     color: Colors.transparent,
@@ -548,7 +546,10 @@ class _OnbondingState extends State<Onbonding> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(PhoneNumber.routeName, (route) => false);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            PhoneNumber.routeName,
+                                            (route) => false);
                                   },
                                   child: Container(
                                       height: height / 16,
