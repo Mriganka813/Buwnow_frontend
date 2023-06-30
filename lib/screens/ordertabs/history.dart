@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gofoods/custtomscreens/custtomdeliverdorder.dart';
-import 'package:gofoods/screens/myorder.dart';
-import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
@@ -74,12 +72,7 @@ class _HistorytabsState extends State<Historytabs> {
             )
           : SingleChildScrollView(
               child: GestureDetector(
-                // onTap: () => Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const MyOrder(),
-                //   ),
-                // ),
+                onTap: () {},
                 child: Container(
                     color: Colors.transparent,
                     child: ListView.builder(

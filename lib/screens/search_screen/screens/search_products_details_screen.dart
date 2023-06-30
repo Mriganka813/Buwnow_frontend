@@ -68,9 +68,9 @@ class _SearchProductDetailsScreenState
     final returnPeriod = args['returnPeriod'];
     final desc = args['description'] ?? 'This is a test description.';
     final String image = args['image'] ?? '';
-    final sellerName = args['sellerName'];
-    final sellerId = args['user'];
-    final category = args['category'];
+    final sellerName = args['sellerName'] ?? '';
+    final sellerId = args['user'] ?? '';
+    final category = args['category'] ?? '';
     final address = args['address'] ?? '';
 
     height = MediaQuery.of(context).size.height;

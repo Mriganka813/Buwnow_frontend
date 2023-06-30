@@ -43,7 +43,7 @@ class _OrderConformationState extends State<OrderConformation> {
 
   bool isLoading = false;
   int subTotal = 0;
-  Map<String, dynamic>? args;
+  Map<String, dynamic>? args = {};
   String userName = '';
   String phoneNumber = '';
   String street = '';
@@ -71,6 +71,7 @@ class _OrderConformationState extends State<OrderConformation> {
         additional = args!['additional'] ?? '';
 
         address = street + ',' + city + "," + state + "," + pincode;
+        print(address);
       }
     });
     getdarkmodepreviousstate();
@@ -266,6 +267,7 @@ class _OrderConformationState extends State<OrderConformation> {
                       : ListView.builder(
                           shrinkWrap: true,
                           itemCount: cartData.length,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final name = cartData[index]['product']['name'];
                             final price =
@@ -468,7 +470,7 @@ class _OrderConformationState extends State<OrderConformation> {
               ),
             ),
             Text(
-              "${price}",
+              "₹${price}",
               style: TextStyle(
                 color: notifier.getgrey,
                 fontSize: height / 70,
@@ -491,7 +493,7 @@ class _OrderConformationState extends State<OrderConformation> {
         backgroundColor: notifier.getwhite,
         content: Container(
           color: Colors.transparent,
-          height: height / 4.5,
+          height: height / 3.8,
           child: Column(
             children: [
               SizedBox(height: height / 130),

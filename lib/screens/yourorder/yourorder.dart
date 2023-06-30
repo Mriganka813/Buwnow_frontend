@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/ordertabs/deliverytabs.dart';
 import 'package:gofoods/screens/ordertabs/history.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';

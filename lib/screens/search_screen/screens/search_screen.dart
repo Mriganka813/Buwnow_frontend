@@ -63,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
     width = MediaQuery.of(context).size.width;
     final notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
+      backgroundColor: notifier.getwhite,
       appBar: AppBar(
         title: Text('Select location'),
         centerTitle: true,
@@ -77,7 +78,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             children: [
               Customsearchtextfild.textField(
-                'Search by city or country',
+                'Search by city, state or country',
                 notifier.getblackcolor,
                 width / 1.13,
                 notifier.getwhite,
@@ -94,23 +95,36 @@ class _SearchScreenState extends State<SearchScreen> {
               SizedBox(
                 height: height / 15,
               ),
-              InkWell(
-                onTap: () {
-                  submit();
-                },
-                child: isLoading
-                    ? CircularProgressIndicator()
-                    : button(
-                        Colors.green,
-                        notifier.getwhite,
-                        'Search',
-                        width / 1.13,
-                      ),
-              )
             ],
           ),
         ),
       ),
+      bottomNavigationBar: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              child: InkWell(
+                onTap: () {
+                  submit();
+                },
+                child: button(
+                    Colors.green, notifier.getwhite, 'Search', width / 1.13),
+              ),
+            ),
     );
   }
+
+  // Widget customButton(Color buttoncolor, Widget ch) {
+  //   return Container(
+  //     height: height / 14,
+  //     width: width / 1.13,
+  //     decoration: BoxDecoration(
+  //       color: buttoncolor,
+  //       borderRadius: const BorderRadius.all(
+  //         Radius.circular(15),
+  //       ),
+  //     ),
+  //     child: Center(child: ch),
+  //   );
+  // }
 }

@@ -177,7 +177,7 @@ Future showmodelbottomsheet({
                         return;
                       }
 
-                      addressServices.addAddress(
+                      await addressServices.addAddress(
                         context: context,
                         city: city,
                         state: state,
@@ -188,6 +188,8 @@ Future showmodelbottomsheet({
                         latitude: latitude,
                         longitude: longitude,
                       );
+
+                      showSnackBar('Your order is being placed...');
 
                       await orderServices.orderPlace(
                         context: context,

@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Row(
                           children: [
-                            SizedBox(width: width / 10),
+                            SizedBox(width: width / 20),
                             Consumer<UserProvider>(
                               builder: (context, value, child) => InkWell(
                                 onTap: () {
@@ -450,8 +450,7 @@ class _HomePageState extends State<HomePage> {
                                           SizedBox(
                                             height: height / 20,
                                           ),
-                                          Text(
-                                              'No Nearby Restaurants available at this location'),
+                                          Text('No Nearby shops found'),
                                         ],
                                       ),
                                     )
