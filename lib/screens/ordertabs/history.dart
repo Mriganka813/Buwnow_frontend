@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gofoods/custtomscreens/custtomdeliverdorder.dart';
+import 'package:gofoods/screens/track_order.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/order.dart';
 import '../../services/order_services.dart';
 
 class Historytabs extends StatefulWidget {
@@ -19,7 +21,7 @@ class _HistorytabsState extends State<Historytabs> {
 
   bool isLoading = false;
   final OrderServices orderServices = OrderServices();
-  List<dynamic> orderHistory = [];
+  List<Order> orderHistory = [];
   int orderLength = 0;
 
   getdarkmodepreviousstate() async {
@@ -54,8 +56,8 @@ class _HistorytabsState extends State<Historytabs> {
 
   getItemsLength() {
     for (int i = 0; i < orderHistory.length; i++) {
-      List items = orderHistory[i]['items'];
-      orderLength += items.length;
+      List<Items>? items = orderHistory[i].items;
+      orderLength += items!.length;
     }
   }
 
@@ -81,26 +83,33 @@ class _HistorytabsState extends State<Historytabs> {
                         itemCount: orderLength,
                         itemBuilder: (context, index) {
                           final order = orderHistory[index];
-                          final orderId = order['_id'];
+                          final orderId = order.orderId;
                           final date =
-                              order['createdAt'].toString().substring(0, 10);
-                          final List items = orderHistory[index]['items'];
+                              order.createdAt.toString().substring(0, 10);
+                          final List<Items>? items = orderHistory[index].items;
 
                           return Column(
                             children: [
                               ListView.builder(
-                                itemCount: items.length,
+                                itemCount: items!.length,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, i) {
-                                  final qty = items[i]['quantity'];
-                                  final prodName = items[i]['productName'];
-                                  final prodPrice = items[i]['productPrice'];
+                                  final qty = items[i].quantity!.toInt();
+                                  final prodName = items[i].productName;
+                                  final prodPrice =
+                                      items[i].productPrice!.toInt();
                                   final totalAmount = qty * prodPrice;
-                                  final status = items[i]['status'];
+                                  final status = items[i].status;
 
-                                  return historyItem(orderId, date, qty,
-                                      prodName, prodPrice, totalAmount, status);
+                                  return historyItem(
+                                      orderId!,
+                                      date,
+                                      qty,
+                                      prodName!,
+                                      prodPrice,
+                                      totalAmount,
+                                      status!);
                                 },
                               )
                             ],
@@ -136,57 +145,72 @@ class _HistorytabsState extends State<Historytabs> {
 
   Widget historyItem(String orderId, String date, int qty, String prodName,
       int prodPrice, int totalAmount, String status) {
-    return Column(
-      children: [
-        SizedBox(height: height / 40),
-        Row(
-          children: [
-            SizedBox(width: width / 20),
-            Icon(Icons.receipt_long,
-                color: notifier.getstarcolor, size: height / 35),
-            SizedBox(width: width / 35),
-            Text(
-              "#$orderId",
-              style: TextStyle(
-                color: notifier.getblackcolor,
-                fontFamily: 'GilroyBold',
-                fontSize: height / 55,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(TrackOrder.routeName, arguments: {
+          'orderId': orderId,
+          'status': status,
+        });
+      },
+      child: Column(
+        children: [
+          SizedBox(height: height / 40),
+          Row(
+            children: [
+              SizedBox(width: width / 20),
+              Icon(Icons.receipt_long,
+                  color: notifier.getstarcolor, size: height / 35),
+              SizedBox(width: width / 35),
+              Expanded(
+                child: Text(
+                  "#$orderId",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: notifier.getblackcolor,
+                    fontFamily: 'GilroyBold',
+                    fontSize: height / 55,
+                  ),
+                ),
               ),
-            ),
-            const Spacer(),
-            Text(
-              date,
-              style: TextStyle(
-                color: notifier.getgrey,
-                fontFamily: 'GilroyMedium',
-                fontSize: height / 55,
+              SizedBox(
+                width: width / 50,
               ),
-            ),
-            SizedBox(width: width / 20),
-          ],
-        ),
-        SizedBox(height: height / 50),
-        CusttomDeliverdOrder(
-          id: '',
-          image: "assets/foodmenu.png",
-          txt: prodName,
-          rate: '₹' + prodPrice.toString(),
-          qty: qty,
-          totalAmount: totalAmount.toString(),
-        ),
-        SizedBox(height: height / 50),
-        Row(
-          children: [
-            SizedBox(width: width / 20),
-            estbutton(status),
-          ],
-        ),
-        SizedBox(height: height / 50),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Divider(color: notifier.getgrey),
-        ),
-      ],
+              Text(
+                date,
+                style: TextStyle(
+                  color: notifier.getgrey,
+                  fontFamily: 'GilroyMedium',
+                  fontSize: height / 55,
+                ),
+              ),
+              SizedBox(width: width / 20),
+            ],
+          ),
+          SizedBox(height: height / 50),
+          CusttomDeliverdOrder(
+            id: '',
+            image: "assets/foodmenu.png",
+            txt: prodName,
+            rate: '₹' + prodPrice.toString(),
+            qty: qty,
+            totalAmount: totalAmount.toString(),
+          ),
+          SizedBox(height: height / 50),
+          Row(
+            children: [
+              SizedBox(width: width / 20),
+              estbutton(status),
+            ],
+          ),
+          SizedBox(height: height / 50),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Divider(color: notifier.getgrey),
+          ),
+        ],
+      ),
     );
   }
 }

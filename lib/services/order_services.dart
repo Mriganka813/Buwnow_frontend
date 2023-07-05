@@ -9,6 +9,8 @@ import 'package:gofoods/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../models/order.dart';
+
 class OrderServices {
   orderPlace({
     required BuildContext context,
@@ -49,9 +51,9 @@ class OrderServices {
     }
   }
 
-  orderHistory(BuildContext context) async {
+  Future<List<Order>> orderHistory(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    List<dynamic> orderHistory = [];
+    List<Order> orderHistory = [];
     try {
       http.Response res = await http.get(
         Uri.parse('${Const.apiV1Url}/consumer/orders/hostory'),
@@ -68,11 +70,17 @@ class OrderServices {
           response: res,
           context: context,
           onSuccess: () {
-            orderHistory = jsonDecode(res.body) as List<dynamic>;
+            final extractedData = jsonDecode(res.body.toString());
+            print('extractedData:' + extractedData.toString());
+            for (Map element in extractedData) {
+              orderHistory.add(Order.fromJson(element as Map<String, dynamic>));
+            }
+            print(extractedData.toString());
             orderHistory = orderHistory.reversed.toList();
           });
     } catch (e) {
       showSnackBar(e.toString());
+      print(e.toString());
     }
     return orderHistory;
   }

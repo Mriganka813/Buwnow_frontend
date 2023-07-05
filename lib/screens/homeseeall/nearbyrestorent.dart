@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gofoods/custtomscreens/custtomrestorent.dart';
+import 'package:gofoods/models/near_by_restorent.dart';
 import 'package:gofoods/utils/enstring.dart';
 import 'package:gofoods/utils/mediaqury.dart';
 import 'package:gofoods/utils/notifirecolor.dart';
@@ -20,7 +21,7 @@ class _NearByRestorentState extends State<NearByRestorent> {
   final scrollController = ScrollController();
   final RestaurantServices restaurantServices = RestaurantServices();
 
-  List restaurants = [];
+  List<NearbyRestorentModel> restaurants = [];
   bool isLoadingMore = false;
 
   int page = 0;
@@ -112,12 +113,12 @@ class _NearByRestorentState extends State<NearByRestorent> {
                     return Column(
                       children: [
                         CusttomRestorent(
-                            id: restaurants[index]['_id'],
-                            address: restaurants[index]['address']['locality'] +
+                            id: restaurants[index].sId!,
+                            address: restaurants[index].address!.locality! +
                                 ',' +
-                                restaurants[index]['address']['city'],
-                            title: restaurants[index]['businessName'],
-                            subtitle: restaurants[index]['businessType']),
+                                restaurants[index].address!.city!,
+                            title: restaurants[index].businessName!,
+                            subtitle: restaurants[index].businessType!),
                         SizedBox(
                           height: height / 50,
                         )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gofoods/custtomscreens/custtomexplorecaterories.dart';
 import 'package:gofoods/custtomscreens/custtomrestorent.dart';
+import 'package:gofoods/models/near_by_restorent.dart';
 import 'package:gofoods/providers/user_provider.dart';
 import 'package:gofoods/screens/bottombar/profilesetting.dart';
 import 'package:gofoods/screens/homeseeall/explorecategories.dart';
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       CategoryProductServices();
 
   List<dynamic> prodList = [];
-  List<dynamic> nearbyRestaurants = [];
+  List<NearbyRestorentModel> nearbyRestaurants = [];
 
   List<String> catName = [
     'Food',
@@ -462,17 +463,18 @@ class _HomePageState extends State<HomePage> {
                                       itemBuilder: (context, index) => Column(
                                         children: [
                                           CusttomRestorent(
-                                              id: nearbyRestaurants[index]
-                                                  ['_id'],
+                                              id: nearbyRestaurants[index].sId!,
                                               address: nearbyRestaurants[index]
-                                                      ['address']['locality'] +
+                                                      .address!
+                                                      .locality! +
                                                   ',' +
                                                   nearbyRestaurants[index]
-                                                      ['address']['city'],
+                                                      .address!
+                                                      .city!,
                                               title: nearbyRestaurants[index]
-                                                  ['businessName'],
+                                                  .businessName!,
                                               subtitle: nearbyRestaurants[index]
-                                                  ['businessType']),
+                                                  .businessType!),
                                           SizedBox(height: height / 50),
                                         ],
                                       ),

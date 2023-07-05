@@ -221,9 +221,9 @@ class _RestorentDealState extends State<RestorentDeal>
                                                 },
                                                 child: FoodItem(
                                                   i: index,
-                                                  prodName: prodName,
-                                                  prodPrice: sellingPrice,
-                                                  sellerName: sellerName,
+                                                  prodName: prodName ?? '',
+                                                  prodPrice: sellingPrice ?? 0,
+                                                  sellerName: sellerName ?? '',
                                                   desc:
                                                       'This is a test description',
                                                   notifier: notifier,

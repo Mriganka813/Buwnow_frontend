@@ -14,6 +14,7 @@ import 'package:gofoods/screens/restorentdeal.dart';
 import 'package:gofoods/screens/search_screen/screens/search_product_list_screen.dart';
 import 'package:gofoods/screens/search_screen/screens/search_products_details_screen.dart';
 import 'package:gofoods/screens/search_screen/screens/search_screen.dart';
+import 'package:gofoods/screens/track_order.dart';
 import 'package:gofoods/screens/yourorder/adress.dart';
 import 'package:gofoods/screens/yourorder/deliveryadrees.dart';
 import 'package:gofoods/screens/yourorder/yourorder.dart';
@@ -97,6 +98,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case Address.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => Address());
+
+    case TrackOrder.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => TrackOrder());
 
     default:
       return MaterialPageRoute(

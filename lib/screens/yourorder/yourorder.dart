@@ -67,66 +67,62 @@ class _YourOrderState extends State<YourOrder> {
       body: Column(
         children: [
           SizedBox(height: height / 50),
-          Expanded(
-            child: DefaultTabController(
-              length: 1,
-              child: Column(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      color: Colors.transparent,
-                    ),
-                    width: width / 1.1,
-                    child: TabBar(
-                      unselectedLabelColor: notifier.getblackcolor,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                        color: notifier.getred,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                      ),
-                      tabs: [
-                        // Tab(
-                        //   child: Align(
-                        //     alignment: Alignment.center,
-                        //     child: Text(
-                        //       LanguageEn.delivery,
-                        //       style: TextStyle(
-                        //           fontSize: height / 50,
-                        //           fontFamily: 'GilroyBold'),
-                        //     ),
-                        //   ),
-                        // ),
-                        Tab(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              LanguageEn.history,
-                              style: TextStyle(
-                                  fontSize: height / 50,
-                                  fontFamily: 'GilroyBold'),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Expanded(
-                    child: TabBarView(
-                      children: <Widget>[
-                        // Deliverytabs(),
-                        Historytabs(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+          // Expanded(
+          //   child: DefaultTabController(
+          //     length: 1,
+          //     child: Column(
+          //       children: [
+          //         Container(
+          //           decoration: const BoxDecoration(
+          //             borderRadius: BorderRadius.all(
+          //               Radius.circular(20),
+          //             ),
+          //             color: Colors.transparent,
+          //           ),
+          //           width: width / 1.1,
+          //           child: TabBar(
+          //             unselectedLabelColor: notifier.getblackcolor,
+          //             indicatorSize: TabBarIndicatorSize.tab,
+          //             indicator: BoxDecoration(
+          //               color: notifier.getred,
+          //               borderRadius: const BorderRadius.all(
+          //                 Radius.circular(20),
+          //               ),
+          //             ),
+          //             tabs: [
+          //               // Tab(
+          //               //   child: Align(
+          //               //     alignment: Alignment.center,
+          //               //     child: Text(
+          //               //       LanguageEn.delivery,
+          //               //       style: TextStyle(
+          //               //           fontSize: height / 50,
+          //               //           fontFamily: 'GilroyBold'),
+          //               //     ),
+          //               //   ),
+          //               // ),
+          //               // Tab(
+          //               //   child: Align(
+          //               //     alignment: Alignment.center,
+          //               //     child: Text(
+          //               //       LanguageEn.history,
+          //               //       style: TextStyle(
+          //               //           fontSize: height / 50,
+          //               //           fontFamily: 'GilroyBold'),
+          //               //     ),
+          //               //   ),
+          //               // ),
+          //             ],
+          //           ),
+          //         ),
+
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          const Expanded(
+            child: Historytabs(),
+          ),
         ],
       ),
     );
