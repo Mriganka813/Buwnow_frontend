@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/restorentdeal.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/screens/specific_shop/screens/restorentdeal.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +16,7 @@ class CusttomPopularfoodlist extends StatefulWidget {
   final String? name;
 
   const CusttomPopularfoodlist(
-      this.bgimage, this.bh, this.bw, this.eh, this.ew, this.sw,this.name,
+      this.bgimage, this.bh, this.bw, this.eh, this.ew, this.sw, this.name,
       {Key? key})
       : super(key: key);
 
@@ -41,6 +41,7 @@ class _CusttomPopularfoodlistState extends State<CusttomPopularfoodlist> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -48,12 +49,12 @@ class _CusttomPopularfoodlistState extends State<CusttomPopularfoodlist> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const RestorentDeal(),
+        //   ),
+        // );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -62,7 +63,8 @@ class _CusttomPopularfoodlistState extends State<CusttomPopularfoodlist> {
         child: Container(
           height: widget.bh!,
           width: widget.bw!,
-          decoration:   BoxDecoration(color: notifier.getbgfildcolor,
+          decoration: BoxDecoration(
+            color: notifier.getbgfildcolor,
             borderRadius: const BorderRadius.all(
               Radius.circular(15),
             ),
@@ -130,12 +132,12 @@ class _CusttomPopularfoodlistState extends State<CusttomPopularfoodlist> {
   Widget kmtime(w, icon, txt) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const RestorentDeal(),
+        //   ),
+        // );
       },
       child: Container(
         height: height / 30,

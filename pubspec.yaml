@@ -1,4 +1,4 @@
-name: gofoods
+name: buynow
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -38,7 +38,7 @@ dependencies:
   dotted_line: ^3.1.0
   flutter_share: ^2.0.0
   flutter_launcher_icons: ^0.9.2
-  http: ^1.0.0
+  http: 
   fluttertoast: ^8.2.2
   shared_preferences: ^2.1.1
   google_fonts: ^4.0.4
@@ -47,8 +47,27 @@ dependencies:
   intl:
   im_stepper: ^1.0.1+1
   flutter_rating_bar: ^4.0.1
+  google_maps_flutter: ^2.2.5
+  geocoding: ^2.1.0
+  uuid: ^3.0.7
+  google_maps_flutter_web: ^0.5.1
+  upi_payment_flutter: ^0.0.4
   
-
+  url_launcher: ^6.1.12
+  flutter_background_service: ^3.0.1
+  flutter_background_service_android: ^4.0.1
+  permission_handler: ^10.4.2
+  flutter_local_notifications: ^15.1.0+1
+  socket_io_client: ^2.0.2
+  upi_payment: 
+  dotted_border: ^2.0.0+3
+  flutter_polyline_points: ^1.0.0
+  google_maps_place_picker_mb: ^3.0.1
+  qr_flutter: ^4.1.0
+  upi_payment_qrcode_generator: ^1.4.0
+  
+  
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,69 +1,81 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 class Product {
   String? sId;
   String? name;
+  String? image;
+  int? purchasePrice;
   int? sellingPrice;
   int? returnPeriod;
   int? quantity;
+  List? rating;
   int? clicks;
   String? user;
+  int? discount;
   String? sellerName;
+  String? expiryDate;
   String? createdAt;
   String? updatedAt;
+  bool? available;
+
   int? iV;
 
   Product(
       {this.sId,
       this.name,
+      this.image,
+      this.purchasePrice,
       this.sellingPrice,
       this.returnPeriod,
       this.quantity,
+      this.rating,
       this.clicks,
       this.user,
+      this.discount,
       this.sellerName,
+      this.expiryDate,
       this.createdAt,
       this.updatedAt,
+      this.available = true,
       this.iV});
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'sId': sId,
-      'name': name,
-      'sellingPrice': sellingPrice,
-      'returnPeriod': returnPeriod,
-      'quantity': quantity,
-      'clicks': clicks,
-      'user': user,
-      'sellerName': sellerName,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'iV': iV,
-    };
+  Product.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    image = json['image'];
+    purchasePrice = json['purchasePrice'];
+    sellingPrice = json['sellingPrice'].toInt();
+    returnPeriod = json['returnPeriod'];
+    quantity = json['quantity'];
+    rating = json['rating'];
+    clicks = json['clicks'];
+    user = json['user'];
+    discount = json['discount'];
+    sellerName = json['sellerName'];
+    expiryDate = json['expiryDate'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    available = json['available'];
+    iV = json['__v'];
   }
 
-  factory Product.fromMap(Map<String, dynamic> map) {
-    return Product(
-      sId: map['sId'] != null ? map['sId'] as String : null,
-      name: map['name'] != null ? map['name'] as String : null,
-      sellingPrice:
-          map['sellingPrice'] != null ? map['sellingPrice'] as int : null,
-      returnPeriod:
-          map['returnPeriod'] != null ? map['returnPeriod'] as int : null,
-      quantity: map['quantity'] != null ? map['quantity'] as int : null,
-      clicks: map['clicks'] != null ? map['clicks'] as int : null,
-      user: map['user'] != null ? map['user'] as String : null,
-      sellerName:
-          map['sellerName'] != null ? map['sellerName'] as String : null,
-      createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
-      updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
-      iV: map['iV'] != null ? map['iV'] as int : null,
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['purchasePrice'] = this.purchasePrice;
+    data['sellingPrice'] = this.sellingPrice;
+    data['returnPeriod'] = this.returnPeriod;
+    data['quantity'] = this.quantity;
+    data['rating'] = this.rating;
+    data['clicks'] = this.clicks;
+    data['user'] = this.user;
+    data['discount'] = this.discount;
+    data['sellerName'] = this.sellerName;
+    data['expiryDate'] = this.expiryDate;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    data['available'] = this.available;
+    data['__v'] = this.iV;
+    return data;
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Product.fromJson(String source) =>
-      Product.fromMap(json.decode(source) as Map<String, dynamic>);
 }

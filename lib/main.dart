@@ -1,18 +1,39 @@
+import 'package:buynow/screens/authscreen/phonenumber.dart';
+import 'package:buynow/services/background_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gofoods/providers/user_provider.dart';
-import 'package:gofoods/router.dart';
-import 'package:gofoods/screens/onbonding/onbonding.dart';
-import 'package:gofoods/screens/search_screen/screens/search_screen.dart';
-import 'package:gofoods/services/auth_services.dart';
+import 'package:buynow/providers/user_provider.dart';
+import 'package:buynow/router.dart';
+import 'package:buynow/screens/search_screen/screens/search_screen.dart';
+import 'package:buynow/services/auth_services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:provider/provider.dart';
 
 import 'utils/notifirecolor.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// set device orientation
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  /// set status bar color
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.white));
+
+  /// initialize notification
+  await flutterLocalNotificationsPlugin.initialize(
+    InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    ),
+    onDidReceiveNotificationResponse: (details) {
+      print(details.payload);
+      print(details.notificationResponseType.name);
+    },
+  );
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => ColorNotifier()),
     ChangeNotifierProvider(create: (context) => UserProvider()),
@@ -53,7 +74,7 @@ class _MyAppState extends State<MyApp> {
             }
             return Provider.of<UserProvider>(context).token!.isNotEmpty
                 ? SearchScreen()
-                : Onbonding();
+                : PhoneNumber();
           }),
     );
   }

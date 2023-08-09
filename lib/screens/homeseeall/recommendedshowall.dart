@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtomrecommended.dart';
-import 'package:gofoods/services/category_products_services.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtomrecommended.dart';
+import 'package:buynow/services/category_products_services.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/category_item.dart';
 
 class RecommendedSeeall extends StatefulWidget {
   static const routeName = '/category-wise-product';
@@ -18,7 +20,11 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
   late ColorNotifier notifier;
   bool isLoading = false;
   String category = '';
-  List<dynamic> categoryData = [];
+  List<CategoryItem> categoryData = [];
+  final scrollController = ScrollController();
+
+  bool isLoadingMore = false;
+  int page = 1;
 
   final CategoryProductServices categoryProductServices =
       CategoryProductServices();
@@ -37,6 +43,7 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
   void initState() {
     super.initState();
     getdarkmodepreviousstate();
+    scrollController.addListener(_scrollListener);
     getCategorydata();
   }
 
@@ -46,12 +53,28 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
     });
     Future.delayed(Duration.zero, () async {
       category = ModalRoute.of(context)!.settings.arguments as String;
-      categoryData =
-          await categoryProductServices.getCategoryProducts(context, category);
+      categoryData = categoryData +
+          await categoryProductServices.getCategoryProducts(
+              context, category, page);
       setState(() {
         isLoading = false;
       });
     });
+  }
+
+  void _scrollListener() async {
+    if (isLoadingMore) return;
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      page++;
+      setState(() {
+        isLoadingMore = true;
+      });
+      await getCategorydata();
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
   }
 
   @override
@@ -83,41 +106,45 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
                 fontFamily: 'GilroyBold'),
           ),
         ),
-        body: isLoading
+        body: categoryData.length == 0
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.all(10),
-                    itemCount: categoryData.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisExtent: height / 2.7,
-                      crossAxisSpacing: width / 50,
-                      mainAxisSpacing: height / 80,
-                    ),
-                    itemBuilder: (context, index) {
-                      final name = categoryData[index]['businessName'];
-                      final address = categoryData[index]['address']
-                              ['locality'] +
-                          "," +
-                          categoryData[index]['address']['city'];
-                      final id = categoryData[index]['_id'];
-                      final category = categoryData[index]['businessType'];
-                      return CusttomRecommended(
-                        bgimage: "assets/bfood.jpg",
-                        adressredto: address,
-                        category: category,
-                        id: id,
-                        name: name,
-                      );
-                    },
-                  ),
-                ],
-              ));
+            : GridView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(10),
+                controller: scrollController,
+                itemCount: isLoadingMore
+                    ? categoryData.length + 1
+                    : categoryData.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: height / 4.7,
+                  crossAxisSpacing: width / 50,
+                  mainAxisSpacing: height / 80,
+                ),
+                itemBuilder: (context, index) {
+                  if (index < categoryData.length) {
+                    final name = categoryData[index].businessName;
+                    final address = categoryData[index].address!.locality! +
+                        "," +
+                        categoryData[index].address!.city!;
+                    final id = categoryData[index].sId;
+                    final category = categoryData[index].businessType;
+                    final image = categoryData[index].image ?? '';
+                    return CusttomRecommended(
+                      bgimage: image,
+                      adressredto: address,
+                      category: category!,
+                      id: id!,
+                      name: name,
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }));
   }
 }
 

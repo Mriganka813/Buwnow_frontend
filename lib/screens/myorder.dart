@@ -1,7 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

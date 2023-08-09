@@ -1,45 +1,42 @@
-import 'package:gofoods/utils/enstring.dart';
+import 'package:buynow/utils/enstring.dart';
 
-
-class SliderModel{
-
+class SliderModel {
   String imageAssetPath;
   String title;
   String desc;
 
-  SliderModel({required this.imageAssetPath,required this.title,required this.desc});
+  SliderModel(
+      {required this.imageAssetPath, required this.title, required this.desc});
 
-  void setImageAssetPath(String getImageAssetPath){
+  void setImageAssetPath(String getImageAssetPath) {
     imageAssetPath = getImageAssetPath;
   }
 
-  void setTitle(String getTitle){
+  void setTitle(String getTitle) {
     title = getTitle;
   }
 
-  void setDesc(String getDesc){
+  void setDesc(String getDesc) {
     desc = getDesc;
   }
 
-  String getImageAssetPath(){
+  String getImageAssetPath() {
     return imageAssetPath;
   }
 
-  String getTitle(){
+  String getTitle() {
     return title;
   }
 
-  String getDesc(){
+  String getDesc() {
     return desc;
   }
-
 }
 
-
-List<SliderModel> getSlides(){
-
-  List<SliderModel> slides =   <SliderModel>[];
-  SliderModel sliderModel =   SliderModel(desc: '', title: '', imageAssetPath: '');
+List<SliderModel> getSlides() {
+  List<SliderModel> slides = <SliderModel>[];
+  SliderModel sliderModel =
+      SliderModel(desc: '', title: '', imageAssetPath: '');
 
   //1
   sliderModel.setDesc(LanguageEn.findyourfavoritefoodanytime);
@@ -47,7 +44,7 @@ List<SliderModel> getSlides(){
   sliderModel.setImageAssetPath("assets/onbondingone.png");
   slides.add(sliderModel);
 
-  sliderModel =   SliderModel(imageAssetPath: '', desc: '', title: '');
+  sliderModel = SliderModel(imageAssetPath: '', desc: '', title: '');
 
   //2
   sliderModel.setDesc(LanguageEn.ourdeliveryman);
@@ -55,7 +52,7 @@ List<SliderModel> getSlides(){
   sliderModel.setImageAssetPath("assets/onbondingtwo.png");
   slides.add(sliderModel);
 
-  sliderModel =    SliderModel(imageAssetPath: '', desc: '', title: '');
+  sliderModel = SliderModel(imageAssetPath: '', desc: '', title: '');
 
   //3
   sliderModel.setDesc(LanguageEn.youreceivethe);
@@ -63,7 +60,7 @@ List<SliderModel> getSlides(){
   sliderModel.setImageAssetPath("assets/onbondingthree.png");
   slides.add(sliderModel);
 
-  sliderModel =    SliderModel(imageAssetPath: '', desc: '', title: '');
+  sliderModel = SliderModel(imageAssetPath: '', desc: '', title: '');
 
   return slides;
 }

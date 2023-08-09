@@ -1,21 +1,22 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'consumer_adrress.dart';
+import 'package:buynow/models/consumer_adrress.dart';
 
 class Order {
   ConsumerAddress? addresses;
-  String? orderId;
+  String? sId;
   List<Items>? items;
-  String? consumer;
+  bool? isPaid;
+  String? consumerId;
+  String? consumerName;
   String? createdAt;
   int? iV;
 
   Order(
       {this.addresses,
-      this.orderId,
+      this.sId,
       this.items,
-      this.consumer,
+      this.isPaid,
+      this.consumerId,
+      this.consumerName,
       this.createdAt,
       this.iV});
 
@@ -23,14 +24,16 @@ class Order {
     addresses = json['addresses'] != null
         ? new ConsumerAddress.fromJson(json['addresses'])
         : null;
-    orderId = json['_id'];
+    sId = json['_id'];
     if (json['items'] != null) {
       items = <Items>[];
       json['items'].forEach((v) {
         items!.add(new Items.fromJson(v));
       });
     }
-    consumer = json['consumer'];
+    isPaid = json['isPaid'];
+    consumerId = json['consumerId'];
+    consumerName = json['consumerName'];
     createdAt = json['createdAt'];
     iV = json['__v'];
   }
@@ -40,11 +43,13 @@ class Order {
     if (this.addresses != null) {
       data['addresses'] = this.addresses!.toJson();
     }
-    data['_id'] = this.orderId;
+    data['_id'] = this.sId;
     if (this.items != null) {
       data['items'] = this.items!.map((v) => v.toJson()).toList();
     }
-    data['consumer'] = this.consumer;
+    data['isPaid'] = this.isPaid;
+    data['consumerId'] = this.consumerId;
+    data['consumerName'] = this.consumerName;
     data['createdAt'] = this.createdAt;
     data['__v'] = this.iV;
     return data;

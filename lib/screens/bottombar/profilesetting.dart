@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/custtomscreens/textfild.dart';
-import 'package:gofoods/services/user_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/custtomscreens/textfild.dart';
+import 'package:buynow/services/user_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,20 +100,20 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           ),
                         ),
                         const Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            LanguageEn.done,
-                            style: TextStyle(
-                              color: notifier.getwhite,
-                              fontSize: height / 45,
-                              fontFamily: 'GilroyMedium',
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: width / 20),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        //   child: Text(
+                        //     LanguageEn.done,
+                        //     style: TextStyle(
+                        //       color: notifier.getwhite,
+                        //       fontSize: height / 45,
+                        //       fontFamily: 'GilroyMedium',
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(width: width / 20),
                       ],
                     ),
                     SizedBox(height: height / 6),

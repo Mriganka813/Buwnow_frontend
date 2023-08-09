@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/const.dart';
-import 'package:gofoods/constants/utils.dart';
+import 'package:buynow/constants/const.dart';
+import 'package:buynow/constants/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,7 @@ class AddressServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      http.Response res = await http.post(
+      final http.Response res = await http.post(
         Uri.parse('${Const.apiV1Url}/consumer/add/address'),
         body: {
           'state': state,

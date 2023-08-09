@@ -1,17 +1,16 @@
+import 'package:buynow/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/screens/yourorder/deliveryadrees.dart';
-import 'package:gofoods/services/address_services.dart';
-import 'package:gofoods/services/cart_services.dart';
-import 'package:gofoods/services/order_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/screens/yourorder/deliveryadrees.dart';
+import 'package:buynow/services/address_services.dart';
+import 'package:buynow/services/cart_services.dart';
+import 'package:buynow/services/order_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/show_model_bottom_sheet.dart';
+import '../../../models/cart_item.dart';
 
 class OrderConformation extends StatefulWidget {
   static const routeName = '/order-confirmation';
@@ -27,7 +26,7 @@ class _OrderConformationState extends State<OrderConformation> {
   final CartServices cartServices = CartServices();
   final OrderServices orderServices = OrderServices();
   final AddressServices addressServices = AddressServices();
-  List<dynamic> cartData = [];
+  List<CartItem> cartData = [];
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,37 +42,36 @@ class _OrderConformationState extends State<OrderConformation> {
 
   bool isLoading = false;
   int subTotal = 0;
-  Map<String, dynamic>? args = {};
-  String userName = '';
-  String phoneNumber = '';
-  String street = '';
-  String city = '';
-  String state = '';
-  String pincode = '';
-  String additional = '';
+  // String userName = '';
+  // String phoneNumber = '';
+  // String street = '';
+  // String city = '';
+  // String state = '';
+  // String pincode = '';
+  // String additional = '';
 
-  String latitude = '';
-  String longitude = '';
+  // String latitude = '';
+  // String longitude = '';
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      if (args != null) {
-        args = ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic> ??
-            {};
-        userName = args!['phoneNumber'] ?? '';
-        street = args!['street'] ?? '';
-        city = args!['city'] ?? '';
-        state = args!['state'] ?? '';
-        pincode = args!['pincode'] ?? '';
-        additional = args!['additional'] ?? '';
+    // Future.delayed(Duration.zero, () {
+    //   if (args != null) {
+    //     args = ModalRoute.of(context)!.settings.arguments
+    //             as Map<String, dynamic> ??
+    //         {};
+    //     userName = args!['name'] ?? '';
+    //     phoneNumber = args!['phoneNumber'] ?? '';
+    //     street = args!['street'] ?? '';
+    //     city = args!['city'] ?? '';
+    //     state = args!['state'] ?? '';
+    //     pincode = args!['pincode'] ?? '';
 
-        address = street + ',' + city + "," + state + "," + pincode;
-        print(address);
-      }
-    });
+    //     address = street + ',' + city + "," + state + "," + pincode;
+    //     print(address);
+    //   }
+    // });
     getdarkmodepreviousstate();
     getCartData();
   }
@@ -87,10 +85,11 @@ class _OrderConformationState extends State<OrderConformation> {
 
     cartData = await cartServices.getCartItems(context);
     cartData.forEach(
-      (product) => subTotal +=
-          int.parse(product['product']['sellingPrice'].toString()) *
-              int.parse(product['quantity'].toString()),
+      (product) => subTotal += int.parse(product.discountedPrice.toString()) *
+          int.parse(product.qty.toString()),
     );
+    Provider.of<UserProvider>(context, listen: false)
+        .setTotalPriceOfCartItems(subTotal);
 
     if (mounted) {
       setState(() {
@@ -99,47 +98,13 @@ class _OrderConformationState extends State<OrderConformation> {
     }
   }
 
-  int _groupValue = -1;
-
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission().then((_) {
-      showSnackBar('Please wait while we are fetching live location.');
-    }).onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-    });
-    return await Geolocator.getCurrentPosition();
-  }
-
   orderNow() async {
     if (cartData.length == 0) {
       return;
-    } else if (address.isEmpty) {
-      showSnackBar('Please enter address');
-      return;
     }
-    await getUserCurrentLocation().then((value) async {
-      latitude = value.latitude.toString();
-      longitude = value.longitude.toString();
-      print(latitude);
-      print(longitude);
-    });
-
-    showmodelbottomsheet(
-      notifier: notifier,
-      context: context,
-      groupValue: _groupValue,
-      orderServices: orderServices,
-      name: userName,
-      phoneNo: phoneNumber,
-      street: street,
-      city: city,
-      state: state,
-      pincode: pincode,
-      additional: additional,
-      latitude: latitude,
-      longitude: longitude,
-      addressServices: addressServices,
-    );
+    Provider.of<UserProvider>(context, listen: false)
+        .setSellerId(cartData[0].sellerId!);
+    Navigator.of(context).pushNamed(AddressUpdates.routeName);
   }
 
   @override
@@ -178,70 +143,70 @@ class _OrderConformationState extends State<OrderConformation> {
               child: Column(
                 children: [
                   SizedBox(height: height / 40),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddressUpdates(),
-                        ),
-                      );
-                    },
-                    child: Center(
-                      child: Container(
-                        color: Colors.transparent,
-                        height: height / 13,
-                        width: width / 1.1,
-                        child: Row(
-                          children: [
-                            Icon(Icons.location_on_outlined,
-                                color: notifier.getstarcolor,
-                                size: height / 25),
-                            SizedBox(width: width / 40),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: height / 70),
-                                  Text(
-                                    LanguageEn.deliveryto,
-                                    style: TextStyle(
-                                        color: notifier.getgrey,
-                                        fontFamily: 'GilroyMedium',
-                                        fontSize: height / 50),
-                                  ),
-                                  if (address.isNotEmpty)
-                                    Text(
-                                      address,
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: notifier.getblackcolor,
-                                          fontFamily: 'GilroyBold',
-                                          fontSize: height / 50),
-                                    )
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(Icons.arrow_forward_ios,
-                                  color: notifier.getblackcolor,
-                                  size: height / 50),
-                            ),
-                            SizedBox(width: width / 30),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const AddressUpdates(),
+                  //       ),
+                  //     );
+                  //   },
+                  // child: Center(
+                  //   child: Container(
+                  //     color: Colors.transparent,
+                  //     height: height / 13,
+                  //     width: width / 1.1,
+                  //     child: Row(
+                  //       children: [
+                  //         Icon(Icons.location_on_outlined,
+                  //             color: notifier.getstarcolor,
+                  //             size: height / 25),
+                  //         SizedBox(width: width / 40),
+                  //         Expanded(
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               SizedBox(height: height / 70),
+                  //               Text(
+                  //                 LanguageEn.deliveryto,
+                  //                 style: TextStyle(
+                  //                     color: notifier.getgrey,
+                  //                     fontFamily: 'GilroyMedium',
+                  //                     fontSize: height / 50),
+                  //               ),
+                  //               if (address.isNotEmpty)
+                  //                 Text(
+                  //                   address,
+                  //                   maxLines: 1,
+                  //                   softWrap: false,
+                  //                   overflow: TextOverflow.ellipsis,
+                  //                   style: TextStyle(
+                  //                       color: notifier.getblackcolor,
+                  //                       fontFamily: 'GilroyBold',
+                  //                       fontSize: height / 50),
+                  //                 )
+                  //             ],
+                  //           ),
+                  //         ),
+                  //         Align(
+                  //           alignment: Alignment.centerRight,
+                  //           child: Icon(Icons.arrow_forward_ios,
+                  //               color: notifier.getblackcolor,
+                  //               size: height / 50),
+                  //         ),
+                  //         SizedBox(width: width / 30),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // ),
                   // SizedBox(height: height / 50),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / 20),
-                    child: Divider(color: notifier.getgrey),
-                  ),
-                  SizedBox(height: height / 50),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: width / 20),
+                  //   child: Divider(color: notifier.getgrey),
+                  // ),
+                  // SizedBox(height: height / 50),
                   Row(
                     children: [
                       SizedBox(width: width / 20),
@@ -262,6 +227,11 @@ class _OrderConformationState extends State<OrderConformation> {
                           alignment: Alignment.center,
                           child: Text(
                             'You have not added any products in your cart',
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: notifier.getgrey,
+                                fontFamily: 'GilroyMedium',
+                                fontSize: height / 50),
                           ),
                         )
                       : ListView.builder(
@@ -269,128 +239,164 @@ class _OrderConformationState extends State<OrderConformation> {
                           itemCount: cartData.length,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final name = cartData[index]['product']['name'];
-                            final price =
-                                cartData[index]['product']['sellingPrice'];
-                            final qty = cartData[index]['quantity'];
-                            final totalAmount = price * qty;
-                            final id = cartData[index]['product']['_id'];
+                            final name = cartData[index].name;
+                            final price = cartData[index].discountedPrice!;
+                            final quantity = cartData[index].qty!;
+                            final totalAmount = price * quantity;
+                            final id = cartData[index].productId;
+                            final String image = cartData[index].image!;
 
                             return Column(
                               children: [
                                 Dismissible(
                                     key: ValueKey(DateTime.now()),
-                                    direction: DismissDirection.endToStart,
-                                    background: Container(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      alignment: Alignment.centerRight,
-                                      padding: const EdgeInsets.only(right: 20),
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 4),
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 40,
-                                        color: Colors.white,
-                                      ),
+                                    background: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            alignment: Alignment.centerLeft,
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 4),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              size: 40,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            alignment: Alignment.centerRight,
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 4),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              size: 40,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     confirmDismiss: (direction) {
                                       return _showDialog();
                                     },
                                     onDismissed: (direction) async {
                                       await cartServices.removeFromCart(
-                                          context, id);
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => super.widget,
-                                          ));
+                                          context, id!);
+                                      cartData.removeAt(index);
+
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      if (cartData.length == 0) {
+                                        prefs.remove('lat');
+                                        prefs.remove('long');
+                                      }
+                                      setState(() {});
+
+                                      // Navigator.pushReplacement(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       builder: (context) => super.widget,
+                                      //     ));
                                     },
-                                    child: cartItem(
-                                        qty, name, totalAmount, price)),
-                                SizedBox(height: height / 80),
+                                    child: cartItem(quantity, name!,
+                                        totalAmount, price, image)),
+                                SizedBox(height: height / 60),
                               ],
                             );
                           }),
 
-                  SizedBox(height: height / 100),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / 20),
-                    child: Divider(color: notifier.getgrey),
-                  ),
-                  SizedBox(height: height / 100),
-                  Row(
-                    children: [
-                      SizedBox(width: width / 20),
-                      Text(
-                        LanguageEn.subtotals,
-                        style: TextStyle(
-                          color: notifier.getgrey,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyMedium',
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "₹${subTotal}",
-                        style: TextStyle(
-                          color: notifier.getgrey,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyMedium',
-                        ),
-                      ),
-                      SizedBox(width: width / 20),
-                    ],
-                  ),
-                  SizedBox(height: height / 100),
-                  Row(
-                    children: [
-                      SizedBox(width: width / 20),
-                      Text(
-                        LanguageEn.deliverycharges,
-                        style: TextStyle(
-                          color: notifier.getgrey,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyMedium',
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "₹40",
-                        style: TextStyle(
-                          color: notifier.getgrey,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyMedium',
-                        ),
-                      ),
-                      SizedBox(width: width / 20),
-                    ],
-                  ),
-                  SizedBox(height: height / 100),
-                  Row(
-                    children: [
-                      SizedBox(width: width / 20),
-                      Text(
-                        LanguageEn.total,
-                        style: TextStyle(
-                          color: notifier.getblackcolor,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyBold',
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "₹${subTotal + 40}",
-                        style: TextStyle(
-                          color: notifier.getblackcolor,
-                          fontSize: height / 60,
-                          fontFamily: 'GilroyBold',
-                        ),
-                      ),
-                      SizedBox(width: width / 20),
-                    ],
-                  ),
-                  SizedBox(height: height / 5),
+                  // SizedBox(height: height / 100),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: width / 20),
+                  //   child: Divider(color: notifier.getgrey),
+                  // ),
+                  // SizedBox(height: height / 100),
+                  // Row(
+                  //   children: [
+                  //     SizedBox(width: width / 20),
+                  //     Text(
+                  //       LanguageEn.subtotals,
+                  //       style: TextStyle(
+                  //         color: notifier.getgrey,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyMedium',
+                  //       ),
+                  //     ),
+                  //     const Spacer(),
+                  //     Text(
+                  //       "₹${subTotal}",
+                  //       style: TextStyle(
+                  //         color: notifier.getgrey,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyMedium',
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: width / 20),
+                  //   ],
+                  // ),
+                  // SizedBox(height: height / 100),
+                  // Row(
+                  //   children: [
+                  //     SizedBox(width: width / 20),
+                  //     Text(
+                  //       LanguageEn.deliverycharges,
+                  //       style: TextStyle(
+                  //         color: notifier.getgrey,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyMedium',
+                  //       ),
+                  //     ),
+                  //     const Spacer(),
+                  //     Text(
+                  //       "₹40",
+                  //       style: TextStyle(
+                  //         color: notifier.getgrey,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyMedium',
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: width / 20),
+                  //   ],
+                  // ),
+                  // SizedBox(height: height / 100),
+                  // Row(
+                  //   children: [
+                  //     SizedBox(width: width / 20),
+                  //     Text(
+                  //       LanguageEn.total,
+                  //       style: TextStyle(
+                  //         color: notifier.getblackcolor,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyBold',
+                  //       ),
+                  //     ),
+                  //     const Spacer(),
+                  //     Text(
+                  //       "₹${subTotal + 40}",
+                  //       style: TextStyle(
+                  //         color: notifier.getblackcolor,
+                  //         fontSize: height / 60,
+                  //         fontFamily: 'GilroyBold',
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: width / 20),
+                  //   ],
+                  // ),
+                  // SizedBox(height: height / 5),
                 ],
               ),
             ),
@@ -401,7 +407,7 @@ class _OrderConformationState extends State<OrderConformation> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: button(
-            notifier.getred,
+            cartData.length == 0 ? notifier.getgrey : notifier.getred,
             notifier.getwhite,
             "Order now",
             width / 1.1,
@@ -411,20 +417,43 @@ class _OrderConformationState extends State<OrderConformation> {
     );
   }
 
-  Widget cartItem(int qty, String name, int totalAmount, int price) {
+  Widget cartItem(
+      int qty, String name, int totalAmount, int price, String image) {
     return Row(
       children: [
         Container(
-          height: height / 13,
+          height: height / 12,
           width: width / 6,
           margin: EdgeInsets.only(left: width / 20),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
-            image: DecorationImage(
-                image: AssetImage('assets/foods.png'), fit: BoxFit.fill),
+            image: image == 'unavailable'
+                ? DecorationImage(
+                    image: AssetImage('assets/product_image.png'),
+                    fit: BoxFit.fill,
+                  )
+                : DecorationImage(image: NetworkImage(image), fit: BoxFit.fill),
           ),
+
+          // child: image.isEmpty
+          //     ? Image.asset(
+          //         'assets/product_image.png',
+          //         height: 180,
+          //         width: 200,
+          //         fit: BoxFit.fill,
+          //       )
+          //     : Image.network(
+          //         image,
+          //         height: 180,
+          //         width: 200,
+          //         fit: BoxFit.cover,
+          //         loadingBuilder: (context, child, loadingProgress) =>
+          //             loadingProgress == null
+          //                 ? child
+          //                 : CircularProgressIndicator(),
+          //       ),
         ),
         SizedBox(width: width / 30),
         Text(
@@ -436,48 +465,57 @@ class _OrderConformationState extends State<OrderConformation> {
           ),
         ),
         SizedBox(width: width / 15),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: TextStyle(
-                color: notifier.getblackcolor,
-                fontSize: height / 50,
-                fontFamily: 'GilroyBold',
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: notifier.getblackcolor,
+                  fontSize: height / 50,
+                  fontFamily: 'GilroyBold',
+                ),
               ),
-            ),
-            Text(
-              LanguageEn.pieces,
-              style: TextStyle(
-                color: notifier.getgrey,
-                fontSize: height / 60,
-                fontFamily: 'GilroyMedium',
+              Text(
+                LanguageEn.pieces,
+                style: TextStyle(
+                  color: notifier.getgrey,
+                  fontSize: height / 60,
+                  fontFamily: 'GilroyMedium',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              "₹${totalAmount}",
-              style: TextStyle(
-                color: notifier.getblackcolor,
-                fontSize: height / 50,
-                fontFamily: 'GilroyBold',
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FittedBox(
+                child: Text(
+                  "₹${totalAmount}",
+                  style: TextStyle(
+                    color: notifier.getblackcolor,
+                    fontSize: height / 50,
+                    fontFamily: 'GilroyBold',
+                  ),
+                ),
               ),
-            ),
-            Text(
-              "₹${price}",
-              style: TextStyle(
-                color: notifier.getgrey,
-                fontSize: height / 70,
-                fontFamily: 'GilroyMedium',
-              ),
-            )
-          ],
+              FittedBox(
+                child: Text(
+                  "₹${price}",
+                  style: TextStyle(
+                    color: notifier.getgrey,
+                    fontSize: height / 70,
+                    fontFamily: 'GilroyMedium',
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         SizedBox(width: width / 20),
       ],
@@ -498,7 +536,7 @@ class _OrderConformationState extends State<OrderConformation> {
             children: [
               SizedBox(height: height / 130),
               Text(
-                'Do you want to remove item from the cart?',
+                'Do you want to remove items from the cart?',
                 style: TextStyle(
                   color: notifier.getgrey,
                   fontSize: height / 30,
@@ -506,14 +544,14 @@ class _OrderConformationState extends State<OrderConformation> {
                 ),
               ),
               SizedBox(height: height / 50),
-              Text(
-                'Are you sure?',
-                style: TextStyle(
-                  color: notifier.getblackcolor,
-                  fontSize: height / 50,
-                  fontFamily: 'GilroyMedium',
-                ),
-              ),
+              // Text(
+              //   'Are you sure?',
+              //   style: TextStyle(
+              //     color: notifier.getblackcolor,
+              //     fontSize: height / 50,
+              //     fontFamily: 'GilroyMedium',
+              //   ),
+              // ),
               SizedBox(height: height / 50),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -562,7 +600,7 @@ class _OrderConformationState extends State<OrderConformation> {
           txt,
           style: TextStyle(
             color: textcolor,
-            fontSize: height / 50,
+            fontSize: height / 40,
             fontFamily: 'GilroyMedium',
           ),
         ),

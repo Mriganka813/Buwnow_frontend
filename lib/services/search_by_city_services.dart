@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:gofoods/constants/const.dart';
-import 'package:gofoods/constants/error_handling.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/models/near_by_restorent.dart';
+import 'package:buynow/constants/const.dart';
+import 'package:buynow/constants/error_handling.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/models/near_by_restorent.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class SearchServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<NearbyRestorentModel> userList = [];
     try {
-      http.Response res = await http.post(
+      final http.Response res = await http.post(
         Uri.parse('${Const.apiV1Url}/consumer/search/location'),
         body: jsonEncode({
           'location': location,
@@ -40,8 +40,9 @@ class SearchServices {
             userList.add(
                 NearbyRestorentModel.fromJson(element as Map<String, dynamic>));
           }
-          print(extractedData.toString());
+
           userList = userList.reversed.toList();
+          print(userList);
         },
       );
     } catch (e) {

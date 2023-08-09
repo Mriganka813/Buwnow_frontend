@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
+import 'package:buynow/constants/utils.dart';
 
 import '../../../utils/mediaqury.dart';
 import '../../search_screen/screens/search_product_list_screen.dart';
@@ -16,6 +16,7 @@ Widget customTextField({
   return Container(
     height: height / 16,
     width: wi,
+    padding: EdgeInsets.all(3),
     decoration: BoxDecoration(
         color: textbgcolor,
         borderRadius: const BorderRadius.all(

@@ -63,6 +63,8 @@ class LanguageEn {
 
   static String get enteryourpassword => "Enter Your Password";
 
+  static String get enteryouraddress => "Enter Your Correspondence Address";
+
   static String get next => "Next";
 
   static String get price => "Price";
@@ -70,6 +72,8 @@ class LanguageEn {
   static String get apply => "Apply";
 
   static String get confirm => "Confirm";
+
+  static String get submit => "Submit";
 
   static String get bronx => "Bronx";
 
@@ -373,6 +377,8 @@ class LanguageEn {
   static String get enteryournumber => 'Enter Your Number';
 
   static String get password => 'Password';
+
+  static String get address => 'Correspondence Address';
 
   static String get facebook => 'Facebook';
 

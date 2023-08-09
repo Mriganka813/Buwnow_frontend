@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/const.dart';
-import 'package:gofoods/constants/error_handling.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/screens/authscreen/phonenumber.dart';
+import 'package:buynow/constants/const.dart';
+import 'package:buynow/constants/error_handling.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/screens/authscreen/phonenumber.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +22,7 @@ class AuthServices {
     required String password,
     required String name,
     required String phoneNo,
+    required String address,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -34,15 +35,39 @@ class AuthServices {
         role: 'user',
         token: '',
         phoneNo: phoneNo,
-        cart: [],
       );
 
-      http.Response res = await http.post(
+      final http.Response res = await http.post(
           Uri.parse('${Const.apiV1Url}/consumer/register'),
           body: user.toJson(),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           });
+
+      final http.Response cuteSignup = await http.post(
+        Uri.parse('http://65.0.7.20:8004/auth/signup'),
+        body: {
+          'username': name,
+          'password': 'qwertyuiop',
+          'roleType': 'CUSTOMER',
+          'phoneNum': phoneNo,
+          'address': address,
+        },
+      );
+
+      print(cuteSignup.body);
+
+      if (cuteSignup.statusCode == 200) {
+        final http.Response cuteVerify = await http.post(
+            Uri.parse('http://65.0.7.20:8004/auth/signup/verify'),
+            body: {'user_id': jsonDecode(cuteSignup.body)['user_id']});
+
+        print(cuteVerify.body);
+      } else {
+        return;
+      }
+
+      print(cuteSignup.body);
 
       print(user);
 
@@ -56,15 +81,13 @@ class AuthServices {
             userProvider.setId(jsonDecode(res.body)['user']['_id']);
             userProvider.setToken(jsonDecode(res.body)['token']);
 
-            if (prefs != null && res.body != null) {
-              try {
-                String token = jsonDecode(res.body)['token'];
-                String id = jsonDecode(res.body)['user']['_id'];
-                await prefs.setString('auth-token', token);
-                await prefs.setString('id', id);
-              } catch (e) {
-                showSnackBar('Token not set.');
-              }
+            try {
+              String token = jsonDecode(res.body)['token'];
+              String id = jsonDecode(res.body)['user']['_id'];
+              await prefs.setString('auth-token', token);
+              await prefs.setString('id', id);
+            } catch (e) {
+              showSnackBar('Token not set.');
             }
 
             Navigator.of(context).pushNamedAndRemoveUntil(
@@ -84,7 +107,7 @@ class AuthServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      http.Response res = await http.post(
+      final http.Response res = await http.post(
           Uri.parse('${Const.apiV1Url}/consumer/login'),
           body: jsonEncode({
             'email': email,
@@ -106,16 +129,15 @@ class AuthServices {
 
           print(res.body);
 
-          if (prefs != null && res.body != null) {
-            try {
-              String id = jsonDecode(res.body)['user']['_id'];
-              String token = jsonDecode(res.body)['token'];
-              await prefs.setString('auth-token', token);
-              await prefs.setString('id', id);
-            } catch (e) {
-              showSnackBar('Token not set.');
-            }
+          try {
+            String id = jsonDecode(res.body)['user']['_id'];
+            String token = jsonDecode(res.body)['token'];
+            await prefs.setString('auth-token', token);
+            await prefs.setString('id', id);
+          } catch (e) {
+            showSnackBar('Token not set.');
           }
+
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => SearchScreen(),
@@ -170,6 +192,7 @@ class AuthServices {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(PhoneNumber.routeName, (route) => false);
     } else {
+      showSnackBar('Logout failed');
       throw Exception('Logout failed'); // Handle any error here
     }
   }

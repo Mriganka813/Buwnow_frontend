@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/services/cart_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/services/cart_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,8 +63,13 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
             borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
-            image: DecorationImage(
-                image: AssetImage(widget.image!), fit: BoxFit.fill),
+            image: widget.image == 'unavailable'
+                ? DecorationImage(
+                    image: AssetImage('assets/product_image.png'),
+                    fit: BoxFit.fill,
+                  )
+                : DecorationImage(
+                    image: NetworkImage(widget.image!), fit: BoxFit.fill),
           ),
         ),
         SizedBox(width: width / 30),
@@ -77,28 +82,31 @@ class _CusttomDeliverdOrderState extends State<CusttomDeliverdOrder> {
           ),
         ),
         SizedBox(width: width / 15),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.txt,
-              style: TextStyle(
-                color: notifier.getblackcolor,
-                fontSize: height / 50,
-                fontFamily: 'GilroyBold',
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.txt,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: notifier.getblackcolor,
+                  fontSize: height / 50,
+                  fontFamily: 'GilroyBold',
+                ),
               ),
-            ),
-            Text(
-              LanguageEn.pieces,
-              style: TextStyle(
-                color: notifier.getgrey,
-                fontSize: height / 60,
-                fontFamily: 'GilroyMedium',
+              Text(
+                LanguageEn.pieces,
+                style: TextStyle(
+                  color: notifier.getgrey,
+                  fontSize: height / 60,
+                  fontFamily: 'GilroyMedium',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const Spacer(),
+        // const Spacer(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [

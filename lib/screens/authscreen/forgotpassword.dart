@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/screens/authscreen/otp.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/screens/authscreen/otp.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +15,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-
   late ColorNotifier notifier;
   String? _selectedindex;
   bool isChecked = false;
@@ -51,6 +50,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -131,13 +131,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
     );
   }
+
   _showMyDialog() async {
     return showDialog(
       context: context,
       useRootNavigator: true,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(backgroundColor: notifier.getwhite,
+        return AlertDialog(
+          backgroundColor: notifier.getwhite,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -214,6 +216,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       },
     );
   }
+
   Widget dailogbutton(buttoncolor, txt, textcolor) {
     return Container(
       height: height / 16,
@@ -242,9 +245,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Container(
       height: height / 16,
       width: width / 1.1,
-      decoration:   BoxDecoration(
+      decoration: BoxDecoration(
         color: notifier.getbgfildcolor,
-
         borderRadius: const BorderRadius.all(
           Radius.circular(13),
         ),
@@ -253,7 +255,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         children: [
           SizedBox(width: width / 100),
           DropdownButtonHideUnderline(
-            child: DropdownButton<String>(dropdownColor: notifier.getbgfildcolor,
+            child: DropdownButton<String>(
+              dropdownColor: notifier.getbgfildcolor,
               hint: Row(
                 children: [
                   Image.asset("assets/flagfour.png.png", height: height / 25),

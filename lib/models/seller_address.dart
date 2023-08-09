@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class SellerAddress {
   String? locality;
   String? city;

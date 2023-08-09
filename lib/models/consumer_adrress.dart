@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 class ConsumerAddress {
   String? name;
   String? state;
   String? city;
   String? country;
-  String? phoneNumber;
+  int? phoneNumber;
   String? pinCode;
   String? streetAddress;
   String? additionalInfo;

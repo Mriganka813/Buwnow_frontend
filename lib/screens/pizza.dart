@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/custtomscreens/custtomfooditeam.dart';
-import 'package:gofoods/custtomscreens/custtomgriadeiteam.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/custtomscreens/custtomfooditeam.dart';
+import 'package:buynow/custtomscreens/custtomgriadeiteam.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

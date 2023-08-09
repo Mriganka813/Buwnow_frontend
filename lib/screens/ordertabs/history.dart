@@ -1,10 +1,12 @@
+import 'package:buynow/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtomdeliverdorder.dart';
-import 'package:gofoods/screens/track_order.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtomdeliverdorder.dart';
+import 'package:buynow/screens/track_order/screens/track_order_screen.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/order.dart';
 import '../../services/order_services.dart';
@@ -46,12 +48,13 @@ class _HistorytabsState extends State<Historytabs> {
     setState(() {
       isLoading = true;
     });
-    orderHistory = await orderServices.orderHistory(context);
+    orderHistory = await orderServices.orderHistory();
     orderLength = orderHistory.length;
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
   }
 
   getItemsLength() {
@@ -83,10 +86,11 @@ class _HistorytabsState extends State<Historytabs> {
                         itemCount: orderLength,
                         itemBuilder: (context, index) {
                           final order = orderHistory[index];
-                          final orderId = order.orderId;
+                          final orderId = order.sId;
                           final date =
                               order.createdAt.toString().substring(0, 10);
                           final List<Items>? items = orderHistory[index].items;
+                          final phoneNo = order.addresses!.phoneNumber;
 
                           return Column(
                             children: [
@@ -95,21 +99,29 @@ class _HistorytabsState extends State<Historytabs> {
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, i) {
+                                  final prodId = items[i].productId;
                                   final qty = items[i].quantity!.toInt();
                                   final prodName = items[i].productName;
                                   final prodPrice =
                                       items[i].productPrice!.toInt();
                                   final totalAmount = qty * prodPrice;
                                   final status = items[i].status;
+                                  final prodImage = items[i].productImage ?? '';
+                                  final sellerId = items[i].sellerId;
 
                                   return historyItem(
-                                      orderId!,
-                                      date,
-                                      qty,
-                                      prodName!,
-                                      prodPrice,
-                                      totalAmount,
-                                      status!);
+                                    orderId!,
+                                    date,
+                                    qty,
+                                    prodName!,
+                                    prodPrice,
+                                    totalAmount,
+                                    status!,
+                                    prodId!,
+                                    phoneNo!,
+                                    prodImage,
+                                    sellerId!,
+                                  );
                                 },
                               )
                             ],
@@ -120,98 +132,152 @@ class _HistorytabsState extends State<Historytabs> {
     );
   }
 
-  Widget estbutton(String status) {
+  Widget estbutton(String status, isCall) {
     return Container(
-      height: height / 28,
-      width: width / 2.9,
-      decoration: BoxDecoration(
-        color: notifier.getred,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-      ),
-      child: Center(
-        child: Text(
-          status.toUpperCase(),
-          style: TextStyle(
-            color: notifier.getwhite,
-            fontSize: height / 60,
-            fontFamily: 'GilroyMedium',
+        height: height / 25,
+        width: width / 2.9,
+        decoration: BoxDecoration(
+          color: notifier.getred,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget historyItem(String orderId, String date, int qty, String prodName,
-      int prodPrice, int totalAmount, String status) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(TrackOrder.routeName, arguments: {
-          'orderId': orderId,
-          'status': status,
-        });
-      },
-      child: Column(
-        children: [
-          SizedBox(height: height / 40),
-          Row(
-            children: [
-              SizedBox(width: width / 20),
-              Icon(Icons.receipt_long,
-                  color: notifier.getstarcolor, size: height / 35),
-              SizedBox(width: width / 35),
-              Expanded(
+        child: !isCall
+            ? Center(
                 child: Text(
-                  "#$orderId",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: false,
+                  status.toUpperCase(),
                   style: TextStyle(
-                    color: notifier.getblackcolor,
-                    fontFamily: 'GilroyBold',
-                    fontSize: height / 55,
+                    color: notifier.getwhite,
+                    fontSize: height / 60,
+                    fontFamily: 'GilroyMedium',
                   ),
                 ),
-              ),
-              SizedBox(
-                width: width / 50,
-              ),
-              Text(
-                date,
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.call,
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    width: width / 60,
+                  ),
+                  Text(
+                    status.toUpperCase(),
+                    style: TextStyle(
+                      color: notifier.getwhite,
+                      fontSize: height / 60,
+                      fontFamily: 'GilroyMedium',
+                    ),
+                  ),
+                ],
+              ));
+  }
+
+  Widget historyItem(
+    String orderId,
+    String date,
+    int qty,
+    String prodName,
+    int prodPrice,
+    int totalAmount,
+    String status,
+    String prodId,
+    int phoneNo,
+    String image,
+    String sellerId,
+  ) {
+    return Column(
+      children: [
+        SizedBox(height: height / 40),
+        Row(
+          children: [
+            SizedBox(width: width / 20),
+            Icon(Icons.receipt_long,
+                color: notifier.getstarcolor, size: height / 35),
+            SizedBox(width: width / 35),
+            Expanded(
+              child: Text(
+                "#$orderId",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
                 style: TextStyle(
-                  color: notifier.getgrey,
-                  fontFamily: 'GilroyMedium',
+                  color: notifier.getblackcolor,
+                  fontFamily: 'GilroyBold',
                   fontSize: height / 55,
                 ),
               ),
-              SizedBox(width: width / 20),
-            ],
-          ),
-          SizedBox(height: height / 50),
-          CusttomDeliverdOrder(
+            ),
+            SizedBox(
+              width: width / 50,
+            ),
+            Text(
+              date,
+              style: TextStyle(
+                color: notifier.getgrey,
+                fontFamily: 'GilroyMedium',
+                fontSize: height / 55,
+              ),
+            ),
+            SizedBox(width: width / 20),
+          ],
+        ),
+        SizedBox(height: height / 50),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed(TrackOrderScreen.routeName, arguments: {
+              'prodId': prodId,
+              'orderId': orderId,
+              'status': status,
+            });
+            Provider.of<UserProvider>(context, listen: false)
+                .setTotalPriceOfCartItems(totalAmount);
+            Provider.of<UserProvider>(context, listen: false)
+                .setSellerId(sellerId);
+          },
+          child: CusttomDeliverdOrder(
             id: '',
-            image: "assets/foodmenu.png",
+            image: image,
             txt: prodName,
             rate: '₹' + prodPrice.toString(),
             qty: qty,
             totalAmount: totalAmount.toString(),
           ),
-          SizedBox(height: height / 50),
-          Row(
-            children: [
-              SizedBox(width: width / 20),
-              estbutton(status),
-            ],
-          ),
-          SizedBox(height: height / 50),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Divider(color: notifier.getgrey),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: height / 50),
+        Row(
+          children: [
+            SizedBox(width: width / 20),
+            estbutton(status, false),
+            Spacer(),
+            GestureDetector(
+                onTap: () => _launchDialer(phoneNo),
+                child: estbutton('Call Shop', true)),
+            SizedBox(width: width / 20),
+          ],
+        ),
+        SizedBox(height: height / 50),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Divider(color: notifier.getgrey),
+        ),
+      ],
     );
+  }
+
+  void _launchDialer(int phoneNo) async {
+    var phoneNumber = '+91$phoneNo'; // Replace with your desired phone number
+
+    final uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
   }
 }
 

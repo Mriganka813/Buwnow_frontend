@@ -1,7 +1,7 @@
+import 'package:buynow/screens/specific_shop/screens/show_all_products.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/restorentdeal.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,11 +10,15 @@ class CusttomRestorent extends StatefulWidget {
   final String address;
   final String title;
   final String subtitle;
+  final String image;
+  final int discount;
   const CusttomRestorent({
     required this.id,
     required this.address,
     required this.title,
     required this.subtitle,
+    required this.image,
+    required this.discount,
   });
 
   @override
@@ -46,11 +50,10 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(RestorentDeal.routeName, arguments: {
+        Navigator.of(context)
+            .pushNamed(SpecificAllProductScreen.routeName, arguments: {
           'id': widget.id,
           'name': widget.title,
-          'category': widget.subtitle,
-          'address': widget.address,
         });
       },
       child: Container(
@@ -66,11 +69,20 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
           children: [
             SizedBox(width: width / 60),
             ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                "assets/foodmenu.png",
-              ),
-            ),
+                borderRadius: BorderRadius.circular(14),
+                child: widget.image.isEmpty
+                    ? Image.asset(
+                        'assets/shop_image.png',
+                        fit: BoxFit.contain,
+                        height: height / 4,
+                        width: width / 5,
+                      )
+                    : Image.network(
+                        widget.image,
+                        height: height / 4,
+                        width: width / 5,
+                        fit: BoxFit.cover,
+                      )),
             SizedBox(width: width / 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,10 +113,20 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
                         size: height / 40, color: notifier.getstarcolor),
                     Icon(Icons.star,
                         size: height / 40, color: notifier.getstarcolor),
-                    SizedBox(width: width / 12),
-                    kmtime(width / 6, Icons.location_on_outlined, "254m"),
-                    SizedBox(width: width / 50),
-                    kmtime(width / 8, Icons.timer, "27'"),
+                    SizedBox(width: width / 8),
+
+                    // kmtime(width / 6, Icons.location_on_outlined, "254m"),
+                    // SizedBox(width: width / 50),
+                    // kmtime(width / 8, Icons.timer, "27'"),
+                    widget.discount != 0
+                        ? Text(
+                            'Flat ${widget.discount}% off',
+                            style: TextStyle(
+                                color: notifier.getred,
+                                fontSize: height / 45,
+                                fontFamily: 'GilroyBold'),
+                          )
+                        : Container()
                   ],
                 ),
               ],

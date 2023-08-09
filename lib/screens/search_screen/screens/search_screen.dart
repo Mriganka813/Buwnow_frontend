@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/textfild.dart';
-import 'package:gofoods/screens/bottombar/bottombar.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/custtomscreens/textfild.dart';
+import 'package:buynow/screens/bottombar/bottombar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../custtomscreens/custtombutton.dart';
 import '../../../providers/user_provider.dart';
@@ -19,10 +20,27 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  late ColorNotifier notifier;
   final searchController = TextEditingController();
   bool isLoading = false;
   final SearchServices searchServices = SearchServices();
   List<dynamic> list = [];
+
+  getdarkmodepreviousstate() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? previusstate = prefs.getBool("setIsDark");
+    if (previusstate == null) {
+      notifier.setIsDark = false;
+    } else {
+      notifier.setIsDark = previusstate;
+    }
+  }
+
+  @override
+  void initState() {
+    getdarkmodepreviousstate();
+    super.initState();
+  }
 
   void submit() async {
     final searchText = searchController.text.trim();
@@ -61,16 +79,23 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final notifier = Provider.of<ColorNotifier>(context, listen: true);
+    notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getwhite,
       appBar: AppBar(
-        title: Text('Select location'),
+        title: Text(
+          'Select location',
+          style: TextStyle(
+            color: notifier.getblackcolor,
+            fontSize: height / 40,
+            fontFamily: 'GilroyBold',
+          ),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         elevation: 0,
         titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
-        backgroundColor: Colors.transparent,
+        backgroundColor: notifier.getwhite,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -88,9 +113,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 height: height / 20,
               ),
               Image.asset(
-                'assets/search.png',
-                height: height / 3,
-                width: width / 1.2,
+                'assets/search_img.jpg',
+                height: height / 2,
+                width: width / 1.1,
               ),
               SizedBox(
                 height: height / 15,

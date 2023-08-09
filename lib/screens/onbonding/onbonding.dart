@@ -1,9 +1,9 @@
 // import 'package:flutter/material.dart';
-// import 'package:gofoods/screens/authscreen/selectlogintype.dart';
-// import 'package:gofoods/screens/onbonding/model.dart';
-// import 'package:gofoods/utils/enstring.dart';
-// import 'package:gofoods/utils/mediaqury.dart';
-// import 'package:gofoods/utils/notifirecolor.dart';
+// import 'package:buynow/screens/authscreen/selectlogintype.dart';
+// import 'package:buynow/screens/onbonding/model.dart';
+// import 'package:buynow/utils/enstring.dart';
+// import 'package:buynow/utils/mediaqury.dart';
+// import 'package:buynow/utils/notifirecolor.dart';
 // import 'package:provider/provider.dart';
 //
 // class Home extends StatefulWidget {
@@ -205,10 +205,10 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gofoods/screens/authscreen/phonenumber.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/screens/authscreen/phonenumber.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -221,14 +221,10 @@ class Onbonding extends StatefulWidget {
 
 class _OnbondingState extends State<Onbonding> {
   final int _numPages = 3;
-  getdarkmodepreviousstate() async {
+  Future<bool?> getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
+    return previusstate;
   }
 
   late ColorNotifier notifire;
@@ -243,12 +239,18 @@ class _OnbondingState extends State<Onbonding> {
     return list;
   }
 
-  late bool isLoading;
+  bool isLoading = false;
 
   @override
   void initState() {
-    getdarkmodepreviousstate();
     super.initState();
+    getdarkmodepreviousstate().then((previusstate) {
+      if (previusstate == null) {
+        notifire.setIsDark = false;
+      } else {
+        notifire.setIsDark = previusstate;
+      }
+    });
   }
 
   Widget _indicator(bool isActive) {
@@ -271,313 +273,324 @@ class _OnbondingState extends State<Onbonding> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.light,
+              child: Stack(
+                children: [
                   Container(
-                    color: const Color(0xff2792f5),
-                    height: height,
-                    child: PageView(
-                      physics: const ClampingScrollPhysics(),
-                      controller: _pageController,
-                      onPageChanged: (int page) {
-                        setState(() {
-                          _currentPage = page;
-                        });
-                      },
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Container(
+                          color: const Color(0xff2792f5),
+                          height: height,
+                          child: PageView(
+                            physics: const ClampingScrollPhysics(),
+                            controller: _pageController,
+                            onPageChanged: (int page) {
+                              setState(() {
+                                _currentPage = page;
+                              });
+                            },
                             children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/onimage.png"),
-                                      fit: BoxFit.cover),
-                                  color: Colors.transparent,
-                                  // borderRadius: BorderRadius.only(
-                                  //   topRight: Radius.circular(50),
-                                  //   topLeft: Radius.circular(50),
-                                  // ),
-                                ),
-                                height: height,
-                                child: Center(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: height / 1.4),
-                                      Text(
-                                        LanguageEn.orderfood,
-                                        style: TextStyle(
-                                            fontFamily: 'GilroyBold',
-                                            color: notifire.getwhite,
-                                            fontSize: height / 32),
+                              SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/onimage.png"),
+                                            fit: BoxFit.cover),
+                                        color: Colors.transparent,
+                                        // borderRadius: BorderRadius.only(
+                                        //   topRight: Radius.circular(50),
+                                        //   topLeft: Radius.circular(50),
+                                        // ),
                                       ),
-                                      SizedBox(height: height / 40),
-                                      // Text(
-                                      //   LanguageEn
-                                      //       .shake,
-                                      //   textAlign: TextAlign.center,
-                                      //   style: TextStyle(
-                                      //       fontFamily: 'Gilroy_Medium',
-                                      //       color: notifire.getwhite,
-                                      //       fontSize: 14),
-                                      // ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image:
-                                          AssetImage("assets/onbondingtwo.png"),
-                                      fit: BoxFit.fill),
-                                  // color: const Color(0xff2792f5),
-                                  // borderRadius: BorderRadius.only(
-                                  //   topRight: Radius.circular(50),
-                                  //   topLeft: Radius.circular(50),
-                                  // ),
-                                ),
-                                height: height,
-                                child: Center(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: height / 1.4),
-                                      Text(
-                                        LanguageEn.finddeals,
-                                        style: TextStyle(
-                                            fontFamily: 'GilroyBold',
-                                            color: notifire.getwhite,
-                                            fontSize: height / 32),
+                                      height: height,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: height / 1.4),
+                                            Text(
+                                              LanguageEn.orderfood,
+                                              style: TextStyle(
+                                                  fontFamily: 'GilroyBold',
+                                                  color: notifire.getwhite,
+                                                  fontSize: height / 32),
+                                            ),
+                                            SizedBox(height: height / 40),
+                                            // Text(
+                                            //   LanguageEn
+                                            //       .shake,
+                                            //   textAlign: TextAlign.center,
+                                            //   style: TextStyle(
+                                            //       fontFamily: 'Gilroy_Medium',
+                                            //       color: notifire.getwhite,
+                                            //       fontSize: 14),
+                                            // ),
+                                          ],
+                                        ),
                                       ),
-                                      // SizedBox(height: height / 40),
-                                      // Text(
-                                      //   LanguageEn
-                                      //       .burgerking,
-                                      //   textAlign: TextAlign.center,
-                                      //   style: TextStyle(
-                                      //       fontFamily: 'Gilroy_Medium',
-                                      //       color: notifire.getwhite,
-                                      //       fontSize: 14),
-                                      // ),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/onbondingthree.png"),
-                                      fit: BoxFit.fill),
-                                  // color: const Color(0xff2792f5),
-                                  // borderRadius: BorderRadius.only(
-                                  //   topRight: Radius.circular(50),
-                                  //   topLeft: Radius.circular(50),
-                                  // ),
-                                ),
-                                height: height,
-                                child: Center(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: height / 1.4),
-                                      Text(
-                                        LanguageEn.showthemyoucare,
-                                        style: TextStyle(
-                                            fontFamily: 'GilroyBold',
-                                            color: notifire.getwhite,
-                                            fontSize: height / 32),
+                              ),
+                              SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/onbondingtwo.png"),
+                                            fit: BoxFit.fill),
+                                        // color: const Color(0xff2792f5),
+                                        // borderRadius: BorderRadius.only(
+                                        //   topRight: Radius.circular(50),
+                                        //   topLeft: Radius.circular(50),
+                                        // ),
                                       ),
-                                    ],
-                                  ),
+                                      height: height,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: height / 1.4),
+                                            Text(
+                                              LanguageEn.finddeals,
+                                              style: TextStyle(
+                                                  fontFamily: 'GilroyBold',
+                                                  color: notifire.getwhite,
+                                                  fontSize: height / 32),
+                                            ),
+                                            // SizedBox(height: height / 40),
+                                            // Text(
+                                            //   LanguageEn
+                                            //       .burgerking,
+                                            //   textAlign: TextAlign.center,
+                                            //   style: TextStyle(
+                                            //       fontFamily: 'Gilroy_Medium',
+                                            //       color: notifire.getwhite,
+                                            //       fontSize: 14),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
+                              ),
+                              SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/onbondingthree.png"),
+                                            fit: BoxFit.fill),
+                                        // color: const Color(0xff2792f5),
+                                        // borderRadius: BorderRadius.only(
+                                        //   topRight: Radius.circular(50),
+                                        //   topLeft: Radius.circular(50),
+                                        // ),
+                                      ),
+                                      height: height,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: height / 1.4),
+                                            Text(
+                                              LanguageEn.showthemyoucare,
+                                              style: TextStyle(
+                                                  fontFamily: 'GilroyBold',
+                                                  color: notifire.getwhite,
+                                                  fontSize: height / 32),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                  _currentPage != _numPages - 1
+                      ? Column(
+                          children: [
+                            SizedBox(height: height / 1.12),
+                            Container(
+                              color: Colors.transparent,
+                              height: height / 11,
+                              child: Align(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  PhoneNumber.routeName,
+                                                  (route) => false);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          height: height / 20,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child: Center(
+                                              child: Text(
+                                                'Skip',
+                                                style: TextStyle(
+                                                    fontFamily: 'GilroyMedium',
+                                                    color: notifire.getwhite,
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        color: Colors.transparent,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: _buildPageIndicator(),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _pageController.nextPage(
+                                              duration: const Duration(
+                                                  microseconds: 300),
+                                              curve: Curves.easeIn);
+                                        },
+                                        child: Container(
+                                            height: height / 16,
+                                            width: width / 7,
+                                            decoration: BoxDecoration(
+                                                color: notifire.getwhite,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10))),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.arrow_forward,
+                                                size: height / 30,
+                                                color: notifire.getred,
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            SizedBox(height: height / 1.12),
+                            Container(
+                              color: Colors.transparent,
+                              height: height / 11,
+                              child: Align(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  PhoneNumber.routeName,
+                                                  (route) => false);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          height: height / 20,
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child: Center(
+                                              child: Text(
+                                                'Skip',
+                                                style: TextStyle(
+                                                    fontFamily: 'GilroyMedium',
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        color: Colors.transparent,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: _buildPageIndicator(),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
+                                                  PhoneNumber.routeName,
+                                                  (route) => false);
+                                        },
+                                        child: Container(
+                                            height: height / 16,
+                                            width: width / 7,
+                                            decoration: BoxDecoration(
+                                              color: notifire.getwhite,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.done,
+                                                size: height / 30,
+                                                color: notifire.getred,
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
-            _currentPage != _numPages - 1
-                ? Column(
-                    children: [
-                      SizedBox(height: height / 1.12),
-                      Container(
-                        color: Colors.transparent,
-                        height: height / 11,
-                        child: Align(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            PhoneNumber.routeName,
-                                            (route) => false);
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    height: height / 20,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15.0),
-                                      child: Center(
-                                        child: Text(
-                                          'Skip',
-                                          style: TextStyle(
-                                              fontFamily: 'GilroyMedium',
-                                              color: notifire.getwhite,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  color: Colors.transparent,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: _buildPageIndicator(),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    _pageController.nextPage(
-                                        duration:
-                                            const Duration(microseconds: 300),
-                                        curve: Curves.easeIn);
-                                  },
-                                  child: Container(
-                                      height: height / 16,
-                                      width: width / 7,
-                                      decoration: BoxDecoration(
-                                          color: notifire.getwhite,
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.arrow_forward,
-                                          size: height / 30,
-                                          color: notifire.getred,
-                                        ),
-                                      )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      SizedBox(height: height / 1.12),
-                      Container(
-                        color: Colors.transparent,
-                        height: height / 11,
-                        child: Align(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            PhoneNumber.routeName,
-                                            (route) => false);
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    height: height / 20,
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15.0),
-                                      child: Center(
-                                        child: Text(
-                                          'Skip',
-                                          style: TextStyle(
-                                              fontFamily: 'GilroyMedium',
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  color: Colors.transparent,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: _buildPageIndicator(),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            PhoneNumber.routeName,
-                                            (route) => false);
-                                  },
-                                  child: Container(
-                                      height: height / 16,
-                                      width: width / 7,
-                                      decoration: BoxDecoration(
-                                        color: notifire.getwhite,
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.done,
-                                          size: height / 30,
-                                          color: notifire.getred,
-                                        ),
-                                      )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/screens/restorentdeal.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/screens/specific_shop/screens/restorentdeal.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../screens/specific_shop/screens/show_all_products.dart';
 
 class CusttomRecommended extends StatefulWidget {
   final String? bgimage;
@@ -48,11 +50,10 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(RestorentDeal.routeName, arguments: {
+        Navigator.of(context)
+            .pushNamed(SpecificAllProductScreen.routeName, arguments: {
           'id': widget.id,
           'name': widget.name,
-          'category': widget.category,
-          'address': widget.adressredto,
         });
       },
       child: Card(
@@ -60,7 +61,7 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          height: height / 2.6,
+          height: height / 3,
           width: width / 2.3,
           decoration: BoxDecoration(
             color: notifier.getbgfildcolor,
@@ -72,59 +73,76 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
             children: [
               Container(
                 color: Colors.transparent,
-                height: height / 5,
-                width: width / 2.2,
+                height: height / 9,
+                width: width / 3,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    widget.bgimage!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(15),
+                    child: widget.bgimage!.isEmpty
+                        ? Image.asset(
+                            'assets/shop_image.png',
+                            fit: BoxFit.contain,
+                          )
+                        : Image.network(
+                            widget.bgimage!,
+                            fit: BoxFit.contain,
+                          )),
               ),
               Row(
                 children: [
                   SizedBox(width: width / 30),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: height / 90),
-                      Text(
-                        widget.name!,
-                        style: TextStyle(
-                            color: notifier.getblackcolor,
-                            fontSize: height / 45,
-                            fontFamily: 'GilroyBold'),
-                      ),
-                      Text(
-                        widget.adressredto!,
-                        style: TextStyle(
-                            color: notifier.getgrey,
-                            fontSize: height / 65,
-                            fontFamily: 'GilroyBold'),
-                      ),
-                      SizedBox(height: height / 100),
-                      Row(
-                        children: [
-                          Icon(Icons.star,
-                              size: height / 40, color: notifier.getstarcolor),
-                          Icon(Icons.star,
-                              size: height / 40, color: notifier.getstarcolor),
-                          Icon(Icons.star,
-                              size: height / 40, color: notifier.getstarcolor),
-                          Icon(Icons.star,
-                              size: height / 40, color: notifier.getstarcolor),
-                        ],
-                      ),
-                      SizedBox(height: height / 50),
-                      Row(
-                        children: [
-                          kmtime(width / 6, Icons.location_on_outlined, "254m"),
-                          SizedBox(width: width / 50),
-                          kmtime(width / 8, Icons.timer, "27'"),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: height / 90),
+                        Text(
+                          widget.name!,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: notifier.getblackcolor,
+                              fontSize: height / 45,
+                              fontFamily: 'GilroyBold'),
+                        ),
+                        Text(
+                          widget.adressredto!,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: notifier.getgrey,
+                              fontSize: height / 65,
+                              fontFamily: 'GilroyBold'),
+                        ),
+                        SizedBox(height: height / 100),
+                        // Row(
+                        //   children: [
+                        //     Icon(Icons.star,
+                        //         size: height / 40,
+                        //         color: notifier.getstarcolor),
+                        //     Icon(Icons.star,
+                        //         size: height / 40,
+                        //         color: notifier.getstarcolor),
+                        //     Icon(Icons.star,
+                        //         size: height / 40,
+                        //         color: notifier.getstarcolor),
+                        //     Icon(Icons.star,
+                        //         size: height / 40,
+                        //         color: notifier.getstarcolor),
+                        //   ],
+                        // ),
+                        // SizedBox(height: height / 50),
+                        // Row(
+                        //   children: [
+                        //     kmtime(
+                        //         width / 6, Icons.location_on_outlined, "254m"),
+                        //     SizedBox(width: width / 50),
+                        //     kmtime(width / 8, Icons.timer, "27'"),
+                        //   ],
+                        // ),
+                      ],
+                    ),
                   ),
                 ],
               )
@@ -138,12 +156,12 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
   Widget kmtime(w, icon, txt) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const RestorentDeal(),
+        //   ),
+        // );
       },
       child: Container(
         height: height / 30,

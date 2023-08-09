@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/custtomscreens/textfild.dart';
-import 'package:gofoods/screens/authscreen/createaccount.dart';
-import 'package:gofoods/screens/authscreen/forgotpassword.dart';
-import 'package:gofoods/services/auth_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/custtomscreens/textfild.dart';
+import 'package:buynow/screens/authscreen/createaccount.dart';
+import 'package:buynow/screens/authscreen/forgotpassword.dart';
+import 'package:buynow/services/auth_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PhoneNumber extends StatefulWidget {
   static const routeName = '/sign-in-screen';
@@ -28,22 +27,14 @@ class _PhoneNumberState extends State<PhoneNumber> {
   bool isChecked = false;
   bool isLoading = false;
 
-  final AuthServices authServices = AuthServices();
+  late int currentIndex;
+  late DateTime currentBackPressTime;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifier.setIsDark = false;
-    } else {
-      notifier.setIsDark = previusstate;
-    }
-  }
+  final AuthServices authServices = AuthServices();
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
   }
 
   @override
@@ -54,7 +45,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
   }
 
   void signIn() async {
-    final email = emailController.text.trim();
+    final email = emailController.text.trim().toLowerCase();
     final password = passwordController.text.trim();
     if (email.isEmpty) {
       showSnackBar('Invalid email');
@@ -63,7 +54,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
       showSnackBar('Invalid password');
       return;
     }
-    if(mounted) {
+    if (mounted) {
       setState(() {
         isLoading = true;
       });
@@ -75,11 +66,11 @@ class _PhoneNumberState extends State<PhoneNumber> {
       password: password,
     )
         .then((value) {
-          if(mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 
@@ -87,7 +78,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    notifier = Provider.of<ColorNotifier>(context, listen: true);
+    notifier = Provider.of<ColorNotifier>(context, listen: false);
     return Scaffold(
       backgroundColor: notifier.getbgcolor,
       body: SingleChildScrollView(
@@ -174,14 +165,13 @@ class _PhoneNumberState extends State<PhoneNumber> {
             ),
             SizedBox(height: height / 60),
             Customtextfild.textField(
-              LanguageEn.enteryouremail,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.email_rounded,
-              notifier.getbgfildcolor,
-              emailController,
-              false
-            ),
+                LanguageEn.enteryouremail,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.email_rounded,
+                notifier.getbgfildcolor,
+                emailController,
+                false),
             SizedBox(height: height / 40),
             Row(
               children: [
@@ -198,14 +188,13 @@ class _PhoneNumberState extends State<PhoneNumber> {
             ),
             SizedBox(height: height / 50),
             Customtextfild.textField(
-              LanguageEn.enteryourpassword,
-              notifier.getblackcolor,
-              width / 1.13,
-              Icons.lock,
-              notifier.getbgfildcolor,
-              passwordController,
-              true
-            ),
+                LanguageEn.enteryourpassword,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.lock,
+                notifier.getbgfildcolor,
+                passwordController,
+                true),
             Row(
               children: [
                 SizedBox(width: width / 30),
@@ -237,35 +226,37 @@ class _PhoneNumberState extends State<PhoneNumber> {
                               fontSize: height / 55, color: notifier.getgrey),
                         ),
                         SizedBox(width: width / 4.9),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ForgotPassword(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            LanguageEn.forgotpassword,
-                            style: TextStyle(
-                              fontSize: height / 55,
-                              color: const Color(0xff3a71d5),
-                            ),
-                          ),
-                        )
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => const ForgotPassword(),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: Text(
+                        //     LanguageEn.forgotpassword,
+                        //     style: TextStyle(
+                        //       fontSize: height / 55,
+                        //       color: const Color(0xff3a71d5),
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: height / 13),
+            SizedBox(height: height / 20),
             GestureDetector(
               onTap: () {
                 signIn();
               },
-              child:isLoading ? CircularProgressIndicator() : button(
+              child: isLoading
+                  ? CircularProgressIndicator()
+                  : button(
                       notifier.getred,
                       notifier.getwhite,
                       LanguageEn.signin,
@@ -273,25 +264,25 @@ class _PhoneNumberState extends State<PhoneNumber> {
                     ),
             ),
 
-            Container(
-              height: height / 15,
-              width: width,
-              alignment: Alignment.center,
-              child: Text(
-                'OR',
-                textAlign: TextAlign.center,
-              ),
-            ),
+            // Container(
+            //   height: height / 15,
+            //   width: width,
+            //   alignment: Alignment.center,
+            //   child: Text(
+            //     'OR',
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                authbutton(Colors.grey.shade300, Colors.black,
-                    LanguageEn.google, width / 1.1, "assets/google.png"),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     authbutton(Colors.grey.shade300, Colors.black,
+            //         LanguageEn.google, width / 1.1, "assets/google.png"),
+            //   ],
+            // ),
 
-            SizedBox(height: height / 50),
+            SizedBox(height: height / 20),
 
             SizedBox(height: height / 50),
             Row(

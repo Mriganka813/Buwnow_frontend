@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtomexplorecaterories.dart';
-import 'package:gofoods/custtomscreens/custtomrestorent.dart';
-import 'package:gofoods/models/near_by_restorent.dart';
-import 'package:gofoods/providers/user_provider.dart';
-import 'package:gofoods/screens/bottombar/profilesetting.dart';
-import 'package:gofoods/screens/homeseeall/explorecategories.dart';
-import 'package:gofoods/screens/homeseeall/nearbyrestorent.dart';
-import 'package:gofoods/screens/restorentdeal.dart';
-import 'package:gofoods/screens/search_screen/screens/search_screen.dart';
-import 'package:gofoods/services/all_nearby_restaurants_services.dart';
-import 'package:gofoods/services/search_by_city_services.dart';
-import 'package:gofoods/services/user_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtomexplorecaterories.dart';
+import 'package:buynow/custtomscreens/custtomrestorent.dart';
+import 'package:buynow/models/near_by_restorent.dart';
+import 'package:buynow/providers/user_provider.dart';
+import 'package:buynow/screens/bottombar/profilesetting.dart';
+import 'package:buynow/screens/homeseeall/explorecategories.dart';
+import 'package:buynow/screens/homeseeall/nearbyrestorent.dart';
+import 'package:buynow/screens/search_screen/screens/search_screen.dart';
+import 'package:buynow/services/all_nearby_restaurants_services.dart';
+import 'package:buynow/services/search_by_city_services.dart';
+import 'package:buynow/services/user_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,6 +50,14 @@ class _HomePageState extends State<HomePage> {
     'Fashion',
     'Stationary',
     'Electrical',
+  ];
+  List<String> catImages = [
+    'assets/food.png',
+    'assets/shopping_bag.png',
+    'assets/medicine.png',
+    'assets/cloth.png',
+    'assets/stationary_product.png',
+    'assets/electronic.png',
   ];
 
   getdarkmodepreviousstate() async {
@@ -267,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                                               : SizedBox(
                                                   width: width / 60,
                                                 ),
-                                          ExploreCategories("assets/f1.png",
+                                          ExploreCategories(catImages[index],
                                               catName[index], height / 9),
                                         ],
                                       ),
@@ -451,7 +458,13 @@ class _HomePageState extends State<HomePage> {
                                           SizedBox(
                                             height: height / 20,
                                           ),
-                                          Text('No Nearby shops found'),
+                                          Text(
+                                            'No Nearby shops found',
+                                            style: TextStyle(
+                                                color: notifier.getgrey,
+                                                fontSize: height / 55,
+                                                fontFamily: 'GilroyMedium'),
+                                          ),
                                         ],
                                       ),
                                     )
@@ -463,18 +476,24 @@ class _HomePageState extends State<HomePage> {
                                       itemBuilder: (context, index) => Column(
                                         children: [
                                           CusttomRestorent(
-                                              id: nearbyRestaurants[index].sId!,
-                                              address: nearbyRestaurants[index]
-                                                      .address!
-                                                      .locality! +
-                                                  ',' +
-                                                  nearbyRestaurants[index]
-                                                      .address!
-                                                      .city!,
-                                              title: nearbyRestaurants[index]
-                                                  .businessName!,
-                                              subtitle: nearbyRestaurants[index]
-                                                  .businessType!),
+                                            id: nearbyRestaurants[index].sId!,
+                                            address: nearbyRestaurants[index]
+                                                    .address!
+                                                    .locality! +
+                                                ',' +
+                                                nearbyRestaurants[index]
+                                                    .address!
+                                                    .city!,
+                                            title: nearbyRestaurants[index]
+                                                .businessName!,
+                                            subtitle: nearbyRestaurants[index]
+                                                .businessType!,
+                                            image: nearbyRestaurants[index]
+                                                    .image ??
+                                                '',
+                                            discount: nearbyRestaurants[index]
+                                                .discount!,
+                                          ),
                                           SizedBox(height: height / 50),
                                         ],
                                       ),
@@ -509,12 +528,12 @@ class _HomePageState extends State<HomePage> {
   Widget kmtime(w, icon, txt) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RestorentDeal(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const RestorentDeal(),
+        //   ),
+        // );
       },
       child: Container(
         height: height / 30,

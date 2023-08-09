@@ -1,9 +1,10 @@
+import 'package:buynow/constants/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtomrestorent.dart';
-import 'package:gofoods/models/near_by_restorent.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtomrestorent.dart';
+import 'package:buynow/models/near_by_restorent.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +25,7 @@ class _NearByRestorentState extends State<NearByRestorent> {
   List<NearbyRestorentModel> restaurants = [];
   bool isLoadingMore = false;
 
-  int page = 0;
+  int page = 1;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,7 +47,10 @@ class _NearByRestorentState extends State<NearByRestorent> {
 
   Future<void> fetchNearByRestaurants() async {
     restaurants = restaurants +
-        await restaurantServices.fetchAllNearbyRestaurantsList(context);
+        await restaurantServices.fetchAllNearbyRestaurantsList(context, page);
+    if (restaurants.length == 0) {
+      showSnackBar('No shops found');
+    }
     print("restaurants: $restaurants");
     setState(() {});
   }
@@ -113,12 +117,15 @@ class _NearByRestorentState extends State<NearByRestorent> {
                     return Column(
                       children: [
                         CusttomRestorent(
-                            id: restaurants[index].sId!,
-                            address: restaurants[index].address!.locality! +
-                                ',' +
-                                restaurants[index].address!.city!,
-                            title: restaurants[index].businessName!,
-                            subtitle: restaurants[index].businessType!),
+                          id: restaurants[index].sId!,
+                          address: restaurants[index].address!.locality! +
+                              ',' +
+                              restaurants[index].address!.city!,
+                          title: restaurants[index].businessName!,
+                          subtitle: restaurants[index].businessType!,
+                          image: restaurants[index].image ?? '',
+                          discount: restaurants[index].discount!,
+                        ),
                         SizedBox(
                           height: height / 50,
                         )

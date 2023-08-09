@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/utils/mediaqury.dart';
+import 'package:buynow/utils/mediaqury.dart';
+
 Widget button(buttoncolor, buttontextcolor, txt, w) {
   return Container(
     height: height / 14,
@@ -21,4 +22,3 @@ Widget button(buttoncolor, buttontextcolor, txt, w) {
     ),
   );
 }
-

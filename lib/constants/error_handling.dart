@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
+import 'package:buynow/constants/utils.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

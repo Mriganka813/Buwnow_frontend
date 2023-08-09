@@ -1,13 +1,16 @@
-import 'package:gofoods/models/seller_address.dart';
+import 'package:buynow/models/seller_address.dart';
 
 class NearbyRestorentModel {
   SellerAddress? address;
+  int? discount;
+  bool? shopOpen;
   String? sId;
   String? email;
   String? role;
   String? businessName;
   String? businessType;
   int? phoneNumber;
+  String? image;
   int? clicks;
   String? referredBy;
   String? taxFile;
@@ -18,12 +21,15 @@ class NearbyRestorentModel {
 
   NearbyRestorentModel(
       {this.address,
+      this.discount,
+      this.shopOpen,
       this.sId,
       this.email,
       this.role,
       this.businessName,
       this.businessType,
       this.phoneNumber,
+      this.image,
       this.clicks,
       this.referredBy,
       this.taxFile,
@@ -36,12 +42,15 @@ class NearbyRestorentModel {
     address = json['address'] != null
         ? new SellerAddress.fromJson(json['address'])
         : null;
+    discount = json['discount'];
+    shopOpen = json['shopOpen'];
     sId = json['_id'];
     email = json['email'];
     role = json['role'];
     businessName = json['businessName'];
     businessType = json['businessType'];
     phoneNumber = json['phoneNumber'];
+    image = json['image'];
     clicks = json['clicks'];
     referredBy = json['referredBy'];
     taxFile = json['taxFile'];
@@ -56,12 +65,15 @@ class NearbyRestorentModel {
     if (this.address != null) {
       data['address'] = this.address!.toJson();
     }
+    data['discount'] = this.discount;
+    data['shopOpen'] = this.shopOpen;
     data['_id'] = this.sId;
     data['email'] = this.email;
     data['role'] = this.role;
     data['businessName'] = this.businessName;
     data['businessType'] = this.businessType;
     data['phoneNumber'] = this.phoneNumber;
+    data['image'] = this.image;
     data['clicks'] = this.clicks;
     data['referredBy'] = this.referredBy;
     data['taxFile'] = this.taxFile;

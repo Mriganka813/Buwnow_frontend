@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/custtomscreens/custtomexplorecaterories.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/custtomscreens/custtomexplorecaterories.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,15 +31,13 @@ class _CategoriesState extends State<Categories> {
     getdarkmodepreviousstate();
   }
 
-  List img = [
-    "assets/f1.png",
-    "assets/f2.png",
-    "assets/f3.png",
-    "assets/pizza.png",
-    "assets/foods.png",
-    "assets/dalfry.png",
-    "assets/chiken.png",
-    "assets/eggiteam.png",
+  List<String> catImages = [
+    'assets/food.png',
+    'assets/shopping_bag.png',
+    'assets/medicine.png',
+    'assets/cloth.png',
+    'assets/stationary_product.png',
+    'assets/electronic.png',
   ];
 
   @override
@@ -93,7 +91,7 @@ class _CategoriesState extends State<Categories> {
                       border: Border.all(color: notifire.getwhite),
                     ),
                     child: ExploreCategories(
-                      img[index],
+                      catImages[index],
                       catName[index],
                       height / 10,
                     ),

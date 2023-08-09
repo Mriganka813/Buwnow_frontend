@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/custtomscreens/textfild.dart';
-import 'package:gofoods/services/auth_services.dart';
-import 'package:gofoods/utils/enstring.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/custtomscreens/textfild.dart';
+import 'package:buynow/services/auth_services.dart';
+import 'package:buynow/utils/enstring.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +23,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
+  final addressController = TextEditingController();
 
   final authServices = AuthServices();
 
@@ -52,13 +53,15 @@ class _CreateAccountState extends State<CreateAccount> {
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
+    addressController.dispose();
   }
 
   void signUp() {
     final name = nameController.text.trim();
-    final email = emailController.text.trim();
+    final email = emailController.text.trim().toLowerCase();
     final phoneNo = phoneController.text.trim();
     final password = passwordController.text.trim();
+    final address = addressController.text.trim();
 
     if (name.isEmpty || name.length < 4) {
       showSnackBar('Invalid name');
@@ -71,6 +74,9 @@ class _CreateAccountState extends State<CreateAccount> {
       return;
     } else if (password.isEmpty || password.length < 8) {
       showSnackBar('Password is too short.');
+      return;
+    } else if (address.isEmpty) {
+      showSnackBar('Please enter your correspondence address');
       return;
     }
     if (mounted) {
@@ -85,6 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
       phoneNo: phoneNo,
       password: password,
       context: context,
+      address: address,
     )
         .then((value) {
       if (mounted) {
@@ -234,6 +241,29 @@ class _CreateAccountState extends State<CreateAccount> {
                 notifier.getbgfildcolor,
                 passwordController,
                 true),
+            SizedBox(height: height / 40),
+            Row(
+              children: [
+                SizedBox(width: width / 20),
+                Text(
+                  LanguageEn.address,
+                  style: TextStyle(
+                    color: notifier.getgrey,
+                    fontSize: height / 50,
+                    fontFamily: 'GilroyMedium',
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height / 50),
+            Customtextfild.textField(
+                LanguageEn.enteryouraddress,
+                notifier.getblackcolor,
+                width / 1.13,
+                Icons.location_city,
+                notifier.getbgfildcolor,
+                addressController,
+                false),
             SizedBox(height: height / 15),
             GestureDetector(
               onTap: () {
@@ -248,7 +278,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       width / 1.1,
                     ),
             ),
-            SizedBox(height: height / 50),
+            SizedBox(height: height / 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -274,6 +304,9 @@ class _CreateAccountState extends State<CreateAccount> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: height / 30,
             )
           ],
         ),

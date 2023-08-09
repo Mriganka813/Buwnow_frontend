@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/services/address_services.dart';
-import 'package:gofoods/services/order_services.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/services/address_services.dart';
+import 'package:buynow/services/order_services.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 
 import '../../ordersucsess.dart';
 import '../../../utils/enstring.dart';
@@ -19,7 +19,6 @@ Future showmodelbottomsheet({
   required String city,
   required String state,
   required String pincode,
-  required String additional,
   required String latitude,
   required String longitude,
   required AddressServices addressServices,
@@ -177,32 +176,31 @@ Future showmodelbottomsheet({
                         return;
                       }
 
-                      await addressServices.addAddress(
-                        context: context,
-                        city: city,
-                        state: state,
-                        phoneNo: phoneNo,
-                        pincode: pincode,
-                        street: street,
-                        additional: additional,
-                        latitude: latitude,
-                        longitude: longitude,
-                      );
+                      // await addressServices.addAddress(
+                      //   context: context,
+                      //   city: city,
+                      //   state: state,
+                      //   phoneNo: phoneNo,
+                      //   pincode: pincode,
+                      //   street: street,
+
+                      //   latitude: latitude,
+                      //   longitude: longitude,
+                      // );
 
                       showSnackBar('Your order is being placed...');
 
-                      await orderServices.orderPlace(
-                        context: context,
-                        name: name,
-                        state: state,
-                        city: city,
-                        phoneNo: phoneNo,
-                        pincode: pincode,
-                        streetAddress: street,
-                        additional: additional,
-                        latitude: latitude,
-                        longitude: longitude,
-                      );
+                      // await orderServices.orderPlace(
+                      //   context: context,
+                      //   name: name,
+                      //   state: state,
+                      //   city: city,
+                      //   phoneNo: phoneNo,
+                      //   pincode: pincode,
+                      //   streetAddress: street,
+                      //   latitude: latitude,
+                      //   longitude: longitude,
+                      // );
 
                       Navigator.popAndPushNamed(
                         context,

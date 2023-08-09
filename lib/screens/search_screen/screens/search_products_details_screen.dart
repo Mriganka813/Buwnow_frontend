@@ -1,13 +1,15 @@
 import 'dart:ui';
 
+import 'package:buynow/models/cart_item.dart';
+import 'package:buynow/models/product.dart';
+import 'package:buynow/screens/specific_shop/screens/show_all_products.dart';
 import 'package:flutter/material.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/custtomscreens/custtombutton.dart';
-import 'package:gofoods/screens/order_confirmation.dart/screens/orderconfirmation.dart';
-import 'package:gofoods/screens/restorentdeal.dart';
-import 'package:gofoods/services/cart_services.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/custtomscreens/custtombutton.dart';
+import 'package:buynow/screens/order_confirmation.dart/screens/orderconfirmation.dart';
+import 'package:buynow/services/cart_services.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +27,7 @@ class _SearchProductDetailsScreenState
   late ColorNotifier notifier;
 
   final CartServices cartServices = CartServices();
-  List<dynamic> cartData = [];
+  List<CartItem> cartData = [];
 
   bool isLoading = false;
 
@@ -60,18 +62,26 @@ class _SearchProductDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as dynamic;
-    final prodId = args['_id'];
-    final prodName = args['name'];
-    final price = args['sellingPrice'];
-    final quantity = args['quantity'].toString();
-    final returnPeriod = args['returnPeriod'];
-    final desc = args['description'] ?? 'This is a test description.';
-    final String image = args['image'] ?? '';
-    final sellerName = args['sellerName'] ?? '';
-    final sellerId = args['user'] ?? '';
-    final category = args['category'] ?? '';
-    final address = args['address'] ?? '';
+    final args = ModalRoute.of(context)!.settings.arguments as Product;
+    final prodId = args.sId;
+    final prodName = args.name;
+    final int price = args.sellingPrice!.toInt();
+    final quantity = args.quantity.toString();
+    final returnPeriod = args.returnPeriod;
+    final desc = 'No description available';
+    final String image = args.image ?? '';
+    final sellerName = args.sellerName ?? '';
+    final sellerId = args.user ?? '';
+    final category = '';
+    final address = '';
+    final String rating =
+        args.rating!.isEmpty ? 'No ratings' : args.rating![0].toString();
+
+    final discount = args.discount ?? 0;
+
+    final discountPrice = (price * discount) / 100;
+
+    final priceAfterDiscount = price - discountPrice;
 
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
@@ -83,30 +93,71 @@ class _SearchProductDetailsScreenState
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Stack(
-              children: [
-                SizedBox(
-                    width: double.infinity,
-                    child: image.isEmpty
-                        ? Image.asset(
-                            'assets/pizza.png',
-                            fit: BoxFit.cover,
-                          )
-                        : Image.network(
-                            image,
-                            fit: BoxFit.cover,
-                          )
-                    // FadeInImage.assetNetwork(
-                    //   placeholder: 'assets/pizza.png',
-                    //   image: image,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    ),
-                buttonArrow(context),
-                scroll(prodId, prodName, sellerName, price, quantity,
-                    returnPeriod, desc, sellerId, category, address),
-              ],
+          : SafeArea(
+              child: Stack(
+                children: [
+                  SizedBox(
+                      height: height / 2.5,
+                      width: double.infinity,
+                      child: image.isEmpty
+                          ? Image.asset(
+                              'assets/product_image.png',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              image,
+                              fit: BoxFit.cover,
+                            )
+                      // FadeInImage.assetNetwork(
+                      //   placeholder: 'assets/pizza.png',
+                      //   image: image,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      ),
+                  buttonArrow(context),
+                  scroll(
+                      prodName!,
+                      sellerName,
+                      priceAfterDiscount.toInt(),
+                      quantity,
+                      returnPeriod!,
+                      desc,
+                      sellerId,
+                      category,
+                      address,
+                      rating),
+                ],
+              ),
             ),
+      bottomNavigationBar: InkWell(
+        onTap: () async {
+          if (userQuantity > int.parse(quantity)) {
+            _showMyDialog('quantity not available');
+            return;
+          }
+          if (cartData.length > 0) {
+            if (sellerId == cartData[0].sellerId) {
+              await cartServices.addToCart(
+                  context, prodId!, userQuantity.toString());
+              showSnackBar('Item added successfully.');
+              Navigator.of(context).pushNamed(OrderConformation.routeName);
+            } else {
+              _showMyDialog(
+                  "You can not buy products from different seller at a time.");
+            }
+          } else {
+            await cartServices.addToCart(
+                context, prodId!, userQuantity.toString());
+            showSnackBar('Item added successfully.');
+            Navigator.of(context).pushNamed(OrderConformation.routeName);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          child: button(
+              notifier.getred, notifier.getwhite, 'Add to cart', width / 1.1),
+        ),
+      ),
     ));
   }
 
@@ -145,7 +196,6 @@ class _SearchProductDetailsScreenState
   }
 
   scroll(
-    String prodId,
     String prodName,
     String sellerName,
     int price,
@@ -155,6 +205,7 @@ class _SearchProductDetailsScreenState
     String sellerId,
     String category,
     String address,
+    String rating,
   ) {
     TextStyle heading = TextStyle(
         color: notifier.getblackcolor,
@@ -208,13 +259,12 @@ class _SearchProductDetailsScreenState
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(RestorentDeal.routeName, arguments: {
-                          'id': sellerId,
-                          'name': sellerName,
-                          'category': category,
-                          'address': address,
-                        });
+                        Navigator.of(context).pushNamed(
+                            SpecificAllProductScreen.routeName,
+                            arguments: {
+                              'id': sellerId,
+                              'name': sellerName,
+                            });
                       },
                       child: Text(
                         '~ by $sellerName',
@@ -233,7 +283,7 @@ class _SearchProductDetailsScreenState
                 Row(
                   children: [
                     Text(
-                      "₹${price}",
+                      "₹${price.toInt()}",
                       style: TextStyle(
                           color: notifier.getblackcolor,
                           fontSize: height / 45,
@@ -280,7 +330,7 @@ class _SearchProductDetailsScreenState
                       child: NumberPicker(
                         minValue: 1,
                         maxValue: 10,
-                        itemWidth: 30,
+                        itemWidth: width / 18,
                         value: userQuantity,
                         axis: Axis.horizontal,
                         itemHeight: 30,
@@ -313,8 +363,12 @@ class _SearchProductDetailsScreenState
                 Row(
                   children: [
                     Text(
-                      '4.0 Ratings',
+                      '$rating',
                       style: text.copyWith(color: notifier.getred),
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: notifier.getstarcolor,
                     ),
                     const Spacer(),
                     Container(
@@ -326,7 +380,7 @@ class _SearchProductDetailsScreenState
                       ),
                     ),
                     Text(
-                      "80 reviews",
+                      "No reviews",
                       style: text.copyWith(color: notifier.getred),
                     ),
                   ],
@@ -357,33 +411,6 @@ class _SearchProductDetailsScreenState
                     height: height / 80,
                   ),
                 ),
-                InkWell(
-                  onTap: () async {
-                    if (userQuantity > int.parse(totalQuantity)) {
-                      _showMyDialog('quantity not available');
-                      return;
-                    }
-                    if (cartData.length > 0) {
-                      if (sellerId == cartData[0]['product']['user']) {
-                        await cartServices.addToCart(
-                            context, prodId, userQuantity.toString());
-                        Navigator.of(context)
-                            .pushNamed(OrderConformation.routeName);
-                      } else {
-                        _showMyDialog(
-                            "You can not buy products from different seller at a time.");
-                      }
-                    } else {
-                      await cartServices.addToCart(
-                          context, prodId, userQuantity.toString());
-                      showSnackBar('Item added successfully.');
-                      Navigator.of(context)
-                          .pushNamed(OrderConformation.routeName);
-                    }
-                  },
-                  child: button(notifier.getred, notifier.getwhite,
-                      'Add to cart', width / 1.1),
-                )
               ],
             ),
           ),
@@ -396,7 +423,7 @@ class _SearchProductDetailsScreenState
     return showDialog(
       context: context,
       useRootNavigator: true,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: notifier.getwhite,
@@ -431,10 +458,12 @@ class _SearchProductDetailsScreenState
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
+                            Navigator.pushNamed(
+                                    context, OrderConformation.routeName)
+                                .then((value) => getCartData());
                           },
-                          child: dailogbutton(
-                              Colors.transparent, 'Got it!', notifier.getred),
+                          child: dailogbutton(Colors.transparent, 'Go to cart',
+                              notifier.getred),
                         ),
                       ],
                     )

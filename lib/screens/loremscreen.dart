@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gofoods/utils/mediaqury.dart';
-import 'package:gofoods/utils/notifirecolor.dart';
+import 'package:buynow/utils/mediaqury.dart';
+import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +31,7 @@ class _LoreamState extends State<Loream> {
     super.initState();
     getdarkmodepreviousstate();
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -65,14 +66,13 @@ class _LoreamState extends State<Loream> {
         children: [
           // SizedBox(height: height/5),
           Padding(
-            padding: const EdgeInsets.only(left: 22,right: 22),
+            padding: const EdgeInsets.only(left: 22, right: 22),
             child: Text(
               widget.loreamm!,
               style: TextStyle(
-                color: notifier.getblackcolor,
-                fontSize: height / 45,
-                fontFamily: 'GilroyMedium'
-              ),
+                  color: notifier.getblackcolor,
+                  fontSize: height / 45,
+                  fontFamily: 'GilroyMedium'),
             ),
           )
         ],

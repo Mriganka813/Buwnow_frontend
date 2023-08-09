@@ -1,22 +1,24 @@
 import 'dart:convert';
 
+import 'package:buynow/models/category_item.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gofoods/constants/const.dart';
-import 'package:gofoods/constants/error_handling.dart';
-import 'package:gofoods/constants/utils.dart';
-import 'package:gofoods/providers/user_provider.dart';
+import 'package:buynow/constants/const.dart';
+import 'package:buynow/constants/error_handling.dart';
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class CategoryProductServices {
-  getCategoryProducts(BuildContext context, String category) async {
+  Future<List<CategoryItem>> getCategoryProducts(
+      BuildContext context, String category, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final location = userProvider.result;
-    List<dynamic> categoryData = [];
+    List<CategoryItem> categoryData = [];
     try {
-      http.Response res = await http.get(
+      final http.Response res = await http.get(
         Uri.parse(
-            '${Const.apiV1Url}/consumer/category/${category}/location/${location}'),
+            '${Const.apiV1Url}/consumer/category/${category}/location/${location}?page=$page&limit=10'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': '${userProvider.token}'
@@ -31,11 +33,19 @@ class CategoryProductServices {
           response: res,
           context: context,
           onSuccess: () {
-            categoryData = jsonDecode(res.body) as List<dynamic>;
+            // categoryData = jsonDecode(res.body) as List<dynamic>;
+
+            final extractedData = jsonDecode(res.body.toString());
+            print('extractedData:' + extractedData.toString());
+            for (Map element in extractedData) {
+              categoryData
+                  .add(CategoryItem.fromJson(element as Map<String, dynamic>));
+            }
+            print(extractedData.toString());
           });
-      return categoryData;
     } catch (e) {
       showSnackBar('No seller available for this category.');
     }
+    return categoryData;
   }
 }
