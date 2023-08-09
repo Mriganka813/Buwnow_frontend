@@ -53,8 +53,14 @@ class TripServices {
   }
 
   /// create new trip
-  Future<String> newTrip(
-      {required NewTripInput input, required String cuteToken}) async {
+  Future<String> newTrip({
+    required NewTripInput input,
+    required String cuteToken,
+    required int amount,
+    required bool status,
+    required String orderId,
+    required String upi,
+  }) async {
     print(cuteToken);
     print(input.toMap());
     String? tripId;
@@ -74,6 +80,8 @@ class TripServices {
       tripId = data['trip']['_id'];
 
       print(tripId);
+
+      await sendTripInfoForUPI(tripId!, amount, status, upi, orderId);
     } catch (e) {
       print(e.toString());
       showSnackBar(e.toString());
@@ -99,21 +107,23 @@ class TripServices {
     bool status,
     String upi,
     String orderId,
-    String cuteToken,
   ) async {
     print(tripId);
     print(amount);
     print(status);
     print(upi);
     print(orderId);
-    print(cuteToken);
+
     try {
       final http.Response res = await http.post(
-          Uri.parse(
-              'http://65.0.7.20:8004/orderAdd/$tripId/$amount/$status/$upi/$orderId'),
-          headers: {
-            "Content-Type": "application/json",
-          });
+          Uri.parse('http://192.168.43.179:8004/trips/confirmed/orderAdd'),
+          body: jsonEncode({
+            'tripId': tripId,
+            'amount': amount,
+            'status': status,
+            'upi': upi,
+            'orderId': orderId,
+          }));
 
       print(res.statusCode);
       print('senorderid=${res.body}');

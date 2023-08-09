@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:buynow/models/category_item.dart';
+import 'package:buynow/models/near_by_restorent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:buynow/constants/const.dart';
 import 'package:buynow/constants/error_handling.dart';
@@ -10,11 +10,11 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class CategoryProductServices {
-  Future<List<CategoryItem>> getCategoryProducts(
+  Future<List<NearbyRestorentModel>> getCategoryProducts(
       BuildContext context, String category, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final location = userProvider.result;
-    List<CategoryItem> categoryData = [];
+    List<NearbyRestorentModel> categoryData = [];
     try {
       final http.Response res = await http.get(
         Uri.parse(
@@ -38,8 +38,8 @@ class CategoryProductServices {
             final extractedData = jsonDecode(res.body.toString());
             print('extractedData:' + extractedData.toString());
             for (Map element in extractedData) {
-              categoryData
-                  .add(CategoryItem.fromJson(element as Map<String, dynamic>));
+              categoryData.add(NearbyRestorentModel.fromJson(
+                  element as Map<String, dynamic>));
             }
             print(extractedData.toString());
           });

@@ -1,3 +1,4 @@
+import 'package:buynow/models/near_by_restorent.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/custtomscreens/custtomrecommended.dart';
 import 'package:buynow/services/category_products_services.dart';
@@ -5,8 +6,6 @@ import 'package:buynow/utils/mediaqury.dart';
 import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../models/category_item.dart';
 
 class RecommendedSeeall extends StatefulWidget {
   static const routeName = '/category-wise-product';
@@ -20,7 +19,7 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
   late ColorNotifier notifier;
   bool isLoading = false;
   String category = '';
-  List<CategoryItem> categoryData = [];
+  List<NearbyRestorentModel> categoryData = [];
   final scrollController = ScrollController();
 
   bool isLoadingMore = false;
@@ -119,7 +118,7 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
                     : categoryData.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisExtent: height / 4.7,
+                  mainAxisExtent: height / 4.3,
                   crossAxisSpacing: width / 50,
                   mainAxisSpacing: height / 80,
                 ),
@@ -132,12 +131,14 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
                     final id = categoryData[index].sId;
                     final category = categoryData[index].businessType;
                     final image = categoryData[index].image ?? '';
+                    final discount = categoryData[index].discount;
                     return CusttomRecommended(
                       bgimage: image,
                       adressredto: address,
                       category: category!,
                       id: id!,
                       name: name,
+                      discount: discount!,
                     );
                   } else {
                     return Center(

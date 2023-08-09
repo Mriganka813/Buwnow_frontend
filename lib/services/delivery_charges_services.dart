@@ -14,6 +14,11 @@ class DeliveryServices {
     final token = Provider.of<UserProvider>(context, listen: false).cuteToken;
     List<Vehicle> vehicles = [];
 
+    print(pickupLat);
+    print(pickupLong);
+    print(dropLat);
+    print(dropLong);
+
     try {
       final http.Response res = await http.get(
         Uri.parse(
@@ -30,7 +35,7 @@ class DeliveryServices {
           response: res,
           context: context,
           onSuccess: () {
-            final extractedData = jsonDecode(res.body)['vehicles'];
+            final extractedData = jsonDecode(res.body)['output']['vehicles'];
             print('extractedData:' + extractedData.toString());
             for (Map element in extractedData) {
               vehicles.add(Vehicle.fromJson(element as Map<String, dynamic>));

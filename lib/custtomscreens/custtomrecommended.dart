@@ -13,12 +13,14 @@ class CusttomRecommended extends StatefulWidget {
   final String? adressredto;
   final String id;
   final String category;
+  final int discount;
   const CusttomRecommended({
     required this.bgimage,
     required this.name,
     required this.adressredto,
     required this.id,
     required this.category,
+    required this.discount,
   });
 
   @override
@@ -116,6 +118,15 @@ class _CusttomRecommendedState extends State<CusttomRecommended> {
                               fontFamily: 'GilroyBold'),
                         ),
                         SizedBox(height: height / 100),
+                        widget.discount != 0
+                            ? Text(
+                                'Flat ${widget.discount}% off',
+                                style: TextStyle(
+                                    color: notifier.getred,
+                                    fontSize: height / 45,
+                                    fontFamily: 'GilroyBold'),
+                              )
+                            : Container()
                         // Row(
                         //   children: [
                         //     Icon(Icons.star,

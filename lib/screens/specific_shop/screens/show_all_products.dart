@@ -175,14 +175,18 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                             if (widget.shopId == cartData[0].sellerId) {
                               await cartServices.addToCart(
                                   context, prodId!, '1');
+                              showSnackBar('Item added successfully.');
                             } else {
                               _showMyDialog(
                                   "You can not buy products from different seller at a time.");
+                              return;
                             }
                           } else {
                             await cartServices.addToCart(context, prodId!, '1');
                             showSnackBar('Item added successfully.');
                           }
+                          Navigator.of(context)
+                              .pushNamed(OrderConformation.routeName);
                         },
                       ),
                     ),

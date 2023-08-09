@@ -106,10 +106,16 @@ void onStart(ServiceInstance service) async {
     // check whether order is confirmed
 
     if (latestOrder[0].items![0].status == 'confirmed') {
-      final tripId = await trip.newTrip(input: newTrip, cuteToken: cuteToken!);
+      await trip.newTrip(
+          input: newTrip,
+          cuteToken: cuteToken!,
+          amount: orderAmount,
+          status: isPaid,
+          orderId: latestOrder[0].sId!,
+          upi: upi);
 
-      await trip.sendTripInfoForUPI(
-          tripId, orderAmount, isPaid, upi, latestOrder[0].sId!, cuteToken);
+      // await trip.sendTripInfoForUPI(
+      //     tripId, orderAmount, isPaid, upi, latestOrder[0].sId!, cuteToken);
 
       await showNotification();
       timer.cancel();
