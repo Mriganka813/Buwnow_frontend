@@ -1,27 +1,40 @@
-import 'package:buynow/models/upi.dart';
-import 'package:buynow/providers/user_provider.dart';
-import 'package:buynow/services/upi_services.dart';
-import 'package:buynow/utils/notifirecolor.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
 
-import '../../utils/mediaqury.dart';
+import '../../../constants/utils.dart';
+import '../../../custtomscreens/custtombutton.dart';
+import '../../../models/upi.dart';
+import '../../../providers/user_provider.dart';
+import '../../../services/background_service.dart';
+import '../../../services/order_services.dart';
+import '../../../services/upi_services.dart';
+import '../../../utils/mediaqury.dart';
+import '../../../utils/notifirecolor.dart';
+import '../../ordersucsess.dart';
 
-class PayNow extends StatefulWidget {
-  static const routeName = '/pay-now';
-  const PayNow({Key? key}) : super(key: key);
+class ShowQRScreen extends StatefulWidget {
+  static const routeName = '/show-qr';
+  ShowQRScreen(
+      {required this.name, required this.phone, required this.additional});
+
+  final name;
+  final phone;
+  final additional;
 
   @override
-  State<PayNow> createState() => _PayNowState();
+  State<ShowQRScreen> createState() => _ShowQRScreenState();
 }
 
-class _PayNowState extends State<PayNow> {
+class _ShowQRScreenState extends State<ShowQRScreen> {
   late ColorNotifier notifier;
   bool isLoading = false;
   UPIModel upi = UPIModel();
   UPIServices upiServices = UPIServices();
+
+  final OrderServices orderServices = OrderServices();
 
   var myupiDetails;
 
@@ -59,9 +72,61 @@ class _PayNowState extends State<PayNow> {
     });
   }
 
+  void checkout(double lat, double long, int amount) async {
+    Placemark first = await latlngToAddress(lat, long);
+    print(first);
+    print(lat.toString());
+    print(long.toString());
+
+    // store vehicle info for background trip create
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // // order place
+    showSnackBar('your order is sending to seller');
+    await orderServices.orderPlace(
+      context: context,
+      name: widget.name,
+      state: first.administrativeArea.toString(),
+      city: first.subAdministrativeArea.toString(),
+      phoneNo: widget.phone,
+      pincode: first.postalCode.toString(),
+      streetAddress: first.street.toString(),
+      latitude: lat.toString(),
+      longitude: long.toString(),
+      additional: widget.additional,
+    );
+
+    // prefs.setInt('orderAmount', amount);
+
+    // initialize background service
+    initializeService();
+
+    prefs.setString('upi', upi.upi!);
+
+    Navigator.pushNamed(context, OrderSucsess.routeName);
+  }
+
+  Future<Placemark> latlngToAddress(double latitude, double longitude) async {
+    List<Placemark> addresses =
+        await placemarkFromCoordinates(latitude, longitude);
+    var first = addresses.first;
+    print(first.name! +
+        ',' +
+        first.subAdministrativeArea! +
+        ',' +
+        first.locality! +
+        ',' +
+        first.country! +
+        ',' +
+        first.postalCode!);
+    return first;
+  }
+
   @override
   Widget build(BuildContext context) {
     notifier = Provider.of<ColorNotifier>(context);
+    final provider = Provider.of<UserProvider>(context, listen: false);
     final blackStyle = TextStyle(
       color: notifier.getblackcolor,
       fontFamily: 'GilroyBold',
@@ -106,7 +171,7 @@ class _PayNowState extends State<PayNow> {
                   ),
                   UPIPaymentQRCode(
                     upiDetails: myupiDetails,
-                    size: 200,
+                    size: 300,
                     embeddedImagePath: 'assets/buynow.png',
                     embeddedImageSize: const Size(60, 60),
                     upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
@@ -191,6 +256,19 @@ class _PayNowState extends State<PayNow> {
                 ],
               ),
             ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () => checkout(provider.consumerLatitude!,
+            provider.consumerLongitude!, provider.subtotal),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: button(
+            notifier.getred,
+            notifier.getwhite,
+            "Confirm",
+            width / 1.1,
+          ),
+        ),
+      ),
     );
   }
 }

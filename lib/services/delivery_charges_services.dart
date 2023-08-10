@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class DeliveryServices {
+  /// delivery charge calculation
   Future<List<Vehicle>> deliveryFairCharges(double pickupLat, double pickupLong,
       double dropLat, double dropLong, BuildContext context) async {
     final token = Provider.of<UserProvider>(context, listen: false).cuteToken;

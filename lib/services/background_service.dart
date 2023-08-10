@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:buynow/models/new_trip_input.dart';
 import 'package:buynow/models/order.dart';
+import 'package:buynow/models/order_history.dart';
 import 'package:buynow/services/cute_services.dart';
 
 import 'package:buynow/services/order_services.dart';
@@ -49,7 +50,7 @@ void onStart(ServiceInstance service) async {
     }
 
     //
-    List<Order> latestOrder = [];
+    List<OrderHistory> latestOrder = [];
     OrderServices orderServices = OrderServices();
     TripServices trip = TripServices();
     NewTripInput newTrip = NewTripInput();
@@ -79,48 +80,62 @@ void onStart(ServiceInstance service) async {
     print(vehicleId);
     print(price);
 
-    newTrip = NewTripInput(
-        pickuplocation: {'lat': sellerLat, 'long': sellerLong},
-        droplocatioon: {'lat': consumerLat, 'long': consumerLong},
-        price: price,
-        serviceAreaId: serviceAreaId,
-        vehicleId: vehicleId);
+    List<String> pendingOrder = [];
 
     latestOrder = await orderServices.orderHistory();
     print('latestorder' + latestOrder.toString());
 
-    // calculate order products price
-
     int orderAmount = 0;
+    bool isPaid = true;
+    String? orderId;
 
-    for (int i = 0; i < latestOrder[0].items!.length; i++) {
-      final prodPrice = latestOrder[0].items![i].productPrice;
-      orderAmount += prodPrice!;
+    for (int i = 0; i < latestOrder.length; i++) {
+      for (int j = 0; j < latestOrder[i].recentOrders!.items!.length; j++) {
+        if (latestOrder[i].recentOrders!.items![j].status == 'pending') {
+          pendingOrder.add(latestOrder[i].recentOrders!.sId!);
+          final prodPrice = latestOrder[i].recentOrders!.items![j].productPrice;
+          orderAmount += prodPrice!;
+          isPaid = latestOrder[i].recentOrders!.isPaid!;
+          orderId = latestOrder[i].recentOrders!.sId;
+        }
+      }
     }
 
     //check isPaid status
 
-    bool isPaid = latestOrder[0].isPaid ?? true;
     final upi = prefs.getString('upi') ?? '6388415501@ybl';
+    final businessName = prefs.getString('businessName') ?? '';
+
+    newTrip = NewTripInput(
+      pickuplocation: {'lat': sellerLat, 'long': sellerLong},
+      droplocatioon: {'lat': consumerLat, 'long': consumerLong},
+      price: price,
+      serviceAreaId: serviceAreaId,
+      vehicleId: vehicleId,
+      upi: upi,
+      businessName: businessName,
+      orderId: orderId,
+      amount: orderAmount,
+      isPaid: isPaid,
+    );
 
     // check whether order is confirmed
 
-    if (latestOrder[0].items![0].status == 'confirmed') {
-      await trip.newTrip(
+    for (int i = 0; i < latestOrder.length; i++) {
+      if (pendingOrder.contains(latestOrder[i].recentOrders!.sId) &&
+          latestOrder[i].recentOrders!.items![0].status == 'confirmed') {
+        await trip.newTrip(
           input: newTrip,
           cuteToken: cuteToken!,
-          amount: orderAmount,
-          status: isPaid,
-          orderId: latestOrder[0].sId!,
-          upi: upi);
+        );
 
-      // await trip.sendTripInfoForUPI(
-      //     tripId, orderAmount, isPaid, upi, latestOrder[0].sId!, cuteToken);
-
-      await showNotification();
-      timer.cancel();
-      service.stopSelf();
-    } else if (latestOrder[0].items![0].status == 'rejected') {
+        await showNotification('Your order has accepted');
+      } else if (pendingOrder.contains(latestOrder[i]) &&
+          latestOrder[0].recentOrders!.items![0].status == 'rejected') {
+        await showNotification('Your order has rejected');
+      }
+    }
+    if (pendingOrder.isEmpty) {
       timer.cancel();
       service.stopSelf();
     }
@@ -129,7 +144,7 @@ void onStart(ServiceInstance service) async {
   });
 }
 
-Future<void> showNotification() async {
+Future<void> showNotification(String msg) async {
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'your_channel_id', // Replace with your channel ID
     'your_channel_name', // Replace with your channel name
@@ -147,7 +162,7 @@ Future<void> showNotification() async {
   await flutterLocalNotificationsPlugin.show(
     0, // Notification ID (optional)
     'BuyNow', // Notification title
-    'Your order has accepted', // Notification body
+    msg, // Notification body
     platformChannelSpecifics,
 
     payload: 'Custom_Payload', // Custom payload (optional)

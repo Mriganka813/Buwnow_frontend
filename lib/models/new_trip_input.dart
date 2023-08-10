@@ -5,6 +5,11 @@ class NewTripInput {
     this.serviceAreaId,
     this.pickuplocation,
     this.droplocatioon,
+    this.upi,
+    this.businessName,
+    this.orderId,
+    this.amount,
+    this.isPaid = true,
   });
 
   double? price;
@@ -12,6 +17,11 @@ class NewTripInput {
   String? vehicleId;
   var pickuplocation;
   var droplocatioon;
+  String? upi;
+  String? businessName;
+  String? orderId;
+  int? amount;
+  bool isPaid;
 
   Map<String, dynamic> toMap() => {
         "pickup": {
@@ -24,7 +34,12 @@ class NewTripInput {
         },
         "serviceAreaId": serviceAreaId,
         "vehicleId": vehicleId,
-        "price": price
+        "price": price,
+        "upi": upi,
+        "businessName": businessName,
+        "orderId": orderId,
+        "amount": amount,
+        "isPaid": isPaid
       };
 
   // index 0 = lat, index 1 = long

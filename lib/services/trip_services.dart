@@ -53,17 +53,12 @@ class TripServices {
   }
 
   /// create new trip
-  Future<String> newTrip({
+  newTrip({
     required NewTripInput input,
     required String cuteToken,
-    required int amount,
-    required bool status,
-    required String orderId,
-    required String upi,
   }) async {
     print(cuteToken);
     print(input.toMap());
-    String? tripId;
 
     try {
       final http.Response res = await http.post(
@@ -75,13 +70,11 @@ class TripServices {
           });
       print(res.body);
 
-      Map<String, dynamic> data = json.decode(res.body);
+      // Map<String, dynamic> data = json.decode(res.body);
 
-      tripId = data['trip']['_id'];
+      // tripId = data['trip']['_id'];
 
-      print(tripId);
-
-      await sendTripInfoForUPI(tripId!, amount, status, upi, orderId);
+      // print(tripId);
     } catch (e) {
       print(e.toString());
       showSnackBar(e.toString());
@@ -97,38 +90,5 @@ class TripServices {
     socket.on('success', (data) {
       print(data);
     });
-    return tripId!;
-  }
-
-  /// send amount,upi,tripId
-  sendTripInfoForUPI(
-    String tripId,
-    int amount,
-    bool status,
-    String upi,
-    String orderId,
-  ) async {
-    print(tripId);
-    print(amount);
-    print(status);
-    print(upi);
-    print(orderId);
-
-    try {
-      final http.Response res = await http.post(
-          Uri.parse('http://192.168.43.179:8004/trips/confirmed/orderAdd'),
-          body: jsonEncode({
-            'tripId': tripId,
-            'amount': amount,
-            'status': status,
-            'upi': upi,
-            'orderId': orderId,
-          }));
-
-      print(res.statusCode);
-      print('senorderid=${res.body}');
-    } catch (e) {
-      print(e.toString());
-    }
   }
 }

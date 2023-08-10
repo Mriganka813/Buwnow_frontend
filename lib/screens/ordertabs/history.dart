@@ -1,3 +1,4 @@
+import 'package:buynow/models/order_history.dart';
 import 'package:buynow/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/custtomscreens/custtomdeliverdorder.dart';
@@ -23,7 +24,7 @@ class _HistorytabsState extends State<Historytabs> {
 
   bool isLoading = false;
   final OrderServices orderServices = OrderServices();
-  List<Order> orderHistory = [];
+  List<OrderHistory> orderHistory = [];
   int orderLength = 0;
 
   getdarkmodepreviousstate() async {
@@ -59,7 +60,7 @@ class _HistorytabsState extends State<Historytabs> {
 
   getItemsLength() {
     for (int i = 0; i < orderHistory.length; i++) {
-      List<Items>? items = orderHistory[i].items;
+      List<Items>? items = orderHistory[i].recentOrders!.items;
       orderLength += items!.length;
     }
   }
@@ -86,11 +87,13 @@ class _HistorytabsState extends State<Historytabs> {
                         itemCount: orderLength,
                         itemBuilder: (context, index) {
                           final order = orderHistory[index];
-                          final orderId = order.sId;
-                          final date =
-                              order.createdAt.toString().substring(0, 10);
-                          final List<Items>? items = orderHistory[index].items;
-                          final phoneNo = order.addresses!.phoneNumber;
+                          final orderId = order.recentOrders!.sId;
+                          final date = order.recentOrders!.createdAt
+                              .toString()
+                              .substring(0, 10);
+                          final List<Items>? items =
+                              orderHistory[index].recentOrders!.items;
+                          final phoneNo = order.sellerNumber;
 
                           return Column(
                             children: [

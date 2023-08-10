@@ -1,12 +1,11 @@
 import 'package:buynow/constants/utils.dart';
 import 'package:buynow/models/upi.dart';
 import 'package:buynow/providers/user_provider.dart';
+import 'package:buynow/screens/payment_details/screens/show_qr_screen.dart';
 
 import 'package:buynow/services/delivery_charges_services.dart';
-import 'package:buynow/services/order_services.dart';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
@@ -14,7 +13,6 @@ import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
 import '../../../custtomscreens/custtombutton.dart';
 import '../../../models/new_trip_input.dart';
 import '../../../models/vehicle.dart';
-import '../../../services/background_service.dart';
 
 import '../../../services/trip_services.dart';
 import '../../../services/upi_services.dart';
@@ -22,7 +20,6 @@ import '../../../utils/enstring.dart';
 import '../../../utils/mediaqury.dart';
 import '../../../utils/notifirecolor.dart';
 import '../../order_confirmation.dart/widgets/show_model_bottom_sheet.dart';
-import '../../ordersucsess.dart';
 
 class PaymentDetailsScreen extends StatefulWidget {
   static const routeName = '/payment-details';
@@ -60,7 +57,6 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
 
   TripServices trip = TripServices();
 
-  final OrderServices orderServices = OrderServices();
   DeliveryServices deliveryServices = DeliveryServices();
 
   getdarkmodepreviousstate() async {
@@ -77,30 +73,6 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
   void initState() {
     super.initState();
     getdarkmodepreviousstate();
-    getUPIData();
-  }
-
-  getUPIData() async {
-    setState(() {
-      isLoading = true;
-    });
-    upi = await upiServices.getUpiDetails(context);
-    int subtotal = Provider.of<UserProvider>(context, listen: false).subtotal;
-    sellerupiDetails = UPIDetails(
-        upiID: upi.upi!,
-        payeeName: upi.businessName!,
-        amount: subtotal.toDouble());
-
-    myupiDetails = UPIDetails(
-      upiID: "6388415501@ybl",
-      payeeName: "Sachin Patel",
-      amount: subtotal.toDouble(),
-      transactionNote: 'Testing payment',
-    );
-
-    setState(() {
-      isLoading = false;
-    });
   }
 
   // void _initiateTransaction(double amount) async {
@@ -194,84 +166,10 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
         provider.consumerLatitude!,
         provider.consumerLongitude!,
         context);
-  }
-
-  void checkout(double lat, double long, int amount) async {
-    if (deliveryGroupValue == -1 || deliveryCharge == 0) {
-      showSnackBar('Please choose delivery method');
-      return;
-    }
-    // if (_groupValue == -1) {
-    //   showSnackBar('Please choose your payment method');
-    //   return;
-    // }
-
-    Placemark first = await latlngToAddress(lat, long);
-    print(first);
-    print(lat.toString());
-    print(long.toString());
-
-    // store vehicle info for background trip create
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('serviceAreaId', vehicles[0].serviceAreaId!);
     await prefs.setString('vehicleId', vehicles[0].id!);
     await prefs.setDouble('price', vehicles[0].price!);
-
-    // if (_groupValue == 0) {
-    // } else if (_groupValue == 1) {
-    //   print(total);
-    // await initiateTransaction(
-    //   merchantVpa: '6000637319-1@okbizaxis',
-    //   merchantName: 'Urban fast food',
-    //   merchantCode: 'BCR2DN4T4SUJ7PBX',
-    //   transactionRefId: 'TXN638841',
-    //   transactionNote: 'Testing payment',
-    //   orderAmount: '1',
-    //   transactionUrl: OrderSucsess.routeName,
-    // );
-    // }
-
-    // // order place
-    showSnackBar('your order is sending to seller');
-    await orderServices.orderPlace(
-      context: context,
-      name: widget.name,
-      state: first.administrativeArea.toString(),
-      city: first.subAdministrativeArea.toString(),
-      phoneNo: widget.phoneNo,
-      pincode: first.postalCode.toString(),
-      streetAddress: first.street.toString(),
-      latitude: lat.toString(),
-      longitude: long.toString(),
-      additional: widget.additional,
-    );
-
-    // prefs.setInt('orderAmount', amount);
-
-    // initialize background service
-    initializeService();
-
-    prefs.setString('upi', upi.upi!);
-
-    Navigator.pushNamed(context, OrderSucsess.routeName);
-  }
-
-  Future<Placemark> latlngToAddress(double latitude, double longitude) async {
-    List<Placemark> addresses =
-        await placemarkFromCoordinates(latitude, longitude);
-    var first = addresses.first;
-    print(first.name! +
-        ',' +
-        first.subAdministrativeArea! +
-        ',' +
-        first.locality! +
-        ',' +
-        first.country! +
-        ',' +
-        first.postalCode!);
-    return first;
   }
 
   @override
@@ -495,40 +393,16 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                 //     notifier,
                 //   ),
                 // ),
-
-                // QR code widget
-
-                upi.upi == ''
-                    ? UPIPaymentQRCode(
-                        upiDetails: myupiDetails,
-                        size: 200,
-                        embeddedImagePath: 'assets/buynow.png',
-                        embeddedImageSize: const Size(60, 60),
-                        upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
-                        qrCodeLoader:
-                            Center(child: CircularProgressIndicator()),
-                      )
-                    : UPIPaymentQRCode(
-                        upiDetails: sellerupiDetails,
-                        size: 200,
-                        embeddedImagePath: 'assets/buynow.png',
-                        embeddedImageSize: const Size(60, 60),
-                        upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
-                        qrCodeLoader:
-                            Center(child: CircularProgressIndicator()),
-                      ),
-                SizedBox(
-                  height: height / 40,
-                ),
-
-                upi.upi == ''
-                    ? Text('Upi id: ' + myupiDetails.upiID)
-                    : Text('Upi id: ' + upi.upi!),
               ],
             ),
       bottomNavigationBar: GestureDetector(
-        onTap: () => checkout(provider.consumerLatitude!,
-            provider.consumerLongitude!, provider.subtotal),
+        onTap: () {
+          Navigator.of(context).pushNamed(ShowQRScreen.routeName, arguments: {
+            'name': widget.name,
+            'phone': widget.phoneNo,
+            'additional': widget.additional,
+          });
+        },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: button(

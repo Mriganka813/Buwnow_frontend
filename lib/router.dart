@@ -1,6 +1,7 @@
 import 'package:buynow/screens/order_details/screens/order_details_screen.dart';
 import 'package:buynow/screens/ordertabs/pay_now.dart';
 import 'package:buynow/screens/payment_details/screens/payment_details_screen.dart';
+import 'package:buynow/screens/payment_details/screens/show_qr_screen.dart';
 import 'package:buynow/screens/specific_shop/screens/show_all_products.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/screens/authscreen/createaccount.dart';
@@ -113,6 +114,20 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case PayNow.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => PayNow());
+
+    case ShowQRScreen.routeName:
+      final args = routeSettings.arguments as Map<String, dynamic>;
+      final name = args['name'];
+      final phone = args['phone'];
+      final additional = args['phone'];
+
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => ShowQRScreen(
+                name: name,
+                phone: phone,
+                additional: additional,
+              ));
 
     case SpecificAllProductScreen.routeName:
       final args = routeSettings.arguments as Map<String, dynamic>;
