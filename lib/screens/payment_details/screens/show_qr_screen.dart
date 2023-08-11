@@ -78,11 +78,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
     print(lat.toString());
     print(long.toString());
 
-    // store vehicle info for background trip create
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // // order place
+    // order place
     showSnackBar('your order is sending to seller');
     await orderServices.orderPlace(
       context: context,
@@ -97,12 +93,8 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
       additional: widget.additional,
     );
 
-    // prefs.setInt('orderAmount', amount);
-
     // initialize background service
     initializeService();
-
-    prefs.setString('upi', upi.upi!);
 
     Navigator.pushNamed(context, OrderSucsess.routeName);
   }
@@ -129,7 +121,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
     final provider = Provider.of<UserProvider>(context, listen: false);
     final blackStyle = TextStyle(
       color: notifier.getblackcolor,
-      fontFamily: 'GilroyBold',
+      fontFamily: 'GilroyMedium',
       fontSize: height / 55,
     );
 
@@ -200,8 +192,13 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
                   SizedBox(
                     height: height / 60,
                   ),
+                  Text('Follow the instructions given below:',
+                      style: blackStyle.copyWith(fontFamily: 'GilroyBold')),
+                  SizedBox(
+                    height: height / 60,
+                  ),
                   Container(
-                    margin: EdgeInsets.only(left: 20),
+                    margin: EdgeInsets.only(left: 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -214,7 +211,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
                           height: height / 100,
                         ),
                         Text(
-                          '2. Open your UPI payment app (Gpay, Phonepe)',
+                          '2. Open your UPI payment app (Google pay, Phonepe)',
                           textDirection: TextDirection.ltr,
                           style: blackStyle,
                         ),

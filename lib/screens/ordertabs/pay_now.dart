@@ -64,7 +64,7 @@ class _PayNowState extends State<PayNow> {
     notifier = Provider.of<ColorNotifier>(context);
     final blackStyle = TextStyle(
       color: notifier.getblackcolor,
-      fontFamily: 'GilroyBold',
+      fontFamily: 'GilroyMedium',
       fontSize: height / 55,
     );
 
@@ -106,7 +106,7 @@ class _PayNowState extends State<PayNow> {
                   ),
                   UPIPaymentQRCode(
                     upiDetails: myupiDetails,
-                    size: 200,
+                    size: 300,
                     embeddedImagePath: 'assets/buynow.png',
                     embeddedImageSize: const Size(60, 60),
                     upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
@@ -135,8 +135,13 @@ class _PayNowState extends State<PayNow> {
                   SizedBox(
                     height: height / 60,
                   ),
+                  Text('Follow the instructions given below:',
+                      style: blackStyle.copyWith(fontFamily: 'GilroyBold')),
+                  SizedBox(
+                    height: height / 60,
+                  ),
                   Container(
-                    margin: EdgeInsets.only(left: 20),
+                    margin: EdgeInsets.only(left: 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -149,7 +154,7 @@ class _PayNowState extends State<PayNow> {
                           height: height / 100,
                         ),
                         Text(
-                          '2. Open your UPI payment app (Gpay, Phonepe)',
+                          '2. Open your UPI payment app (Google pay, Phonepe)',
                           textDirection: TextDirection.ltr,
                           style: blackStyle,
                         ),

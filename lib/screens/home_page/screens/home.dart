@@ -208,14 +208,22 @@ class _HomePageState extends State<HomePage> {
                                       child: Row(
                                         children: [
                                           SizedBox(width: width / 18),
-                                          Image.asset("assets/d.png"),
+                                          ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              child: Image.asset(
+                                                  "assets/banner1.png")),
                                           SizedBox(width: width / 20),
-                                          Image.asset("assets/e.png"),
+                                          ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              child: Image.asset(
+                                                  "assets/banner2.png")),
                                           SizedBox(width: width / 20),
-                                          Image.asset("assets/d1.png"),
-                                          SizedBox(width: width / 20),
-                                          Image.asset("assets/s.png"),
-                                          SizedBox(width: width / 20),
+                                          // Image.asset("assets/d1.png"),
+                                          // SizedBox(width: width / 20),
+                                          // Image.asset("assets/s.png"),
+                                          // SizedBox(width: width / 20),
                                         ],
                                       ),
                                     );

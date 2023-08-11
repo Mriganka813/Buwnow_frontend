@@ -39,7 +39,7 @@ class RestaurantServices {
             restaurantList = restaurantList.reversed.toList();
           });
     } catch (e) {
-      showSnackBar("No Nearby Restaurants available at this location");
+      // showSnackBar("No Nearby Restaurants available at this location");
     }
     return restaurantList;
   }

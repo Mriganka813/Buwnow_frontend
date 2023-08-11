@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:buynow/models/new_trip_input.dart';
 import 'package:buynow/models/order.dart';
-import 'package:buynow/models/order_history.dart';
 import 'package:buynow/services/cute_services.dart';
 
 import 'package:buynow/services/order_services.dart';
@@ -50,18 +49,17 @@ void onStart(ServiceInstance service) async {
     }
 
     //
-    List<OrderHistory> latestOrder = [];
+    List<Order> latestOrder = [];
     OrderServices orderServices = OrderServices();
     TripServices trip = TripServices();
     NewTripInput newTrip = NewTripInput();
-    CuteServices cuteServices = CuteServices();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final cuteToken = prefs.getString('cuteToken');
 
     Timer.periodic(Duration(minutes: 15), (timer) async {
-      await cuteServices.getNewToken();
+      await trip.getNewToken();
     });
 
     final sellerLat = prefs.getString('lat');
@@ -86,55 +84,70 @@ void onStart(ServiceInstance service) async {
     print('latestorder' + latestOrder.toString());
 
     int orderAmount = 0;
-    bool isPaid = true;
-    String? orderId;
 
     for (int i = 0; i < latestOrder.length; i++) {
-      for (int j = 0; j < latestOrder[i].recentOrders!.items!.length; j++) {
-        if (latestOrder[i].recentOrders!.items![j].status == 'pending') {
-          pendingOrder.add(latestOrder[i].recentOrders!.sId!);
-          final prodPrice = latestOrder[i].recentOrders!.items![j].productPrice;
-          orderAmount += prodPrice!;
-          isPaid = latestOrder[i].recentOrders!.isPaid!;
-          orderId = latestOrder[i].recentOrders!.sId;
-        }
+      final order = latestOrder[i];
+      if (order.items![0].status == 'pending') {
+        pendingOrder.add(latestOrder[i].sId!);
       }
     }
 
-    //check isPaid status
+    print(pendingOrder);
+    final po = prefs.getStringList('pending') ?? pendingOrder;
 
-    final upi = prefs.getString('upi') ?? '6388415501@ybl';
-    final businessName = prefs.getString('businessName') ?? '';
-
-    newTrip = NewTripInput(
-      pickuplocation: {'lat': sellerLat, 'long': sellerLong},
-      droplocatioon: {'lat': consumerLat, 'long': consumerLong},
-      price: price,
-      serviceAreaId: serviceAreaId,
-      vehicleId: vehicleId,
-      upi: upi,
-      businessName: businessName,
-      orderId: orderId,
-      amount: orderAmount,
-      isPaid: isPaid,
-    );
+    await prefs.setStringList('pending', po);
 
     // check whether order is confirmed
 
     for (int i = 0; i < latestOrder.length; i++) {
-      if (pendingOrder.contains(latestOrder[i].recentOrders!.sId) &&
-          latestOrder[i].recentOrders!.items![0].status == 'confirmed') {
+      final order = latestOrder[i];
+      print(order.sId);
+      print(po);
+      if (po.contains(order.sId) && order.items![0].status == 'confirmed') {
+        print(order.sId);
+        final Order confirmedOrder =
+            latestOrder.firstWhere((element) => element.sId == order.sId);
+
+        print('conid=${confirmedOrder.sId}');
+
+        /// calculating amount of all products
+        for (int j = 0; j < confirmedOrder.items!.length; j++) {
+          final prodPrice = confirmedOrder.items![j].productPrice;
+          orderAmount += prodPrice!;
+        }
+        print(orderAmount);
+
+        /// initializing trip
+        newTrip = NewTripInput(
+          pickuplocation: {'lat': sellerLat, 'long': sellerLong},
+          droplocatioon: {'lat': consumerLat, 'long': consumerLong},
+          price: price,
+          serviceAreaId: serviceAreaId,
+          vehicleId: vehicleId,
+          upi: confirmedOrder.sellerUpi ?? 'demoUPI@magicstep',
+          businessName: confirmedOrder.items![0].sellerName,
+          orderId: confirmedOrder.sId,
+          amount: orderAmount,
+          isPaid: confirmedOrder.isPaid!,
+        );
+
+        print(newTrip.toMap());
+
+        // creating trip
         await trip.newTrip(
           input: newTrip,
           cuteToken: cuteToken!,
         );
 
         await showNotification('Your order has accepted');
-      } else if (pendingOrder.contains(latestOrder[i]) &&
-          latestOrder[0].recentOrders!.items![0].status == 'rejected') {
+      } else if (po.contains(order.sId) &&
+          order.items![0].status == 'rejected') {
         await showNotification('Your order has rejected');
       }
     }
+    await prefs.setStringList('pending', pendingOrder);
+
+    print('no element');
     if (pendingOrder.isEmpty) {
       timer.cancel();
       service.stopSelf();

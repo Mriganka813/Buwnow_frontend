@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:buynow/services/cute_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/const.dart';
@@ -11,10 +12,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class TripServices {
   /// get all trips
-  Future<List<TripOrder>> getAllTrips(String orderType) async {
-    List<TripOrder> order = [];
-    List<TripOrder> _waitingorder = [];
-    List<TripOrder> _pastorder = [];
+  Future<List<TripModel>> getAllTrips(String orderType) async {
+    List<TripModel> order = [];
+    List<TripModel> _waitingorder = [];
+    List<TripModel> _pastorder = [];
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('cuteToken')!;
@@ -35,10 +36,10 @@ class TripServices {
         if (res[i]['status'] == "WAITING FOR DRIVER" ||
             res[i]['status'] == "CONFIRMED" ||
             res[i]['status'] == "STARTED") {
-          _waitingorder.add(TripOrder.fromMap(res[i]));
+          _waitingorder.add(TripModel.fromJson(res[i]));
           // final _waitingorder = Order.waiting(value.data['trips'][i]);
         } else if (res[i]['status'] == "COMPLETED") {
-          _pastorder.add(TripOrder.fromMap(res[i]));
+          _pastorder.add(TripModel.fromJson(res[i]));
           // final _pastorder = Order.fromMap(value.data['trips'][i]);
         }
       }
@@ -47,6 +48,8 @@ class TripServices {
     }).onError((error, stackTrace) {
       print(error);
       showSnackBar('No trips available');
+      getNewToken();
+
       throw "No trips Available";
     });
     return order;
@@ -90,5 +93,22 @@ class TripServices {
     socket.on('success', (data) {
       print(data);
     });
+  }
+
+  /// get new token
+  getNewToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String refresh_token = prefs.getString('cute_refresh_token') ?? "";
+    final http.Response response = await http
+        .get(Uri.parse('http://65.0.7.20:8004/auth/newtoken'), headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $refresh_token",
+    });
+    if ((response.statusCode) > 300) {
+      return null;
+    }
+    final String access_token = jsonDecode(response.body)['token'];
+    await prefs.setString('cuteToken', access_token);
+    await prefs.reload();
   }
 }

@@ -36,21 +36,4 @@ class CuteServices {
       showSnackBar(e.toString());
     }
   }
-
-  /// get new token
-  getNewToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String refresh_token = prefs.getString('cute_refresh_token') ?? "";
-    final http.Response response =
-        await http.get(Uri.parse('/auth/newtoken'), headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $refresh_token",
-    });
-    if ((response.statusCode) > 300) {
-      return null;
-    }
-    final String access_token = jsonDecode(response.body)['token'];
-    await prefs.setString('cuteToken', access_token);
-    await prefs.reload();
-  }
 }

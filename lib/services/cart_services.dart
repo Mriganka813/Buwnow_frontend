@@ -56,7 +56,7 @@ class CartServices {
             userProvider.setSellerLatLong(lat, long);
           });
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
     }
   }
 
@@ -89,7 +89,7 @@ class CartServices {
             cartData = cartData.reversed.toList();
           });
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
     }
     return cartData;
   }

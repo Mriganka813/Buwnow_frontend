@@ -7,6 +7,8 @@ class Order {
   bool? isPaid;
   String? consumerId;
   String? consumerName;
+  String? sellerNum;
+  String? sellerUpi;
   String? createdAt;
   int? iV;
 
@@ -17,6 +19,8 @@ class Order {
       this.isPaid,
       this.consumerId,
       this.consumerName,
+      this.sellerNum,
+      this.sellerUpi,
       this.createdAt,
       this.iV});
 
@@ -34,6 +38,8 @@ class Order {
     isPaid = json['isPaid'];
     consumerId = json['consumerId'];
     consumerName = json['consumerName'];
+    sellerNum = json['sellerNum'];
+    sellerUpi = json['sellerUpi'];
     createdAt = json['createdAt'];
     iV = json['__v'];
   }
@@ -50,6 +56,8 @@ class Order {
     data['isPaid'] = this.isPaid;
     data['consumerId'] = this.consumerId;
     data['consumerName'] = this.consumerName;
+    data['sellerNum'] = this.sellerNum;
+    data['sellerUpi'] = this.sellerUpi;
     data['createdAt'] = this.createdAt;
     data['__v'] = this.iV;
     return data;

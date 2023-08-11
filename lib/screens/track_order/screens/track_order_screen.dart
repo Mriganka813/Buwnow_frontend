@@ -10,7 +10,9 @@ import 'package:buynow/custtomscreens/custtombutton.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../services/cute_services.dart';
 import '../../../utils/mediaqury.dart';
 import '../../../utils/notifirecolor.dart';
 
@@ -32,7 +34,9 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
 
   ProductServices productServices = ProductServices();
   TripServices getAllTripsService = TripServices();
-  List<TripOrder> order = [];
+  List<TripModel> order = [];
+
+  TripServices trip = TripServices();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -47,7 +51,9 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   @override
   void initState() {
     super.initState();
+    trip.getNewToken();
     getAllTrips();
+
     getdarkmodepreviousstate();
   }
 
@@ -56,9 +62,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
       isLoading = true;
     });
     order = await getAllTripsService.getAllTrips('activeOrder');
-    if (order.length == 0) {
-      showSnackBar('No trips avaiable at this time.');
-    }
+
     setState(() {
       isLoading = false;
     });
@@ -89,6 +93,13 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
     final orderId = args['orderId'];
     final status = args['status'].toString().toLowerCase();
     final prodId = args['prodId'].toString();
+
+    TripModel? trip = order.firstWhere(
+      (element) => element.orderId == orderId,
+      orElse: () {
+        return TripModel();
+      },
+    );
 
     if (statusIndex.indexOf(status) < 1) {
       ispending = true;
@@ -286,7 +297,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     SizedBox(
                       width: width / 20,
                     ),
-                    order.length != 0
+                    trip.orderId != null
                         ? Center(
                             child: GestureDetector(
                                 onTap: () async {
@@ -296,7 +307,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              TrackOrder(order: order[0]),
+                                              TrackOrder(order: trip),
                                         ));
                                   } else {
                                     showDialog(
@@ -331,10 +342,33 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                           )
                         : Container()
                   ],
-                )
+                ),
+                SizedBox(
+                  height: height / 40,
+                ),
+                trip.driverNumber != null
+                    ? InkWell(
+                        onTap: () => _launchDialer(trip.driverNumber!),
+                        child: Center(
+                          child: button(notifier.getred, notifier.getwhite,
+                              'Call Driver', width / 1.1),
+                        ))
+                    : Container()
               ],
             ),
     );
+  }
+
+  void _launchDialer(int phoneNo) async {
+    var phoneNumber = '+91$phoneNo'; // Replace with your desired phone number
+
+    final uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
   }
 
   Future<bool?> _showDialog(String prodId) {

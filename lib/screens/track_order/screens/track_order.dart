@@ -14,7 +14,7 @@ import '../../../utils/notifirecolor.dart';
 import '../widgets/route_map.dart';
 
 class TrackOrder extends StatefulWidget {
-  TripOrder order;
+  TripModel order;
   TrackOrder({
     Key? key,
     required this.order,
@@ -53,16 +53,16 @@ class _TrackOrderState extends State<TrackOrder> {
   ///
   void connect() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('access')!;
+    String token = prefs.getString('cuteToken')!;
     print(token);
-    print(widget.order.customerSocketID);
+    print(widget.order.customerSocket);
 
     final socket = IO.io(Const.socketUrl, <String, dynamic>{
       'transports': ['websocket'],
       'query': {
         'accessToken': '$token',
         'isReconnect': false,
-        'previousId': widget.order.customerSocketID,
+        'previousId': widget.order.customerSocket,
         'role': 'CUSTOMER'
       }
     });
@@ -574,12 +574,12 @@ class _TrackOrderState extends State<TrackOrder> {
         ],
       ),
       body: RouteMap(
-          sourceLat: double.parse(widget.order.pickup_lat!),
-          sourceLang: double.parse(widget.order.pickup_long!),
-          destinationLat: double.parse(widget.order.drop_lat!),
-          destinationLang: double.parse(widget.order.drop_long!),
-          driverLat: double.parse(widget.order.driver_lat!),
-          driverLang: double.parse(widget.order.driver_long!),
+          sourceLat: double.parse(widget.order.pickup!.lat!),
+          sourceLang: double.parse(widget.order.pickup!.long!),
+          destinationLat: double.parse(widget.order.drop!.lat!),
+          destinationLang: double.parse(widget.order.drop!.long!),
+          driverLat: double.parse(widget.order.subTrips![0].start!.lat!),
+          driverLang: double.parse(widget.order.subTrips![0].start!.long!),
           socket: socket),
     );
   }

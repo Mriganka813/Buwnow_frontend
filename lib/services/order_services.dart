@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:buynow/models/order_history.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/constants/const.dart';
 
@@ -52,12 +51,12 @@ class OrderServices {
     }
   }
 
-  // order history
+  /// order history
 
-  Future<List<OrderHistory>> orderHistory() async {
+  Future<List<Order>> orderHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth-token');
-    List<OrderHistory> orderHistory = [];
+    List<Order> orderHistory = [];
     try {
       final http.Response res = await http.get(
         Uri.parse('${Const.apiV1Url}/consumer/orders/history'),
@@ -71,15 +70,14 @@ class OrderServices {
       print('order = ${res.body}');
 
       if (res.statusCode == 200) {
-        final extractedData = jsonDecode(res.body.toString());
+        final extractedData = jsonDecode(res.body)['recentOrders'];
         // print('extractedData:' + extractedData.toString());
         for (Map element in extractedData) {
-          orderHistory
-              .add(OrderHistory.fromJson(element as Map<String, dynamic>));
+          orderHistory.add(Order.fromJson(element as Map<String, dynamic>));
         }
         // print(extractedData.toString());
         orderHistory = orderHistory.reversed.toList();
-        print('orderhistory =${orderHistory[0].sellerNumber!}');
+        print('orderhistory =${orderHistory[0].sellerNum!}');
         print(orderHistory[0]);
       }
 

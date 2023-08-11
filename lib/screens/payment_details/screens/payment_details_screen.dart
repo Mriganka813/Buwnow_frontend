@@ -397,6 +397,9 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
             ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
+          if (deliveryCharge == 0) {
+            return;
+          }
           Navigator.of(context).pushNamed(ShowQRScreen.routeName, arguments: {
             'name': widget.name,
             'phone': widget.phoneNo,

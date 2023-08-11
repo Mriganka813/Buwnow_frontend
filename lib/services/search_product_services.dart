@@ -44,7 +44,7 @@ class SearchProductServices {
             print(extractedData.toString());
           });
     } catch (e) {
-      showSnackBar('No product found matching your search.');
+      // showSnackBar('No product found matching your search.');
     }
     return prodList;
   }

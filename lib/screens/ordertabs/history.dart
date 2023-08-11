@@ -1,4 +1,4 @@
-import 'package:buynow/models/order_history.dart';
+import 'package:buynow/constants/utils.dart';
 import 'package:buynow/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/custtomscreens/custtomdeliverdorder.dart';
@@ -24,7 +24,7 @@ class _HistorytabsState extends State<Historytabs> {
 
   bool isLoading = false;
   final OrderServices orderServices = OrderServices();
-  List<OrderHistory> orderHistory = [];
+  List<Order> orderHistory = [];
   int orderLength = 0;
 
   getdarkmodepreviousstate() async {
@@ -52,6 +52,11 @@ class _HistorytabsState extends State<Historytabs> {
     orderHistory = await orderServices.orderHistory();
     orderLength = orderHistory.length;
 
+    if (orderLength == 0) {
+      showSnackBar('No Orders');
+      return;
+    }
+
     if (mounted)
       setState(() {
         isLoading = false;
@@ -60,7 +65,7 @@ class _HistorytabsState extends State<Historytabs> {
 
   getItemsLength() {
     for (int i = 0; i < orderHistory.length; i++) {
-      List<Items>? items = orderHistory[i].recentOrders!.items;
+      List<Items>? items = orderHistory[i].items;
       orderLength += items!.length;
     }
   }
@@ -87,13 +92,11 @@ class _HistorytabsState extends State<Historytabs> {
                         itemCount: orderLength,
                         itemBuilder: (context, index) {
                           final order = orderHistory[index];
-                          final orderId = order.recentOrders!.sId;
-                          final date = order.recentOrders!.createdAt
-                              .toString()
-                              .substring(0, 10);
-                          final List<Items>? items =
-                              orderHistory[index].recentOrders!.items;
-                          final phoneNo = order.sellerNumber;
+                          final orderId = order.sId;
+                          final date =
+                              order.createdAt.toString().substring(0, 10);
+                          final List<Items>? items = orderHistory[index].items;
+                          final phoneNo = order.sellerNum;
 
                           return Column(
                             children: [
@@ -187,7 +190,7 @@ class _HistorytabsState extends State<Historytabs> {
     int totalAmount,
     String status,
     String prodId,
-    int phoneNo,
+    String phoneNo,
     String image,
     String sellerId,
   ) {
@@ -271,8 +274,9 @@ class _HistorytabsState extends State<Historytabs> {
     );
   }
 
-  void _launchDialer(int phoneNo) async {
-    var phoneNumber = '+91$phoneNo'; // Replace with your desired phone number
+  void _launchDialer(String phoneNo) async {
+    int phone = int.parse(phoneNo);
+    var phoneNumber = '+91$phone'; // Replace with your desired phone number
 
     final uri = Uri(scheme: 'tel', path: phoneNumber);
 
