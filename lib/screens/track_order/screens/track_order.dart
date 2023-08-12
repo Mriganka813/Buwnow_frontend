@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../../../constants/const.dart';
 import '../../../utils/mediaqury.dart';
 import '../../../utils/notifirecolor.dart';
 import '../widgets/route_map.dart';
@@ -55,9 +54,9 @@ class _TrackOrderState extends State<TrackOrder> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('cuteToken')!;
     print(token);
-    print(widget.order.customerSocket);
+    print('custSocket = ${widget.order.customerSocket}');
 
-    final socket = IO.io(Const.socketUrl, <String, dynamic>{
+    final socket = IO.io('http://65.0.7.20:8005/', <String, dynamic>{
       'transports': ['websocket'],
       'query': {
         'accessToken': '$token',
@@ -120,88 +119,6 @@ class _TrackOrderState extends State<TrackOrder> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     notifier = Provider.of<ColorNotifier>(context, listen: true);
-
-    endrideDialogue() {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          // return object of type Dialog
-          return Dialog(
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            child: Container(
-              height: 200.0,
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Are you sure you want to end the ride?",
-                    style: TextStyle(
-                      color: notifier.getgrey,
-                      fontSize: height / 40,
-                      fontFamily: 'GilroyBold',
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: (width / 3.5),
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Text(
-                            'No',
-                            style: TextStyle(
-                              color: notifier.getgrey,
-                              fontSize: height / 50,
-                              fontFamily: 'GilroyMedium',
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () async {},
-                        child: Container(
-                          width: (width / 3.5),
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Text(
-                            'Yes',
-                            style: TextStyle(
-                              color: notifier.getgrey,
-                              fontSize: height / 50,
-                              fontFamily: 'GilroyMedium',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
 
     return Scaffold(
       backgroundColor: notifier.getbgcolor,
@@ -319,148 +236,73 @@ class _TrackOrderState extends State<TrackOrder> {
                       //   '4:10 PM',
                       //   style: blackLargeTextStyle,
                       // ),
+                      // Icon(Icons.keyboard_arrow_down,
+                      //     color: notifier.getgrey, size: 24.0),
                     ],
                   ),
                 ),
                 getDevider(),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 2.0,
-                                height: 30.0,
-                                color: notifier.getgrey,
-                              ),
-                              Container(
-                                width: 30.0,
-                                height: 30.0,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Container(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Container(
-                                    width: 10.0,
-                                    height: 10.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      color: notifier.getwhite,
+
+                SizedBox(
+                  height: height / 60,
+                ),
+                StreamBuilder<Set<String>>(
+                    stream: Stream.value(notifications),
+                    builder: (context, AsyncSnapshot<Set<String>> snapshot) {
+                      if (snapshot.hasData) {
+                        Set<String>? updatedList = snapshot.data;
+
+                        if (updatedList!.length > 0) {
+                          return Container(
+                            height: 60,
+                            child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: updatedList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  height: 60,
+                                  child: Text(
+                                    updatedList.elementAt(
+                                        updatedList.length - index - 1),
+                                    style: TextStyle(
+                                      color: notifier.getred,
+                                      fontSize: height / 50,
+                                      fontFamily: 'GilroyBold',
                                     ),
                                   ),
-                                ),
-                              ),
-                              DottedLine(
-                                direction: Axis.vertical,
-                                lineLength: 50.0,
-                                lineThickness: 2.0,
-                                dashLength: 4.0,
-                                dashRadius: 0.0,
-                                dashGapLength: 4.0,
-                                dashGapColor: Colors.transparent,
-                                dashGapRadius: 0.0,
-                              ),
-                            ],
-                          ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder<Set<String>>(
-                                    stream: Stream.value(notifications),
-                                    builder: (context,
-                                        AsyncSnapshot<Set<String>> snapshot) {
-                                      if (snapshot.hasData) {
-                                        Set<String>? updatedList =
-                                            snapshot.data;
-
-                                        if (updatedList!.length > 0) {
-                                          return Container(
-                                            height: 60,
-                                            child: ListView.builder(
-                                              itemCount: updatedList.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Container(
-                                                  height: 60,
-                                                  child: Text(
-                                                    updatedList.elementAt(
-                                                        updatedList.length -
-                                                            index -
-                                                            1),
-                                                    style: TextStyle(
-                                                      color: notifier.getred,
-                                                      fontSize: height / 50,
-                                                      fontFamily: 'GilroyBold',
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          );
-                                          // Text(
-                                          //   updatedList.last,
-                                          //   style: blackHeadingTextStyle,
-                                          // );
-                                        } else {
-                                          notifications.add(
-                                              'Driver arriving at your location. \nPlease wait...');
-                                        }
-                                        return Text(
-                                          'Driver arriving at your location. \nPlease wait...',
-                                          style: TextStyle(
-                                            color: notifier.getgrey,
-                                            fontSize: height / 50,
-                                            fontFamily: 'GilroyMedium',
-                                          ),
-                                        );
-                                      } else {
-                                        return Text(
-                                          'Driver arriving at your location.\nPlease wait...',
-                                          style: TextStyle(
-                                            color: notifier.getgrey,
-                                            fontSize: height / 50,
-                                            fontFamily: 'GilroyMedium',
-                                          ),
-                                        );
-                                      }
-                                    }),
-                                // child: Text(
-                                //   'Items have been picked up',
-                                //   style: blackHeadingTextStyle,
-                                // ),
-
-                                // Text(
-                                //   'Partner have been picked up your items and is on his way to the delivery location',
-                                //   style: greySmallTextStyle,
-                                // ),
-                              ],
+                                );
+                              },
                             ),
+                          );
+                          // Text(
+                          //   updatedList.last,
+                          //   style: blackHeadingTextStyle,
+                          // );
+                        } else {
+                          notifications.add(
+                              'Driver arriving at your location. \nPlease wait...');
+                        }
+                        return Text(
+                          'Driver arriving at your location. \nPlease wait...',
+                          style: TextStyle(
+                            color: notifier.getgrey,
+                            fontSize: height / 50,
+                            fontFamily: 'GilroyMedium',
                           ),
-                        ],
-                      ),
-                      Icon(Icons.keyboard_arrow_down,
-                          color: notifier.getgrey, size: 24.0),
-                    ],
-                  ),
-                ),
+                        );
+                      } else {
+                        return Text(
+                          'Driver arriving at your location.\nPlease wait...',
+                          style: TextStyle(
+                            color: notifier.getgrey,
+                            fontSize: height / 50,
+                            fontFamily: 'GilroyMedium',
+                          ),
+                        );
+                      }
+                    }),
+
                 getDevider(),
                 // Container(
                 //   padding: EdgeInsets.all(fixPadding * 2.0),

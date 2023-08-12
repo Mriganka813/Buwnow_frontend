@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:buynow/constants/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -71,7 +72,22 @@ class _RouteMapState extends State<RouteMap> {
     });
   }
 
-  void updateDriverLocation(double lat, double lang) {
+  void trackLocation() {
+    Geolocator.getPositionStream(
+            locationSettings: LocationSettings(
+                accuracy: LocationAccuracy.high, distanceFilter: 1))
+        .listen((Position position) async {
+      widget.socket!.emit('driverLocation', {
+        'lat': position.latitude,
+        'long': position.longitude,
+      });
+
+      // Update the UI
+      await updateDriverLocation(position.latitude, position.longitude);
+    });
+  }
+
+  updateDriverLocation(double lat, double lang) {
     setState(() {
       driverLocatioon = LatLng(lat, lang);
       _markers.removeWhere(
@@ -92,6 +108,13 @@ class _RouteMapState extends State<RouteMap> {
         ImageConfiguration(devicePixelRatio: 2.5), 'assets/end2.png');
     driverIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), 'assets/driver2.png');
+  }
+
+  @override
+  void dispose() {
+    widget.socket!.disconnect();
+    widget.socket!.dispose();
+    super.dispose();
   }
 
   @override

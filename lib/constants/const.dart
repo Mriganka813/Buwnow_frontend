@@ -17,4 +17,5 @@ class Const {
   static const socketUrl = 'http://65.0.7.20:8005/';
 
   static const googleApiKey = 'AIzaSyCIJ0M2vvrymov0ZgzgR9Arx4SMAIm8_ic';
+  static const cutegoogleApiKey = 'AIzaSyBMJ21OZJZ_nids4dY3xWs6aNNJcN7dOOY';
 }

@@ -135,6 +135,7 @@ class _SearchProductDetailsScreenState
             _showMyDialog('quantity not available');
             return;
           }
+
           if (cartData.length > 0) {
             if (sellerId == cartData[0].sellerId) {
               await cartServices.addToCart(
@@ -148,6 +149,7 @@ class _SearchProductDetailsScreenState
           } else {
             await cartServices.addToCart(
                 context, prodId!, userQuantity.toString());
+
             showSnackBar('Item added successfully.');
             Navigator.of(context).pushNamed(OrderConformation.routeName);
           }

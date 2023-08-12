@@ -88,14 +88,18 @@ class TripServices {
       'query': {'accessToken': 'Bearer ${cuteToken}', 'role': 'CUSTOMER'}
     });
 
+    print('socket done');
+
     // success
     socket.on('success', (data) {
       print(data);
     });
+
+    print('connected');
   }
 
   /// get new token
-  getNewToken() async {
+  Future getNewToken() async {
     final prefs = await SharedPreferences.getInstance();
     final String refresh_token = prefs.getString('cute_refresh_token') ?? "";
     final http.Response response = await http

@@ -311,6 +311,16 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                       value: 0,
                       groupValue: deliveryGroupValue,
                       onChanged: (value) async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String? sellerLat = prefs.getString('lat');
+                        String? sellerLong = prefs.getString('long');
+
+                        if (sellerLat == null || sellerLong == null) {
+                          showSnackBar(
+                              'Please remove items from cart and add them again.');
+                          return;
+                        }
                         deliveryGroupValue = 0;
 
                         await deliveryChargeCalculation();
@@ -398,8 +408,10 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
       bottomNavigationBar: GestureDetector(
         onTap: () {
           if (deliveryCharge == 0) {
+            showSnackBar('Please choose vehicle');
             return;
           }
+
           Navigator.of(context).pushNamed(ShowQRScreen.routeName, arguments: {
             'name': widget.name,
             'phone': widget.phoneNo,

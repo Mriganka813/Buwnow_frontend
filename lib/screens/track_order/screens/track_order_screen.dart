@@ -52,19 +52,18 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 2), () async {
-      await tripService.getNewToken();
-    });
+    getAllTrips();
 
     getdarkmodepreviousstate();
-    getAllTrips();
   }
 
   getAllTrips() async {
     setState(() {
       isLoading = true;
     });
-    order = await getAllTripsService.getAllTrips('activeOrder');
+    await tripService.getNewToken().then((value) async {
+      order = await getAllTripsService.getAllTrips('activeOrder');
+    });
 
     setState(() {
       isLoading = false;
