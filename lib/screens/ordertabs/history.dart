@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/order.dart';
+import '../../services/cute_services.dart';
 import '../../services/order_services.dart';
 
 class Historytabs extends StatefulWidget {
@@ -26,6 +27,8 @@ class _HistorytabsState extends State<Historytabs> {
   final OrderServices orderServices = OrderServices();
   List<Order> orderHistory = [];
   int orderLength = 0;
+
+  final phoneController = TextEditingController();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -232,17 +235,25 @@ class _HistorytabsState extends State<Historytabs> {
         ),
         SizedBox(height: height / 50),
         GestureDetector(
-          onTap: () {
-            Navigator.of(context)
-                .pushNamed(TrackOrderScreen.routeName, arguments: {
-              'prodId': prodId,
-              'orderId': orderId,
-              'status': status,
-            });
+          onTap: () async {
             Provider.of<UserProvider>(context, listen: false)
                 .setTotalPriceOfCartItems(totalAmount);
             Provider.of<UserProvider>(context, listen: false)
                 .setSellerId(sellerId);
+
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String? token = prefs.getString('cuteToken');
+
+            if (token == null) {
+              await phoneDialog(prodId, orderId, status, context);
+            } else {
+              Navigator.of(context)
+                  .pushNamed(TrackOrderScreen.routeName, arguments: {
+                'prodId': prodId,
+                'orderId': orderId,
+                'status': status,
+              });
+            }
           },
           child: CusttomDeliverdOrder(
             id: '',
@@ -286,7 +297,99 @@ class _HistorytabsState extends State<Historytabs> {
       throw 'Could not launch $uri';
     }
   }
+
+  phoneDialog(String prodId, String orderId, String status, BuildContext ctx) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return Dialog(
+          elevation: 0.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          child: Container(
+            height: 200.0,
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Phone number",
+                  style: TextStyle(
+                    color: notifier.getblackcolor,
+                    fontFamily: 'GilroyBold',
+                    fontSize: height / 55,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                TextField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Your phone number',
+                    hintStyle: TextStyle(
+                      color: notifier.getgrey,
+                      fontFamily: 'GilroyMedium',
+                      fontSize: height / 55,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        CuteServices cuteServices = CuteServices();
+                        int statuscode = await cuteServices.cuteLogin(
+                            context, phoneController.text);
+
+                        if (statuscode == 200) {
+                          Navigator.of(ctx).pushNamed(
+                              TrackOrderScreen.routeName,
+                              arguments: {
+                                'prodId': prodId,
+                                'orderId': orderId,
+                                'status': status,
+                              });
+                        } else {
+                          return;
+                        }
+                      },
+                      child: Container(
+                        width: (width / 3.5),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Text(
+                          'Done',
+                          style: TextStyle(
+                            color: notifier.getred,
+                            fontFamily: 'GilroyBold',
+                            fontSize: height / 55,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+
+
 
 // SizedBox(height: height / 30),
 // SizedBox(height: height / 50),

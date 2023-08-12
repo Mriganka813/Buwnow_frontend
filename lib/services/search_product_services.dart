@@ -7,7 +7,6 @@ import 'package:buynow/constants/error_handling.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../constants/utils.dart';
 import '../providers/user_provider.dart';
 
 class SearchProductServices {

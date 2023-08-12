@@ -58,7 +58,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       return;
     }
 
-    await cuteServices.cuteLogin(context, phone);
+    int statuscode = await cuteServices.cuteLogin(context, phone);
+
+    if (statuscode > 300) {
+      return;
+    }
 
     Navigator.of(context).pushNamed(PaymentDetailsScreen.routeName, arguments: {
       'name': name,

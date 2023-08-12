@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:buynow/services/cute_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/const.dart';
@@ -84,7 +83,7 @@ class TripServices {
     }
     // start socket for very first time to update socket id to database
 
-    IO.Socket socket = IO.io(Const.socketUrl, <String, dynamic>{
+    IO.Socket socket = IO.io('http://65.0.7.20:8005/', <String, dynamic>{
       'transports': ['websocket'],
       'query': {'accessToken': 'Bearer ${cuteToken}', 'role': 'CUSTOMER'}
     });

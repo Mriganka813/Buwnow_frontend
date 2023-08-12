@@ -8,8 +8,6 @@ import 'package:buynow/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../constants/utils.dart';
-
 class RestaurantServices {
   Future<List<NearbyRestorentModel>> fetchAllNearbyRestaurantsList(
       BuildContext context, int page) async {

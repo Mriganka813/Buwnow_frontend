@@ -3,7 +3,6 @@ import 'package:buynow/constants/utils.dart';
 import 'package:buynow/custtomscreens/custtombutton.dart';
 import 'package:buynow/custtomscreens/textfild.dart';
 import 'package:buynow/screens/authscreen/createaccount.dart';
-import 'package:buynow/screens/authscreen/forgotpassword.dart';
 import 'package:buynow/services/auth_services.dart';
 import 'package:buynow/utils/enstring.dart';
 import 'package:buynow/utils/mediaqury.dart';
@@ -210,7 +209,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
                     value: isChecked,
                     onChanged: (bool? value) {
                       setState(() {
-                        isChecked = value!;
+                        isChecked = value ?? false;
                       });
                     },
                   ),
@@ -381,37 +380,37 @@ class _PhoneNumberState extends State<PhoneNumber> {
   //   );
   // }
 
-  Widget authbutton(buttoncolor, buttontextcolor, txt, w, image) {
-    return Container(
-      height: height / 14,
-      width: w,
-      decoration: BoxDecoration(
-        color: buttoncolor,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(15),
-        ),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              image,
-              height: height / 30,
-            ),
-            SizedBox(width: width / 30),
-            Text(
-              txt,
-              style: TextStyle(
-                  color: buttontextcolor,
-                  fontSize: height / 50,
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget authbutton(buttoncolor, buttontextcolor, txt, w, image) {
+  //   return Container(
+  //     height: height / 14,
+  //     width: w,
+  //     decoration: BoxDecoration(
+  //       color: buttoncolor,
+  //       borderRadius: const BorderRadius.all(
+  //         Radius.circular(15),
+  //       ),
+  //     ),
+  //     child: Center(
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Image.asset(
+  //             image,
+  //             height: height / 30,
+  //           ),
+  //           SizedBox(width: width / 30),
+  //           Text(
+  //             txt,
+  //             style: TextStyle(
+  //                 color: buttontextcolor,
+  //                 fontSize: height / 50,
+  //                 fontWeight: FontWeight.bold),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // _showMyDialog() async {
   //   return showDialog(
@@ -497,29 +496,29 @@ class _PhoneNumberState extends State<PhoneNumber> {
   //   );
   // }
 
-  Widget dailogbutton(buttoncolor, txt, textcolor) {
-    return Container(
-      height: height / 16,
-      width: width / 3.8,
-      decoration: BoxDecoration(
-        color: buttoncolor,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(13),
-        ),
-        // border: Border.all(color: bordercolor),
-      ),
-      child: Center(
-        child: Text(
-          txt,
-          style: TextStyle(
-            color: textcolor,
-            fontSize: height / 50,
-            fontFamily: 'GilroyMedium',
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget dailogbutton(buttoncolor, txt, textcolor) {
+  //   return Container(
+  //     height: height / 16,
+  //     width: width / 3.8,
+  //     decoration: BoxDecoration(
+  //       color: buttoncolor,
+  //       borderRadius: const BorderRadius.all(
+  //         Radius.circular(13),
+  //       ),
+  //       // border: Border.all(color: bordercolor),
+  //     ),
+  //     child: Center(
+  //       child: Text(
+  //         txt,
+  //         style: TextStyle(
+  //           color: textcolor,
+  //           fontSize: height / 50,
+  //           fontFamily: 'GilroyMedium',
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Widget mobailnotextfild(TextEditingController controller) {
   //   return Container(

@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:buynow/models/new_trip_input.dart';
 import 'package:buynow/models/order.dart';
-import 'package:buynow/services/cute_services.dart';
 
 import 'package:buynow/services/order_services.dart';
 import 'package:buynow/services/trip_services.dart';

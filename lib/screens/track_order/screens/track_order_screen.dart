@@ -1,7 +1,7 @@
-import 'package:buynow/constants/utils.dart';
 import 'package:buynow/models/trip_order.dart';
 import 'package:buynow/screens/ordertabs/pay_now.dart';
 import 'package:buynow/screens/track_order/screens/track_order.dart';
+import 'package:buynow/services/cute_services.dart';
 import 'package:buynow/services/product_services.dart';
 import 'package:buynow/services/trip_services.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../services/cute_services.dart';
 import '../../../utils/mediaqury.dart';
 import '../../../utils/notifirecolor.dart';
 
@@ -36,10 +35,11 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   TripServices getAllTripsService = TripServices();
   List<TripModel> order = [];
 
-  TripServices trip = TripServices();
+  TripServices tripService = TripServices();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
+
     bool? previusstate = prefs.getBool("setIsDark");
     if (previusstate == null) {
       notifier.setIsDark = false;
@@ -51,10 +51,13 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   @override
   void initState() {
     super.initState();
-    trip.getNewToken();
-    getAllTrips();
+
+    Future.delayed(Duration(seconds: 2), () async {
+      await tripService.getNewToken();
+    });
 
     getdarkmodepreviousstate();
+    getAllTrips();
   }
 
   getAllTrips() async {
@@ -116,6 +119,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
       isontheway = true;
       isdeliver = true;
     }
+
     return Scaffold(
       backgroundColor: notifier.getwhite,
       appBar: AppBar(

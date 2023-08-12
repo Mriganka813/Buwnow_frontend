@@ -15,6 +15,8 @@ class NearbyRestorentModel {
   String? referredBy;
   String? taxFile;
   String? upiId;
+  String? openingTime;
+  String? closingTime;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -34,6 +36,8 @@ class NearbyRestorentModel {
       this.referredBy,
       this.taxFile,
       this.upiId,
+      this.openingTime,
+      this.closingTime,
       this.createdAt,
       this.updatedAt,
       this.iV});
@@ -55,6 +59,8 @@ class NearbyRestorentModel {
     referredBy = json['referredBy'];
     taxFile = json['taxFile'];
     upiId = json['upi_id'];
+    openingTime = json['openingTime'];
+    closingTime = json['closingTime'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -78,6 +84,8 @@ class NearbyRestorentModel {
     data['referredBy'] = this.referredBy;
     data['taxFile'] = this.taxFile;
     data['upi_id'] = this.upiId;
+    data['openingTime'] = this.openingTime;
+    data['closingTime'] = this.closingTime;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;

@@ -2,8 +2,12 @@ import 'package:buynow/screens/specific_shop/screens/show_all_products.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/utils/mediaqury.dart';
 import 'package:buynow/utils/notifirecolor.dart';
+import 'package:intl/intl.dart';
+import 'package:ntp/ntp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../constants/utils.dart';
 
 class CusttomRestorent extends StatefulWidget {
   final String id;
@@ -12,13 +16,19 @@ class CusttomRestorent extends StatefulWidget {
   final String subtitle;
   final String image;
   final int discount;
-  const CusttomRestorent({
+  final bool shopOpen;
+  String? openTime;
+  String? closeTime;
+  CusttomRestorent({
     required this.id,
     required this.address,
     required this.title,
     required this.subtitle,
     required this.image,
     required this.discount,
+    required this.shopOpen,
+    this.openTime,
+    this.closeTime,
   });
 
   @override
@@ -49,7 +59,41 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
     width = MediaQuery.of(context).size.width;
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        if (!widget.shopOpen) {
+          showSnackBar('This shop is not available right now');
+          return;
+        }
+
+        DateTime optime = DateFormat.Hm().parse(widget.openTime ?? '10:00');
+        DateTime cltime = DateFormat.Hm().parse(widget.closeTime ?? '22:00');
+
+        // final ophour = optime.hour;
+        // final opminute = optime.minute;
+
+        // final clhour = cltime.hour;
+        // final clminute = cltime.minute;
+
+        print(optime);
+        print(cltime);
+
+        // Synchronize with an NTP server
+        DateTime currentTime = await NTP.now();
+
+        if (currentTime.hour < optime.hour ||
+            (currentTime.hour == optime.hour &&
+                currentTime.minute < optime.minute)) {
+          showSnackBar(
+              'This shop is available from ${optime.hour}:${optime.minute.isOdd} to ${cltime.hour}:${cltime.minute}');
+          return;
+        } else if (currentTime.hour > cltime.hour ||
+            (currentTime.hour == cltime.hour &&
+                currentTime.minute > cltime.minute)) {
+          showSnackBar(
+              'This shop is available from ${optime.hour}:${optime.minute} to ${cltime.hour}:${cltime.minute}');
+          return;
+        }
+
         Navigator.of(context)
             .pushNamed(SpecificAllProductScreen.routeName, arguments: {
           'id': widget.id,

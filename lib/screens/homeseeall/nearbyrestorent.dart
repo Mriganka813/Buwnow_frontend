@@ -114,17 +114,20 @@ class _NearByRestorentState extends State<NearByRestorent> {
                 controller: scrollController,
                 itemBuilder: (context, index) {
                   if (index < restaurants.length) {
+                    final rt = restaurants[index];
                     return Column(
                       children: [
                         CusttomRestorent(
-                          id: restaurants[index].sId!,
-                          address: restaurants[index].address!.locality! +
-                              ',' +
-                              restaurants[index].address!.city!,
-                          title: restaurants[index].businessName!,
-                          subtitle: restaurants[index].businessType!,
-                          image: restaurants[index].image ?? '',
-                          discount: restaurants[index].discount!,
+                          openTime: rt.openingTime,
+                          closeTime: rt.closingTime,
+                          shopOpen: rt.shopOpen!,
+                          id: rt.sId!,
+                          address:
+                              rt.address!.locality! + ',' + rt.address!.city!,
+                          title: rt.businessName!,
+                          subtitle: rt.businessType!,
+                          image: rt.image ?? '',
+                          discount: rt.discount!,
                         ),
                         SizedBox(
                           height: height / 50,

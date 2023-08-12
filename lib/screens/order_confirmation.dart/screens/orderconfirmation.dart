@@ -56,22 +56,6 @@ class _OrderConformationState extends State<OrderConformation> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero, () {
-    //   if (args != null) {
-    //     args = ModalRoute.of(context)!.settings.arguments
-    //             as Map<String, dynamic> ??
-    //         {};
-    //     userName = args!['name'] ?? '';
-    //     phoneNumber = args!['phoneNumber'] ?? '';
-    //     street = args!['street'] ?? '';
-    //     city = args!['city'] ?? '';
-    //     state = args!['state'] ?? '';
-    //     pincode = args!['pincode'] ?? '';
-
-    //     address = street + ',' + city + "," + state + "," + pincode;
-    //     print(address);
-    //   }
-    // });
     getdarkmodepreviousstate();
     getCartData();
   }

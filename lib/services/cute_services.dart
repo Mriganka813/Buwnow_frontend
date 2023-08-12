@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 class CuteServices {
   /// cute login
   cuteLogin(BuildContext context, String phoneNo) async {
+    int? statuscode;
     try {
       final http.Response res =
           await http.post(Uri.parse('http://65.0.7.20:8004/auth/login'), body: {
@@ -18,6 +19,7 @@ class CuteServices {
         'password': "qwertyuiop",
       });
       print(res.body);
+      statuscode = res.statusCode;
       if (res.statusCode == 200) {
         final token = jsonDecode(res.body)['tokens'];
         final accessToken = token['access'];
@@ -30,10 +32,10 @@ class CuteServices {
         print(accessToken);
       } else {
         showSnackBar('This number is not registered in this app.');
-        return;
       }
     } catch (e) {
       showSnackBar(e.toString());
     }
+    return statuscode;
   }
 }

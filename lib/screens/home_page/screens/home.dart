@@ -481,31 +481,28 @@ class _HomePageState extends State<HomePage> {
                                       padding: EdgeInsets.zero,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemCount: nearbyRestaurants.length,
-                                      itemBuilder: (context, index) => Column(
-                                        children: [
-                                          CusttomRestorent(
-                                            id: nearbyRestaurants[index].sId!,
-                                            address: nearbyRestaurants[index]
-                                                    .address!
-                                                    .locality! +
-                                                ',' +
-                                                nearbyRestaurants[index]
-                                                    .address!
-                                                    .city!,
-                                            title: nearbyRestaurants[index]
-                                                .businessName!,
-                                            subtitle: nearbyRestaurants[index]
-                                                .businessType!,
-                                            image: nearbyRestaurants[index]
-                                                    .image ??
-                                                '',
-                                            discount: nearbyRestaurants[index]
-                                                .discount!,
-                                          ),
-                                          SizedBox(height: height / 50),
-                                        ],
-                                      ),
-                                    ),
+                                      itemBuilder: (context, index) {
+                                        final nr = nearbyRestaurants[index];
+
+                                        return Column(
+                                          children: [
+                                            CusttomRestorent(
+                                              openTime: nr.openingTime,
+                                              closeTime: nr.closingTime,
+                                              shopOpen: nr.shopOpen!,
+                                              id: nr.sId!,
+                                              address: nr.address!.locality! +
+                                                  ',' +
+                                                  nr.address!.city!,
+                                              title: nr.businessName!,
+                                              subtitle: nr.businessType!,
+                                              image: nr.image ?? '',
+                                              discount: nr.discount!,
+                                            ),
+                                            SizedBox(height: height / 50),
+                                          ],
+                                        );
+                                      }),
 
                               // CusttomRestorent("assets/foodmenu.png",
                               //     LanguageEn.savorbread, LanguageEn.banhmimilk),

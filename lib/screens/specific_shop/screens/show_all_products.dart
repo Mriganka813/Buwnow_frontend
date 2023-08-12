@@ -153,6 +153,10 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
 
                   return InkWell(
                     onTap: () {
+                      if (!(product.available!)) {
+                        showSnackBar('Product is not available right now');
+                        return;
+                      }
                       Navigator.of(context).pushNamed(
                         SearchProductDetailsScreen.routeName,
                         arguments: products[index],
@@ -171,6 +175,10 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                         image: image,
                         isShopProduct: true,
                         onAddTap: () async {
+                          if (!(product.available!)) {
+                            showSnackBar('Product is not available right now');
+                            return;
+                          }
                           if (cartData.length > 0) {
                             if (widget.shopId == cartData[0].sellerId) {
                               await cartServices.addToCart(
