@@ -111,8 +111,8 @@ void onStart(ServiceInstance service) async {
 
         /// calculating amount of all products
         for (int j = 0; j < confirmedOrder.items!.length; j++) {
-          final prodPrice = confirmedOrder.items![j].productPrice;
-          orderAmount += prodPrice!;
+          final prodPrice = confirmedOrder.items![j].productPrice!.toInt();
+          orderAmount += prodPrice;
         }
         print(orderAmount);
 

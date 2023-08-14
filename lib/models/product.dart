@@ -2,7 +2,7 @@ class Product {
   String? sId;
   String? name;
   String? image;
-  int? purchasePrice;
+  // int? purchasePrice;
   int? sellingPrice;
   int? returnPeriod;
   int? quantity;
@@ -22,7 +22,7 @@ class Product {
       {this.sId,
       this.name,
       this.image,
-      this.purchasePrice,
+      // this.purchasePrice,
       this.sellingPrice,
       this.returnPeriod,
       this.quantity,
@@ -41,7 +41,7 @@ class Product {
     sId = json['_id'];
     name = json['name'];
     image = json['image'];
-    purchasePrice = json['purchasePrice'];
+    // purchasePrice = json['purchasePrice']?.toInt();
     sellingPrice = json['sellingPrice'].toInt();
     returnPeriod = json['returnPeriod'];
     quantity = json['quantity'];
@@ -62,7 +62,7 @@ class Product {
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['image'] = this.image;
-    data['purchasePrice'] = this.purchasePrice;
+    // data['purchasePrice'] = this.purchasePrice;
     data['sellingPrice'] = this.sellingPrice;
     data['returnPeriod'] = this.returnPeriod;
     data['quantity'] = this.quantity;

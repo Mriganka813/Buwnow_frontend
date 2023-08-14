@@ -94,7 +94,7 @@ class OrderServices {
       //       orderHistory = orderHistory.reversed.toList();
       //     });
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
       print(e.toString());
     }
     return orderHistory;

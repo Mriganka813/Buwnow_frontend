@@ -34,7 +34,7 @@ class CuteServices {
         showSnackBar('This number is not registered in this app.');
       }
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
     }
     return statuscode;
   }

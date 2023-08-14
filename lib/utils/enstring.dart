@@ -339,7 +339,7 @@ class LanguageEn {
 
   static String get faq => 'FAQs';
 
-  static String get teamsandcontiotion => 'Teams & Condition';
+  static String get teamsandcontiotion => 'Terms & Condition';
 
   static String get helpcenter => 'Help Center';
 

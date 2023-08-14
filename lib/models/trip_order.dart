@@ -50,7 +50,7 @@ class TripModel {
     drop = json['drop'] != null ? new Pickup.fromJson(json['drop']) : null;
     sId = json['_id'];
     businessName = json['businessName'];
-    amount = json['amount'];
+    amount = json['amount'].toInt();
     isPaid = json['isPaid'];
     orderId = json['orderId'];
     upi = json['upi'];

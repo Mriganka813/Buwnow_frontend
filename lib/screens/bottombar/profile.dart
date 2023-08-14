@@ -1,3 +1,5 @@
+import 'package:buynow/screens/bottombar/screens/help_center.dart';
+import 'package:buynow/screens/bottombar/screens/terms_conditions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:buynow/constants/utils.dart';
@@ -70,44 +72,56 @@ class _ProfileState extends State<Profile> {
               ],
             ),
             SizedBox(height: height / 20),
+            // GestureDetector(
+            //   child: profiletype("assets/Bag.png", LanguageEn.myporder),
+            // ),
+            // SizedBox(height: height / 30),
+            // GestureDetector(
+            //   child:
+            //       profiletype("assets/Setting.png", LanguageEn.profilesetting),
+            // ),
+            // SizedBox(height: height / 30),
+            // GestureDetector(
+            //   child: profiletype(
+            //       "assets/Ticket.png", LanguageEn.discountsandpromocodes),
+            // ),
+            // SizedBox(height: height / 30),
             GestureDetector(
-              child: profiletype("assets/Bag.png", LanguageEn.myporder),
-            ),
-            SizedBox(height: height / 30),
-            GestureDetector(
-              child:
-                  profiletype("assets/Setting.png", LanguageEn.profilesetting),
-            ),
-            SizedBox(height: height / 30),
-            GestureDetector(
-              child: profiletype(
-                  "assets/Ticket.png", LanguageEn.discountsandpromocodes),
-            ),
-            SizedBox(height: height / 30),
-            GestureDetector(
+              onTap: () {
+                // Navigator.of(context).pushNamed();
+              },
               child: profiletype(
                   "assets/Notification.png", LanguageEn.notifications),
             ),
+            // SizedBox(height: height / 30),
+            // GestureDetector(
+            //     child:
+            //         profiletype("assets/invite.png", LanguageEn.invitefriend)),
+            // SizedBox(height: height / 30),
+            // GestureDetector(
+            //     child: profiletype("assets/about.png", LanguageEn.aboutus)),
+            // SizedBox(height: height / 30),
+            // GestureDetector(
+            //     child: profiletype("assets/Paper.png", LanguageEn.faq)),
             SizedBox(height: height / 30),
             GestureDetector(
-                child:
-                    profiletype("assets/invite.png", LanguageEn.invitefriend)),
-            SizedBox(height: height / 30),
-            GestureDetector(
-                child: profiletype("assets/about.png", LanguageEn.aboutus)),
-            SizedBox(height: height / 30),
-            GestureDetector(
-                child: profiletype("assets/Paper.png", LanguageEn.faq)),
-            SizedBox(height: height / 30),
-            GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, TermsConditionScreen.routeName);
+                },
                 child: profiletype(
                     "assets/teams.png", LanguageEn.teamsandcontiotion)),
             SizedBox(height: height / 30),
             GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    HelpCenterScreen.routeName,
+                  );
+                },
                 child: profiletype("assets/Call.png", LanguageEn.helpcenter)),
             SizedBox(height: height / 30),
-            darkmode(),
-            SizedBox(height: height / 30),
+            // darkmode(),
+            // SizedBox(height: height / 30),
             GestureDetector(
               onTap: logout,
               child: profiletype("assets/Logout.png", LanguageEn.logout),

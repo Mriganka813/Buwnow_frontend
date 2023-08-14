@@ -1,3 +1,5 @@
+import 'package:buynow/screens/bottombar/screens/help_center.dart';
+import 'package:buynow/screens/bottombar/screens/terms_conditions.dart';
 import 'package:buynow/screens/order_details/screens/order_details_screen.dart';
 import 'package:buynow/screens/ordertabs/pay_now.dart';
 import 'package:buynow/screens/payment_details/screens/payment_details_screen.dart';
@@ -114,6 +116,13 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case PayNow.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => PayNow());
+
+    case TermsConditionScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => TermsConditionScreen());
+
+    case HelpCenterScreen.routeName:
+      return MaterialPageRoute(builder: (_) => HelpCenterScreen());
 
     case ShowQRScreen.routeName:
       final args = routeSettings.arguments as Map<String, dynamic>;

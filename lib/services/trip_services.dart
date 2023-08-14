@@ -85,7 +85,7 @@ class TripServices {
 
     IO.Socket socket = IO.io('http://65.0.7.20:8005/', <String, dynamic>{
       'transports': ['websocket'],
-      'query': {'accessToken': 'Bearer ${cuteToken}', 'role': 'CUSTOMER'}
+      'query': {'accessToken': '${cuteToken}', 'role': 'CUSTOMER'}
     });
 
     print('socket done');

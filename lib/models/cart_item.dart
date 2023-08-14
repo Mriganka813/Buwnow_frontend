@@ -22,8 +22,8 @@ class CartItem {
     productId = json['productId'];
     sellerName = json['sellerName'];
     sellerId = json['sellerId'];
-    originalPrice = json['originalPrice'];
-    discountedPrice = json['discountedPrice'];
+    originalPrice = json['originalPrice'].toInt();
+    discountedPrice = json['discountedPrice'].toInt();
     qty = json['qty'];
     name = json['name'];
     image = json['image'];

@@ -54,7 +54,7 @@ android {
         applicationId "com.magicstep.cube.buynow"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 7
+        versionCode 11
         versionName flutterVersionName
     }
 
