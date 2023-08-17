@@ -370,7 +370,7 @@ class LanguageEn {
 
   static String get signin => 'Sign in';
 
-  static String get welcometogofoods => 'Welcome to GoFoods!';
+  static String get welcometogofoods => 'Welcome to BuyNow!';
 
   static String get phonenumber => 'Phone Number';
 

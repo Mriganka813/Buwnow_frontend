@@ -16,6 +16,7 @@ class TripModel {
   String? createdAt;
   List<SubTrips>? subTrips;
   String? customerSocket;
+  String? driverSocketID;
   int? driverNumber;
   String? otp;
   String? driverId;
@@ -39,6 +40,7 @@ class TripModel {
       this.createdAt,
       this.subTrips,
       this.customerSocket,
+      this.driverSocketID,
       this.driverNumber,
       this.otp,
       this.driverId,
@@ -50,7 +52,7 @@ class TripModel {
     drop = json['drop'] != null ? new Pickup.fromJson(json['drop']) : null;
     sId = json['_id'];
     businessName = json['businessName'];
-    amount = json['amount'].toInt();
+    amount = json['amount'];
     isPaid = json['isPaid'];
     orderId = json['orderId'];
     upi = json['upi'];
@@ -67,6 +69,7 @@ class TripModel {
         subTrips!.add(new SubTrips.fromJson(v));
       });
     }
+    driverSocketID = json["driverSocket"];
     customerSocket = json['customerSocket'];
     driverNumber = json['driverNumber'];
     otp = json['otp'];
@@ -99,6 +102,7 @@ class TripModel {
       data['subTrips'] = this.subTrips!.map((v) => v.toJson()).toList();
     }
     data['customerSocket'] = this.customerSocket;
+    data['driverSocket'] = this.driverSocketID;
     data['driverNumber'] = this.driverNumber;
     data['otp'] = this.otp;
     data['driverId'] = this.driverId;

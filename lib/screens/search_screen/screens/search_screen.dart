@@ -1,7 +1,10 @@
+import 'package:buynow/services/push_notification.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/constants/utils.dart';
 import 'package:buynow/custtomscreens/textfild.dart';
 import 'package:buynow/screens/bottombar/bottombar.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,10 +39,48 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  void messageHandler() async {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      print('started');
+      print(message);
+      if (message != null) {
+        print('new notification');
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((message) {
+      print('onmessage listen');
+      if (message.notification != null) {
+        print(message.notification!.title);
+        print(message.notification!.body);
+
+        PushNotifications.createanddisplaynotification(message);
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('onMessageOpenedApp');
+      if (message.notification != null) {
+        print(message.notification!.title);
+        print(message.notification!.body);
+        print('${message.data['_id']}');
+      }
+    });
+  }
+
   @override
   void initState() {
     getdarkmodepreviousstate();
     super.initState();
+
+    messageHandler();
   }
 
   void submit() async {

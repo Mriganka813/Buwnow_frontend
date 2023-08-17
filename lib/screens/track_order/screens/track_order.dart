@@ -1,8 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:buynow/models/trip_order.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:dotted_line/dotted_line.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,6 +63,7 @@ class _TrackOrderState extends State<TrackOrder> {
         'role': 'CUSTOMER'
       }
     });
+    print('socket = $socket');
     setState(() {
       this.socket = socket;
     });
@@ -109,8 +108,8 @@ class _TrackOrderState extends State<TrackOrder> {
 
   @override
   void dispose() {
-    socket.disconnect();
-    socket.dispose();
+    socket!.disconnect();
+    socket!.dispose();
     super.dispose();
   }
 
@@ -246,62 +245,65 @@ class _TrackOrderState extends State<TrackOrder> {
                 SizedBox(
                   height: height / 60,
                 ),
-                StreamBuilder<Set<String>>(
-                    stream: Stream.value(notifications),
-                    builder: (context, AsyncSnapshot<Set<String>> snapshot) {
-                      if (snapshot.hasData) {
-                        Set<String>? updatedList = snapshot.data;
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StreamBuilder<Set<String>>(
+                      stream: Stream.value(notifications),
+                      builder: (context, AsyncSnapshot<Set<String>> snapshot) {
+                        if (snapshot.hasData) {
+                          Set<String>? updatedList = snapshot.data;
 
-                        if (updatedList!.length > 0) {
-                          return Container(
-                            height: 60,
-                            child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: updatedList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  height: 60,
-                                  child: Text(
-                                    updatedList.elementAt(
-                                        updatedList.length - index - 1),
-                                    style: TextStyle(
-                                      color: notifier.getred,
-                                      fontSize: height / 50,
-                                      fontFamily: 'GilroyBold',
+                          if (updatedList!.length > 0) {
+                            return Container(
+                              height: 60,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: updatedList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    height: 60,
+                                    child: Text(
+                                      updatedList.elementAt(
+                                          updatedList.length - index - 1),
+                                      style: TextStyle(
+                                        color: notifier.getred,
+                                        fontSize: height / 50,
+                                        fontFamily: 'GilroyBold',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
+                            );
+                            // Text(
+                            //   updatedList.last,
+                            //   style: blackHeadingTextStyle,
+                            // );
+                          } else {
+                            notifications.add(
+                                'Driver arriving at your location. \nPlease wait...');
+                          }
+                          return Text(
+                            'Driver arriving at your location. \nPlease wait...',
+                            style: TextStyle(
+                              color: notifier.getgrey,
+                              fontSize: height / 50,
+                              fontFamily: 'GilroyMedium',
                             ),
                           );
-                          // Text(
-                          //   updatedList.last,
-                          //   style: blackHeadingTextStyle,
-                          // );
                         } else {
-                          notifications.add(
-                              'Driver arriving at your location. \nPlease wait...');
+                          return Text(
+                            'Driver arriving at your location.\nPlease wait...',
+                            style: TextStyle(
+                              color: notifier.getgrey,
+                              fontSize: height / 50,
+                              fontFamily: 'GilroyMedium',
+                            ),
+                          );
                         }
-                        return Text(
-                          'Driver arriving at your location. \nPlease wait...',
-                          style: TextStyle(
-                            color: notifier.getgrey,
-                            fontSize: height / 50,
-                            fontFamily: 'GilroyMedium',
-                          ),
-                        );
-                      } else {
-                        return Text(
-                          'Driver arriving at your location.\nPlease wait...',
-                          style: TextStyle(
-                            color: notifier.getgrey,
-                            fontSize: height / 50,
-                            fontFamily: 'GilroyMedium',
-                          ),
-                        );
-                      }
-                    }),
+                      }),
+                ),
 
                 getDevider(),
                 // Container(

@@ -40,6 +40,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="BuyNow"/>
     </application>
     <!-- Provide required visibility configuration for API level 30 and above -->
 <queries>

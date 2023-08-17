@@ -61,29 +61,19 @@ class _RouteMapState extends State<RouteMap> {
     driverLocatioon = widget.driverLat == null
         ? LatLng(0, 0)
         : LatLng(widget.driverLat, widget.driverLang);
+    print(widget.driverLat);
+    print(widget.driverLang);
+    print('sokt:${widget.socket}');
     setSourceAndDestinationIcons();
     if (widget.socket != null) socketListener();
+    print('gone');
   }
 
   void socketListener() {
     widget.socket!.on('driverLocation', (data) {
       print('driverLocation');
+      print(data);
       updateDriverLocation(data['lat'], data['long']);
-    });
-  }
-
-  void trackLocation() {
-    Geolocator.getPositionStream(
-            locationSettings: LocationSettings(
-                accuracy: LocationAccuracy.high, distanceFilter: 1))
-        .listen((Position position) async {
-      widget.socket!.emit('driverLocation', {
-        'lat': position.latitude,
-        'long': position.longitude,
-      });
-
-      // Update the UI
-      await updateDriverLocation(position.latitude, position.longitude);
     });
   }
 
