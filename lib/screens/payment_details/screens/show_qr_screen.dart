@@ -155,102 +155,143 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: height / 20,
-                  ),
-                  UPIPaymentQRCode(
-                    upiDetails: myupiDetails,
-                    size: 300,
-                    embeddedImagePath: 'assets/buynow.png',
-                    embeddedImageSize: const Size(60, 60),
-                    upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
-                    qrCodeLoader: Center(child: CircularProgressIndicator()),
-                  ),
-                  SizedBox(
-                    height: height / 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Upi id: ',
-                        style: blackStyle,
-                      ),
-                      SelectableText(
-                        '${myupiDetails.upiID}',
-                        style: greenStyle,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: height / 60,
-                  ),
-                  Text('OR', style: blackStyle),
-                  SizedBox(
-                    height: height / 60,
-                  ),
-                  Text('Follow the instructions given below:',
-                      style: blackStyle.copyWith(fontFamily: 'GilroyBold')),
-                  SizedBox(
-                    height: height / 60,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 40),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          : SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: height / 20,
+                    ),
+                    UPIPaymentQRCode(
+                      upiDetails: myupiDetails,
+                      size: 200,
+                      embeddedImagePath: 'assets/buynow.png',
+                      embeddedImageSize: const Size(60, 60),
+                      upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
+                      qrCodeLoader: Center(child: CircularProgressIndicator()),
+                    ),
+                    SizedBox(
+                      height: height / 40,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '1. Hold the above given upi id to copy it.',
-                          textDirection: TextDirection.ltr,
+                          'Upi id: ',
                           style: blackStyle,
                         ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Text(
-                          '2. Open your UPI payment app (Google pay, Phonepe)',
-                          textDirection: TextDirection.ltr,
-                          style: blackStyle,
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Text(
-                          '3. Click on Pay UPI ID',
-                          textDirection: TextDirection.ltr,
-                          style: blackStyle,
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Text(
-                          '4. Paste the UPI ID you have copied before',
-                          textDirection: TextDirection.ltr,
-                          style: blackStyle,
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Text(
-                          '5. Click on verify to whom you are paying',
-                          textDirection: TextDirection.ltr,
-                          style: blackStyle,
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Text(
-                          '6. Enter amount and pay',
-                          textDirection: TextDirection.ltr,
-                          style: blackStyle,
-                        ),
+                        SelectableText(
+                          '${myupiDetails.upiID}',
+                          style: greenStyle,
+                        )
                       ],
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: height / 60,
+                    ),
+                    Text('OR', style: blackStyle),
+                    SizedBox(
+                      height: height / 60,
+                    ),
+                    Text('Follow the instructions given below:',
+                        style: blackStyle.copyWith(fontFamily: 'GilroyBold')),
+                    SizedBox(
+                      height: height / 60,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '1. Hold the above given upi id to copy it.',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '2. Open your UPI payment app (Google pay, Phonepe)',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '3. Click on Pay UPI ID',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '4. Paste the UPI ID you have copied before',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '5. Click on verify to whom you are paying',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '6. Enter amount and pay',
+                            textDirection: TextDirection.ltr,
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 60,
+                          ),
+                          Text(
+                            'FAQ: ',
+                            style:
+                                blackStyle.copyWith(fontFamily: 'GilroyBold'),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '1. Do you only accept prepaid orders?',
+                            style: blackStyle.copyWith(
+                              fontFamily: 'GilroyBold',
+                            ),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            'Ans. No, we accept both prepaid and Pay on delivery orders but it is upto the shop if they accept Pay on delivery or not.',
+                            style: blackStyle,
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            '2. What if you do not want to pay now ?',
+                            style:
+                                blackStyle.copyWith(fontFamily: 'GilroyBold'),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Text(
+                            'Ans. If you click on Confirm button ,your order will be placed. You can choose to Pay now or Pay on delivery. If the shop accepts prepaid orders only, they will call you, You can still pay by going to MyOrders->Click on the order->Click on Pay now->Scan and Pay ',
+                            style: blackStyle,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
       bottomNavigationBar: GestureDetector(
