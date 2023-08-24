@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:buynow/constants/utils.dart';
 import 'package:buynow/custtomscreens/textfild.dart';
 import 'package:buynow/screens/bottombar/bottombar.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +38,9 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  // handle push notification
   void messageHandler() async {
+    // for foreground message
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -65,12 +66,14 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
 
+    // when user tap on notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('onMessageOpenedApp');
       if (message.notification != null) {
         print(message.notification!.title);
         print(message.notification!.body);
         print('${message.data['_id']}');
+        // Navigator.of(context).pushNamed(SearchScreen.routeName);
       }
     });
   }
@@ -94,9 +97,12 @@ class _SearchScreenState extends State<SearchScreen> {
         isLoading = true;
       });
     }
+
+    //
     Provider.of<UserProvider>(context, listen: false).setKeyword(searchText);
     await searchServices.sendCityName(searchText, context);
 
+    //
     Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => BottomHome(),
@@ -179,18 +185,4 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
     );
   }
-
-  // Widget customButton(Color buttoncolor, Widget ch) {
-  //   return Container(
-  //     height: height / 14,
-  //     width: width / 1.13,
-  //     decoration: BoxDecoration(
-  //       color: buttoncolor,
-  //       borderRadius: const BorderRadius.all(
-  //         Radius.circular(15),
-  //       ),
-  //     ),
-  //     child: Center(child: ch),
-  //   );
-  // }
 }

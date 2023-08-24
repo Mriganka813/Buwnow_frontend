@@ -38,7 +38,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
   final searchController = TextEditingController();
 
   var uuid = Uuid();
-  String _sessionToken = '12345';
+  String? _sessionToken = '12345';
   List<dynamic> _placesList = [];
 
   bool istapped = true;
@@ -94,6 +94,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     }
   }
 
+  // convert address into lat long
   Future<LatLng> addressToLatLong(String address) async {
     List<Location> locations = await locationFromAddress(address);
     if (locations.length > 0) {
@@ -103,6 +104,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     }
   }
 
+  // convert lat long into address
   Future<Placemark> latlngToAddress(double latitude, double longitude) async {
     List<Placemark> addresses =
         await placemarkFromCoordinates(latitude, longitude);
@@ -119,6 +121,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     return first;
   }
 
+  // animate the camera when user search location
   animateCamera(double latitude, double longitude) async {
     var cameraPosition = CameraPosition(
       target: LatLng(latitude, longitude),
@@ -129,7 +132,6 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     setState(() {});
   }
 
-  @override
   void onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     setState(() {
@@ -137,6 +139,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     });
   }
 
+  // when tapped on map
   void onMapTap(LatLng latLng) {
     setState(() {
       if (markerLatLng == null) {
@@ -149,6 +152,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
     });
   }
 
+  // to get current location of user
   void _currentLocation() async {
     final GoogleMapController controller = await _controller.future;
     Position? currentLocation;
@@ -284,8 +288,7 @@ class _AddressUpdatesState extends State<AddressUpdates> {
                   .setConsumerLatLong(
                       markerLatLng!.latitude, markerLatLng!.longitude);
 
-              //store consumer lat long locally
-
+              // store consumer lat long locally
               SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.setString(
                   'consumerLat', markerLatLng!.latitude.toString());

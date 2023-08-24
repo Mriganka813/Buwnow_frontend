@@ -60,7 +60,7 @@ class CartServices {
     }
   }
 
-  //get cart items
+  // get cart items
   Future<List<CartItem>> getCartItems(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<CartItem> cartData = [];
@@ -94,7 +94,7 @@ class CartServices {
     return cartData;
   }
 
-  //remove from cart
+  // remove from cart
   removeFromCart(BuildContext context, String prodId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {

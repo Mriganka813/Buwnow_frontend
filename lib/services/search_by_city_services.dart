@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 
 class SearchServices {
-  // fetch nearby restorants
+  // fetch 20 nearby restaurants
   Future<List<NearbyRestorentModel>> sendCityName(
       String location, BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

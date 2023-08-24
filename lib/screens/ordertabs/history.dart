@@ -48,6 +48,7 @@ class _HistorytabsState extends State<Historytabs> {
     getItemsLength();
   }
 
+  // get orders history
   getOrderHistory() async {
     setState(() {
       isLoading = true;
@@ -268,8 +269,11 @@ class _HistorytabsState extends State<Historytabs> {
         Row(
           children: [
             SizedBox(width: width / 20),
+
+            // status button
             estbutton(status, false),
             Spacer(),
+
             GestureDetector(
                 onTap: () => _launchDialer(phoneNo),
                 child: estbutton('Call Shop', true)),
@@ -285,6 +289,7 @@ class _HistorytabsState extends State<Historytabs> {
     );
   }
 
+  // to launch dialer pad
   void _launchDialer(String phoneNo) async {
     int phone = int.parse(phoneNo);
     var phoneNumber = '+91$phone'; // Replace with your desired phone number
@@ -298,6 +303,7 @@ class _HistorytabsState extends State<Historytabs> {
     }
   }
 
+  // if cuteToken is null then first it take phone number to store cuteToken and refresh token
   phoneDialog(String prodId, String orderId, String status, BuildContext ctx) {
     showDialog(
       context: context,
@@ -388,8 +394,6 @@ class _HistorytabsState extends State<Historytabs> {
     );
   }
 }
-
-
 
 // SizedBox(height: height / 30),
 // SizedBox(height: height / 50),

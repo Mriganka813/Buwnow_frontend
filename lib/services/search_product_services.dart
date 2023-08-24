@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 
 class SearchProductServices {
-  //get searched product list
+  // get searched product list
   Future<List<Product>> getProducts(
       String prodName, BuildContext context, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

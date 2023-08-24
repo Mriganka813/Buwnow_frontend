@@ -86,6 +86,8 @@ class _ProfileState extends State<Profile> {
             //       "assets/Ticket.png", LanguageEn.discountsandpromocodes),
             // ),
             // SizedBox(height: height / 30),
+
+            // notifications
             GestureDetector(
               onTap: () {
                 // Navigator.of(context).pushNamed();
@@ -104,6 +106,8 @@ class _ProfileState extends State<Profile> {
             // GestureDetector(
             //     child: profiletype("assets/Paper.png", LanguageEn.faq)),
             SizedBox(height: height / 30),
+
+            // terms and conditions
             GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, TermsConditionScreen.routeName);
@@ -111,6 +115,8 @@ class _ProfileState extends State<Profile> {
                 child: profiletype(
                     "assets/teams.png", LanguageEn.teamsandcontiotion)),
             SizedBox(height: height / 30),
+
+            // help center
             GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
@@ -122,6 +128,8 @@ class _ProfileState extends State<Profile> {
             SizedBox(height: height / 30),
             // darkmode(),
             // SizedBox(height: height / 30),
+
+            // logout
             GestureDetector(
               onTap: logout,
               child: profiletype("assets/Logout.png", LanguageEn.logout),

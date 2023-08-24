@@ -9,7 +9,7 @@ import '../providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 
 class CuteServices {
-  /// cute login
+  // cute login
   cuteLogin(BuildContext context, String phoneNo) async {
     int? statuscode;
     try {

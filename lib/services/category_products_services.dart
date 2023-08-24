@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class CategoryProductServices {
+  // get category wise products
   Future<List<NearbyRestorentModel>> getCategoryProducts(
       BuildContext context, String category, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

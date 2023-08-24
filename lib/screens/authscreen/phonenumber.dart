@@ -46,6 +46,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
   void signIn() async {
     final email = emailController.text.trim().toLowerCase();
     final password = passwordController.text.trim();
+
+    // validation
     if (email.isEmpty) {
       showSnackBar('Invalid email');
       return;
@@ -53,11 +55,15 @@ class _PhoneNumberState extends State<PhoneNumber> {
       showSnackBar('Invalid password');
       return;
     }
+
+    // enable loading indicator
     if (mounted) {
       setState(() {
         isLoading = true;
       });
     }
+
+    // login user
     authServices
         .signInUser(
       context: context,
@@ -66,6 +72,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
     )
         .then((value) {
       if (mounted) {
+        // disable loading indicator
         setState(() {
           isLoading = false;
         });
@@ -163,6 +170,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
               ],
             ),
             SizedBox(height: height / 60),
+
+            // enter your email
             Customtextfild.textField(
                 LanguageEn.enteryouremail,
                 notifier.getblackcolor,
@@ -186,6 +195,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter your password
             Customtextfild.textField(
                 LanguageEn.enteryourpassword,
                 notifier.getblackcolor,
@@ -194,6 +205,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
                 notifier.getbgfildcolor,
                 passwordController,
                 true),
+
+            // remember me check box
             Row(
               children: [
                 SizedBox(width: width / 30),
@@ -249,6 +262,8 @@ class _PhoneNumberState extends State<PhoneNumber> {
               ],
             ),
             SizedBox(height: height / 20),
+
+            // sign in button
             GestureDetector(
               onTap: () {
                 signIn();

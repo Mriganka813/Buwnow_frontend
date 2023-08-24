@@ -45,6 +45,7 @@ class _NearByRestorentState extends State<NearByRestorent> {
     fetchNearByRestaurants();
   }
 
+  // fetch all nearby restaurants
   Future<void> fetchNearByRestaurants() async {
     restaurants = restaurants +
         await restaurantServices.fetchAllNearbyRestaurantsList(context, page);
@@ -55,6 +56,7 @@ class _NearByRestorentState extends State<NearByRestorent> {
     setState(() {});
   }
 
+  // this is for pagination
   void _scrollListener() async {
     if (isLoadingMore) return;
     if (scrollController.position.pixels ==

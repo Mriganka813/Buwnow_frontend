@@ -51,10 +51,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.magicstep.cube.buynow"
+        applicationId "com.trybuynow.magicstep"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 14
+        versionCode 1
         versionName flutterVersionName
     }
 
@@ -83,6 +83,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    // implementation("com.google.firebase:firebase-analytics-ktx")
     
 }

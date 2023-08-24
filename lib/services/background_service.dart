@@ -109,14 +109,14 @@ void onStart(ServiceInstance service) async {
 
         print('conid=${confirmedOrder.sId}');
 
-        /// calculating amount of all products
+        // calculating amount of all products
         for (int j = 0; j < confirmedOrder.items!.length; j++) {
           final prodPrice = confirmedOrder.items![j].productPrice!.toInt();
           orderAmount += prodPrice;
         }
         print(orderAmount);
 
-        /// initializing trip
+        // initializing trip
         newTrip = NewTripInput(
           pickuplocation: {'lat': sellerLat, 'long': sellerLong},
           droplocatioon: {'lat': consumerLat, 'long': consumerLong},

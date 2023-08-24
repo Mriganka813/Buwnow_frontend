@@ -108,8 +108,8 @@ class _TrackOrderState extends State<TrackOrder> {
 
   @override
   void dispose() {
-    socket!.disconnect();
-    socket!.dispose();
+    socket.disconnect();
+    socket.dispose();
     super.dispose();
   }
 

@@ -15,7 +15,6 @@ import '../screens/search_screen/screens/search_screen.dart';
 
 class AuthServices {
   // sign up user
-
   Future<void> signUpUser({
     required BuildContext context,
     required String email,
@@ -37,6 +36,7 @@ class AuthServices {
         phoneNo: phoneNo,
       );
 
+      // buynow registration
       final http.Response res = await http.post(
           Uri.parse('${Const.apiV1Url}/consumer/register'),
           body: user.toJson(),
@@ -44,6 +44,7 @@ class AuthServices {
             'Content-Type': 'application/json; charset=UTF-8'
           });
 
+      // creating account in cute app
       final http.Response cuteSignup = await http.post(
         Uri.parse('http://65.0.7.20:8004/auth/signup'),
         body: {
@@ -58,6 +59,7 @@ class AuthServices {
       print(cuteSignup.body);
 
       if (cuteSignup.statusCode == 200) {
+        // signup verification
         final http.Response cuteVerify = await http.post(
             Uri.parse('http://65.0.7.20:8004/auth/signup/verify'),
             body: {'user_id': jsonDecode(cuteSignup.body)['user_id']});
@@ -82,6 +84,7 @@ class AuthServices {
             userProvider.setToken(jsonDecode(res.body)['token']);
 
             try {
+              // store token and userId at signup
               String token = jsonDecode(res.body)['token'];
               String id = jsonDecode(res.body)['user']['_id'];
               await prefs.setString('auth-token', token);
@@ -130,6 +133,7 @@ class AuthServices {
           print(res.body);
 
           try {
+            // store token and userId at login
             String id = jsonDecode(res.body)['user']['_id'];
             String token = jsonDecode(res.body)['token'];
             await prefs.setString('auth-token', token);
@@ -151,9 +155,9 @@ class AuthServices {
   }
 
   // get user data
-
   Future<void> getUserData(BuildContext context) async {
     try {
+      // get token and userId for auto login
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth-token');
       String? id = prefs.getString('id');
@@ -175,7 +179,6 @@ class AuthServices {
   }
 
   // logout user
-
   Future<void> logout(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 

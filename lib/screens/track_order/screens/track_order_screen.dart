@@ -1,7 +1,6 @@
 import 'package:buynow/models/trip_order.dart';
 import 'package:buynow/screens/ordertabs/pay_now.dart';
 import 'package:buynow/screens/track_order/screens/track_order.dart';
-import 'package:buynow/services/cute_services.dart';
 import 'package:buynow/services/product_services.dart';
 import 'package:buynow/services/trip_services.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +50,11 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   @override
   void initState() {
     super.initState();
-
     getAllTrips();
-
     getdarkmodepreviousstate();
   }
 
+  // get all trips
   getAllTrips() async {
     setState(() {
       isLoading = true;
@@ -103,6 +101,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
       },
     );
 
+    //
     if (statusIndex.indexOf(status) < 1) {
       ispending = true;
     } else if (statusIndex.indexOf(status) < 2) {
@@ -261,6 +260,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     ),
                   ],
                 ),
+
+                // if product is delivered then
                 if (isdeliver)
                   Center(
                     child: GestureDetector(

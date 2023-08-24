@@ -104,6 +104,8 @@ class _PayNowState extends State<PayNow> {
                   SizedBox(
                     height: height / 20,
                   ),
+
+                  // qr code image
                   UPIPaymentQRCode(
                     upiDetails: myupiDetails,
                     size: 300,
@@ -122,6 +124,8 @@ class _PayNowState extends State<PayNow> {
                         'Upi id: ',
                         style: blackStyle,
                       ),
+
+                      // to copy upi id
                       SelectableText(
                         '${myupiDetails.upiID}',
                         style: greenStyle,
@@ -140,6 +144,8 @@ class _PayNowState extends State<PayNow> {
                   SizedBox(
                     height: height / 60,
                   ),
+
+                  // instructions
                   Container(
                     margin: EdgeInsets.only(left: 40),
                     child: Column(

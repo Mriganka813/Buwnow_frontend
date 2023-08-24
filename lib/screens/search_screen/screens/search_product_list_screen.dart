@@ -1,11 +1,16 @@
 import 'package:buynow/constants/utils.dart';
+import 'package:buynow/models/near_by_restorent.dart';
 import 'package:buynow/models/product.dart';
+import 'package:buynow/providers/user_provider.dart';
 import 'package:buynow/services/cart_services.dart';
+import 'package:buynow/services/search_by_city_services.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/screens/search_screen/screens/search_products_details_screen.dart';
 import 'package:buynow/screens/search_screen/widgets/food_item.dart';
 import 'package:buynow/services/search_product_services.dart';
 import 'package:buynow/utils/mediaqury.dart';
+import 'package:intl/intl.dart';
+import 'package:ntp/ntp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,11 +34,15 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   late ColorNotifier notifier;
   final scrollController = ScrollController();
   final SearchProductServices searchProductServices = SearchProductServices();
+
   List<Product> prodList = [];
   bool isLoadingMore = false;
 
   CartServices cartServices = CartServices();
   List<CartItem> cartData = [];
+
+  final SearchServices searchServices = SearchServices();
+  List<NearbyRestorentModel> productShop = [];
 
   int page = 1;
 
@@ -51,16 +60,71 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   void initState() {
     super.initState();
     getdarkmodepreviousstate();
+    getShopDetails();
     getCartData();
     scrollController.addListener(_scrollListener);
     fetchSearchedProducts();
   }
 
-  getCartData() async {
-    cartServices.getCartItems(context);
+  // get shop details for opening and closing time
+  getShopDetails() async {
+    final location = Provider.of<UserProvider>(context, listen: false).result;
+    productShop = await searchServices.sendCityName(location, context);
   }
 
-  goToProductDetails(BuildContext context, int idx) {
+  // get cart data for restricted the added items of different seller
+  getCartData() async {
+    cartData = await cartServices.getCartItems(context);
+  }
+
+  // get product details
+  goToProductDetails(BuildContext context, int idx) async {
+    NearbyRestorentModel? shopdetail;
+    try {
+      shopdetail = productShop
+          .firstWhere((element) => prodList[idx].user == element.sId);
+    } catch (e) {
+      shopdetail = null;
+    }
+
+    if (shopdetail != null) {
+      if (!(shopdetail.shopOpen!)) {
+        showSnackBar('This shop is not available right now');
+        return;
+      }
+
+      DateTime optime =
+          DateFormat.Hm().parse(shopdetail.openingTime ?? '10:00');
+      DateTime cltime =
+          DateFormat.Hm().parse(shopdetail.closingTime ?? '22:00');
+
+      // final ophour = optime.hour;
+      // final opminute = optime.minute;
+
+      // final clhour = cltime.hour;
+      // final clminute = cltime.minute;
+
+      print(optime);
+      print(cltime);
+
+      // Synchronize with an NTP server
+      DateTime currentTime = await NTP.now();
+
+      if (currentTime.hour < optime.hour ||
+          (currentTime.hour == optime.hour &&
+              currentTime.minute < optime.minute)) {
+        showSnackBar(
+            'This shop\'s product is available from ${optime.hour}:${optime.minute} to ${cltime.hour}:${cltime.minute}');
+        return;
+      } else if (currentTime.hour > cltime.hour ||
+          (currentTime.hour == cltime.hour &&
+              currentTime.minute > cltime.minute)) {
+        showSnackBar(
+            'This product shop\'s product is available from ${optime.hour}:${optime.minute} to ${cltime.hour}:${cltime.minute}');
+        return;
+      }
+    }
+
     Navigator.of(context).pushNamed(SearchProductDetailsScreen.routeName,
         arguments: prodList[idx]);
   }
@@ -75,6 +139,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
     setState(() {});
   }
 
+  // this is for pagination
   void _scrollListener() async {
     if (isLoadingMore) return;
     if (scrollController.position.pixels ==
@@ -158,20 +223,32 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                             notifier: notifier,
                             image: prodList[index].image ?? '',
                             onAddTap: () async {
+                              // if cart has items and ensure that current item is not of different seller
                               if (cartData.length > 0) {
                                 if (prodList[index].user ==
                                     cartData[0].sellerId) {
                                   await cartServices.addToCart(
                                       context, prodList[index].sId!, '1');
+                                  showSnackBar('Item added successfully.');
+                                  Navigator.of(context)
+                                      .pushNamed(OrderConformation.routeName);
                                 } else {
                                   _showMyDialog(
                                       "You can not buy products from different seller at a time.");
                                 }
+
+                                // if cart has no items.
                               } else {
                                 await cartServices.addToCart(
                                     context, prodList[index].sId!, '1');
                                 showSnackBar('Item added successfully.');
+                                Navigator.of(context)
+                                    .pushNamed(OrderConformation.routeName);
                               }
+                              setState(() {
+                                // refresh cart data to check efficiently.
+                                getCartData();
+                              });
                             },
                           ),
                           SizedBox(

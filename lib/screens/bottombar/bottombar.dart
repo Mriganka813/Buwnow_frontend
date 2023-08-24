@@ -70,6 +70,7 @@ class _BottomHomeState extends State<BottomHome> {
               showSelectedLabels: true,
               showUnselectedLabels: true,
               items: [
+                // home page
                 BottomNavigationBarItem(
                     backgroundColor: notifire.getwhite,
                     icon: Image.asset("assets/Home.png",
@@ -78,6 +79,8 @@ class _BottomHomeState extends State<BottomHome> {
                             : notifire.getgrey,
                         height: height / 42),
                     label: ''),
+
+                // my orders page
                 BottomNavigationBarItem(
                     backgroundColor: notifire.getwhite,
                     icon: Image.asset("assets/Paper.png",
@@ -86,6 +89,8 @@ class _BottomHomeState extends State<BottomHome> {
                             : notifire.getgrey,
                         height: height / 35),
                     label: ''),
+
+                // cart page
                 BottomNavigationBarItem(
                     backgroundColor: notifire.getwhite,
                     icon: Image.asset("assets/Buy.png",
@@ -94,6 +99,8 @@ class _BottomHomeState extends State<BottomHome> {
                             : notifire.getgrey,
                         height: height / 42),
                     label: ''),
+
+                // profile page
                 BottomNavigationBarItem(
                   backgroundColor: notifire.getwhite,
                   icon: Image.asset("assets/profile.png",

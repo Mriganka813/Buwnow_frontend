@@ -84,7 +84,7 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
             (currentTime.hour == optime.hour &&
                 currentTime.minute < optime.minute)) {
           showSnackBar(
-              'This shop is available from ${optime.hour}:${optime.minute.isOdd} to ${cltime.hour}:${cltime.minute}');
+              'This shop is available from ${optime.hour}:${optime.minute} to ${cltime.hour}:${cltime.minute}');
           return;
         } else if (currentTime.hour > cltime.hour ||
             (currentTime.hour == cltime.hour &&

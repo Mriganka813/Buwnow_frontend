@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 
 class ProductServices {
+  // send product rating
   rating(String productId, BuildContext context, int rating) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {

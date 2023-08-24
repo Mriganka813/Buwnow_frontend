@@ -63,6 +63,7 @@ class _CreateAccountState extends State<CreateAccount> {
     final password = passwordController.text.trim();
     final address = addressController.text.trim();
 
+    // validation
     if (name.isEmpty || name.length < 4) {
       showSnackBar('Invalid name');
       return;
@@ -84,6 +85,8 @@ class _CreateAccountState extends State<CreateAccount> {
         isLoading = true;
       });
     }
+
+    // user registration
     authServices
         .signUpUser(
       name: name,
@@ -164,6 +167,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter your name
             Customtextfild.textField(
                 LanguageEn.enteryourfullname,
                 notifier.getblackcolor,
@@ -187,6 +192,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter your email
             Customtextfild.textField(
                 LanguageEn.enteryouremail,
                 notifier.getblackcolor,
@@ -210,6 +217,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter your phone number
             Customtextfild.textField(
                 LanguageEn.enteryourphonenumber,
                 notifier.getblackcolor,
@@ -233,6 +242,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter your password
             Customtextfild.textField(
                 LanguageEn.enteryourpassword,
                 notifier.getblackcolor,
@@ -256,6 +267,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             SizedBox(height: height / 50),
+
+            // enter address for cute registration
             Customtextfild.textField(
                 LanguageEn.enteryouraddress,
                 notifier.getblackcolor,
@@ -265,6 +278,8 @@ class _CreateAccountState extends State<CreateAccount> {
                 addressController,
                 false),
             SizedBox(height: height / 15),
+
+            // signup button
             GestureDetector(
               onTap: () {
                 signUp();
@@ -279,6 +294,8 @@ class _CreateAccountState extends State<CreateAccount> {
                     ),
             ),
             SizedBox(height: height / 30),
+
+            // already have an account, sign in
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

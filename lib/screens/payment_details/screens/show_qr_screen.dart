@@ -99,6 +99,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
     Navigator.pushNamed(context, OrderSucsess.routeName);
   }
 
+  // convert latitude longitude into address
   Future<Placemark> latlngToAddress(double latitude, double longitude) async {
     List<Placemark> addresses =
         await placemarkFromCoordinates(latitude, longitude);
@@ -162,6 +163,8 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
                     SizedBox(
                       height: height / 20,
                     ),
+
+                    // qr code image
                     UPIPaymentQRCode(
                       upiDetails: myupiDetails,
                       size: 200,
@@ -198,6 +201,8 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
                     SizedBox(
                       height: height / 60,
                     ),
+
+                    // instructions
                     Container(
                       margin: EdgeInsets.only(left: 40),
                       child: Column(

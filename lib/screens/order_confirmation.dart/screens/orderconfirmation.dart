@@ -42,16 +42,6 @@ class _OrderConformationState extends State<OrderConformation> {
 
   bool isLoading = false;
   int subTotal = 0;
-  // String userName = '';
-  // String phoneNumber = '';
-  // String street = '';
-  // String city = '';
-  // String state = '';
-  // String pincode = '';
-  // String additional = '';
-
-  // String latitude = '';
-  // String longitude = '';
 
   @override
   void initState() {
@@ -60,6 +50,7 @@ class _OrderConformationState extends State<OrderConformation> {
     getCartData();
   }
 
+  // get cart data
   getCartData() async {
     if (mounted) {
       setState(() {
@@ -68,6 +59,8 @@ class _OrderConformationState extends State<OrderConformation> {
     }
 
     cartData = await cartServices.getCartItems(context);
+
+    // calculate total from all cart items
     cartData.forEach(
       (product) => subTotal += int.parse(product.discountedPrice.toString()) *
           int.parse(product.qty.toString()),
@@ -82,10 +75,13 @@ class _OrderConformationState extends State<OrderConformation> {
     }
   }
 
+  // navigate to map page
   orderNow() async {
     if (cartData.length == 0) {
       return;
     }
+
+    // set seller id for get seller upi details at payment page
     Provider.of<UserProvider>(context, listen: false)
         .setSellerId(cartData[0].sellerId!);
     Navigator.of(context).pushNamed(AddressUpdates.routeName);
@@ -204,6 +200,8 @@ class _OrderConformationState extends State<OrderConformation> {
                     ],
                   ),
                   SizedBox(height: height / 50),
+
+                  // show cart items
                   cartData.length == 0
                       ? Container(
                           height: height / 4,
@@ -420,24 +418,6 @@ class _OrderConformationState extends State<OrderConformation> {
                   )
                 : DecorationImage(image: NetworkImage(image), fit: BoxFit.fill),
           ),
-
-          // child: image.isEmpty
-          //     ? Image.asset(
-          //         'assets/product_image.png',
-          //         height: 180,
-          //         width: 200,
-          //         fit: BoxFit.fill,
-          //       )
-          //     : Image.network(
-          //         image,
-          //         height: 180,
-          //         width: 200,
-          //         fit: BoxFit.cover,
-          //         loadingBuilder: (context, child, loadingProgress) =>
-          //             loadingProgress == null
-          //                 ? child
-          //                 : CircularProgressIndicator(),
-          //       ),
         ),
         SizedBox(width: width / 30),
         Text(

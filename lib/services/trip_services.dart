@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../constants/const.dart';
 import '../constants/utils.dart';
 import '../models/new_trip_input.dart';
 import '../models/trip_order.dart';

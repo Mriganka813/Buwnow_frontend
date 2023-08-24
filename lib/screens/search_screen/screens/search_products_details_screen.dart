@@ -50,6 +50,7 @@ class _SearchProductDetailsScreenState
     getCartData();
   }
 
+  // get cart data
   getCartData() async {
     setState(() {
       isLoading = true;
@@ -77,10 +78,9 @@ class _SearchProductDetailsScreenState
     final String rating =
         args.rating!.isEmpty ? 'No ratings' : args.rating![0].toString();
 
+    // calculate discounted price
     final discount = args.discount ?? 0;
-
     final discountPrice = (price * discount) / 100;
-
     final priceAfterDiscount = price - discountPrice;
 
     height = MediaQuery.of(context).size.height;
@@ -131,11 +131,13 @@ class _SearchProductDetailsScreenState
             ),
       bottomNavigationBar: InkWell(
         onTap: () async {
+          // check quantity is available or not
           if (userQuantity > int.parse(quantity)) {
             _showMyDialog('quantity not available');
             return;
           }
 
+          // if cart has items and ensure that current item is of different seller
           if (cartData.length > 0) {
             if (sellerId == cartData[0].sellerId) {
               await cartServices.addToCart(
@@ -146,6 +148,8 @@ class _SearchProductDetailsScreenState
               _showMyDialog(
                   "You can not buy products from different seller at a time.");
             }
+
+            // if cart has no items
           } else {
             await cartServices.addToCart(
                 context, prodId!, userQuantity.toString());

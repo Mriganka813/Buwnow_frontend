@@ -66,6 +66,7 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
         TabController(length: 1, vsync: this, animationDuration: Duration.zero);
   }
 
+  // get shop products
   getShopDetails() {
     setState(() {
       isLoading = true;
@@ -82,6 +83,7 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
     });
   }
 
+  // this is for pagination
   void _scrollListener() async {
     if (isLoadingMore) return;
     if (scrollController.position.pixels ==
@@ -139,16 +141,12 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                   final product = products[index];
                   final prodId = product.sId;
                   final discount = product.discount ?? 0;
-
                   final prodName = product.name;
                   final sellingPrice = product.sellingPrice!.toInt();
-
                   final image = product.image ?? '';
-
                   final sellerName = product.sellerName;
 
                   final discountPrice = (sellingPrice * discount) / 100;
-
                   final priceAfterDiscount = sellingPrice - discountPrice;
 
                   return InkWell(
@@ -168,17 +166,20 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                         i: index,
                         prodName: prodName ?? '',
                         priceAfterDiscount: priceAfterDiscount.toInt(),
-                        prodPrice: sellingPrice.toInt() ?? 0,
+                        prodPrice: sellingPrice.toInt(),
                         sellerName: sellerName ?? '',
                         desc: 'No description available',
                         notifier: notifier,
                         image: image,
                         isShopProduct: true,
                         onAddTap: () async {
+                          // check product availability
                           if (!(product.available!)) {
                             showSnackBar('Product is not available right now');
                             return;
                           }
+
+                          // if cart has items and ensure that current item is not of different seller
                           if (cartData.length > 0) {
                             if (widget.shopId == cartData[0].sellerId) {
                               await cartServices.addToCart(
@@ -189,6 +190,8 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                                   "You can not buy products from different seller at a time.");
                               return;
                             }
+
+                            // if cart has no items
                           } else {
                             await cartServices.addToCart(context, prodId!, '1');
                             showSnackBar('Item added successfully.');

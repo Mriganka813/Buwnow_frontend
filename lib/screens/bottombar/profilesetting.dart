@@ -146,6 +146,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
                         ),
                       ),
                       SizedBox(height: height / 25),
+
+                      // show user name and user can update his name
                       Customtextfild.textField(
                           map['name'] ?? '',
                           notifier.getblackcolor,
@@ -164,6 +166,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       //     false
                       // ),
                       // SizedBox(height: height/25),
+
+                      // show user email and user can update his email
                       Customtextfild.textField(
                           map['email'] ?? '',
                           notifier.getblackcolor,
@@ -173,6 +177,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           emailController,
                           false),
                       SizedBox(height: height / 4.3),
+
+                      // update user name and email
                       GestureDetector(
                           onTap: () async {
                             final name = nameController.text.trim();

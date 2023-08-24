@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class RestaurantServices {
+  // fetch all neraby restaurants
   Future<List<NearbyRestorentModel>> fetchAllNearbyRestaurantsList(
       BuildContext context, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

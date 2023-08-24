@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:buynow/constants/utils.dart';
 
 import '../../../utils/mediaqury.dart';
-import '../../search_screen/screens/search_product_list_screen.dart';
 
 Widget customTextField({
   required double wi,
@@ -12,6 +10,7 @@ Widget customTextField({
   required String name1,
   required BuildContext context,
   required List<dynamic> prodList,
+  required Function(String)? onSubmit,
 }) {
   return Container(
     height: height / 16,
@@ -33,15 +32,7 @@ Widget customTextField({
         hintStyle: const TextStyle(color: Colors.grey),
       ),
       textCapitalization: TextCapitalization.words,
-      onSubmitted: (value) async {
-        if (value.isEmpty) {
-          showSnackBar('Search Something.');
-          return;
-        }
-
-        Navigator.of(context)
-            .pushNamed(SearchProductListScreen.routeName, arguments: value);
-      },
+      onSubmitted: onSubmit,
     ),
   );
 }

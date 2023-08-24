@@ -31,6 +31,7 @@ class _CategoriesState extends State<Categories> {
     getdarkmodepreviousstate();
   }
 
+  // category images
   List<String> catImages = [
     'assets/food.png',
     'assets/shopping_bag.png',
@@ -44,6 +45,7 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     notifire = Provider.of<ColorNotifier>(context, listen: true);
     final catName = ModalRoute.of(context)!.settings.arguments as List<String>;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: notifire.getwhite,
@@ -74,6 +76,8 @@ class _CategoriesState extends State<Categories> {
             Container(
               color: Colors.transparent,
               height: height / 1,
+
+              // shops
               child: GridView.builder(
                 padding: EdgeInsets.symmetric(horizontal: width / 20),
                 itemCount: catName.length,

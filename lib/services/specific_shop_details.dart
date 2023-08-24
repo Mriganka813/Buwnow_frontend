@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class SpecificShopDetails {
+  // get specific shop products list
   Future<List<Product>> getShopProducts(
       BuildContext context, String shopId, int page) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class UPIServices {
+  // get seller upi details
   Future<UPIModel> getUpiDetails(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     print(userProvider.token);

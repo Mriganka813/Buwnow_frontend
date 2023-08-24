@@ -8,7 +8,6 @@ import 'package:buynow/services/delivery_charges_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
 
 import '../../../custtomscreens/custtombutton.dart';
 import '../../../models/new_trip_input.dart';
@@ -167,6 +166,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
         provider.consumerLongitude!,
         context);
 
+    // store it for creating new trip in background after accepting by the shopkeeper
     await prefs.setString('serviceAreaId', vehicles[0].serviceAreaId!);
     await prefs.setString('vehicleId', vehicles[0].id!);
     await prefs.setDouble('price', vehicles[0].price!);

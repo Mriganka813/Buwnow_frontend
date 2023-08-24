@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/order.dart';
 
 class OrderServices {
+  // order place
   orderPlace({
     required BuildContext context,
     required String name,
@@ -51,8 +52,7 @@ class OrderServices {
     }
   }
 
-  /// order history
-
+  // order history
   Future<List<Order>> orderHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth-token');

@@ -10,6 +10,7 @@ import 'package:buynow/router.dart';
 import 'package:buynow/screens/search_screen/screens/search_screen.dart';
 import 'package:buynow/services/auth_services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 import 'package:provider/provider.dart';
 
@@ -25,15 +26,15 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroungHandler);
 
-  /// set device orientation
+  // set device orientation
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  /// set status bar color
+  // set status bar color
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.white));
 
-  /// initialize notification
+  // initialize notification
   await flutterLocalNotificationsPlugin.initialize(
     InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -61,17 +62,33 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   AuthServices authServices = AuthServices();
+  String? test;
 
   @override
   void initState() {
     super.initState();
+    checkForUpdate();
+  }
+
+  // check for update
+  Future<void> checkForUpdate() async {
+    final update = await InAppUpdate.checkForUpdate();
+    if (update.updateAvailability == UpdateAvailability.updateNotAvailable) {
+      return;
+    }
+    if (update.immediateUpdateAllowed) {
+      await InAppUpdate.startFlexibleUpdate();
+      await InAppUpdate.completeFlexibleUpdate();
+      return;
+    }
+    await InAppUpdate.performImmediateUpdate();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'GoFoods',
+      title: 'Buynow',
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
@@ -84,6 +101,8 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
+
+            // check token is empty or not
             return Provider.of<UserProvider>(context).token!.isNotEmpty
                 ? SearchScreen()
                 : PhoneNumber();

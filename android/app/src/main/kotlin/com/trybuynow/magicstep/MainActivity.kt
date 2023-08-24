@@ -1,4 +1,4 @@
-package com.magicstep.cube.buynow
+package com.trybuynow.magicstep
 
 
 import io.flutter.embedding.android.FlutterActivity

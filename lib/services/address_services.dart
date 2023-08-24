@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 
 class AddressServices {
+  // add address of current order
   addAddress({
     required BuildContext context,
     required String city,

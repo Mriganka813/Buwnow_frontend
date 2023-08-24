@@ -50,6 +50,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final phone = phoneController.text.trim();
     final additional = additionalController.text.trim();
 
+    // validation
     if (name.isEmpty) {
       showSnackBar('Please enter name');
       return;
@@ -58,6 +59,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       return;
     }
 
+    // cute login(for token) for calculating delivery charge
     int statuscode = await cuteServices.cuteLogin(context, phone);
 
     if (statuscode > 300) {
@@ -111,6 +113,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           Container(
             height: height / 3.5,
             width: width,
+
+            // static google map to show choosed location
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
                   target: LatLng(
@@ -132,6 +136,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(
             height: height / 20,
           ),
+
+          // enter your name
           Customtextfild.textField(
               'Enter your name',
               notifier.getblackcolor,
@@ -143,6 +149,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(
             height: height / 50,
           ),
+
+          // enter phone number to login in cute and order place
           Customtextfild.textField(
               'Enter your phone number',
               notifier.getblackcolor,
@@ -154,6 +162,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(
             height: height / 50,
           ),
+
+          // additional field data
           Row(
             children: [
               SizedBox(width: width / 20),

@@ -1,3 +1,5 @@
+import 'package:buynow/constants/utils.dart';
+import 'package:buynow/screens/search_screen/screens/search_product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/custtomscreens/custtomexplorecaterories.dart';
 import 'package:buynow/custtomscreens/custtomrestorent.dart';
@@ -43,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> prodList = [];
   List<NearbyRestorentModel> nearbyRestaurants = [];
 
+  // category name
   List<String> catName = [
     'Food',
     'Grocery',
@@ -51,6 +54,8 @@ class _HomePageState extends State<HomePage> {
     'Stationary',
     'Electrical',
   ];
+
+  // category images
   List<String> catImages = [
     'assets/food.png',
     'assets/shopping_bag.png',
@@ -77,10 +82,13 @@ class _HomePageState extends State<HomePage> {
     getNearByRestaurants();
   }
 
+  // get nearby reataurants
   getNearByRestaurants() async {
     setState(() {
       isLoading = true;
     });
+
+    // get location provided by user at the beginning
     final location =
         await Provider.of<UserProvider>(context, listen: false).result;
     nearbyRestaurants = await searchServices.sendCityName(location, context);
@@ -89,11 +97,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // navigate to category page
   void goToCategories(String category) async {
     Navigator.of(context)
         .pushNamed(RecommendedSeeall.routeName, arguments: category);
   }
 
+  // navigate to profile page
   void goToProfile() async {
     Navigator.pushNamed(context, ProfileSetting.routeName);
   }
@@ -117,6 +127,7 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // show results for
                         Row(
                           children: [
                             SizedBox(width: width / 20),
@@ -136,6 +147,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+
+                        // dynamic provided location
                         Row(
                           children: [
                             SizedBox(width: width / 20),
@@ -160,6 +173,8 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const Spacer(),
+
+                    // profile icon
                     GestureDetector(
                       onTap: goToProfile,
                       child: Image.asset("assets/p3.png", height: height / 17),
@@ -178,6 +193,7 @@ class _HomePageState extends State<HomePage> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
+                              // search bar to search products
                               customTextField(
                                 wi: width / 1.13,
                                 textbgcolor: notifier.getbgfildcolor,
@@ -186,8 +202,20 @@ class _HomePageState extends State<HomePage> {
                                 name1: LanguageEn.searchfordish,
                                 context: context,
                                 prodList: prodList,
+                                onSubmit: (value) async {
+                                  if (value.isEmpty) {
+                                    showSnackBar('Search Something.');
+                                    return;
+                                  }
+
+                                  Navigator.of(context).pushNamed(
+                                      SearchProductListScreen.routeName,
+                                      arguments: value);
+                                },
                               ),
                               SizedBox(height: height / 40),
+
+                              // 30% off banners
                               Container(
                                 color: Colors.transparent,
                                 height: height / 5,
@@ -232,6 +260,7 @@ class _HomePageState extends State<HomePage> {
                               ),
 
                               SizedBox(height: height / 40),
+
                               Row(
                                 children: [
                                   SizedBox(width: width / 20),
@@ -243,6 +272,8 @@ class _HomePageState extends State<HomePage> {
                                         fontFamily: 'GilroyBold'),
                                   ),
                                   const Spacer(),
+
+                                  // show all category
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
@@ -262,6 +293,8 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               SizedBox(height: height / 100),
+
+                              // category list
                               Container(
                                 color: Colors.transparent,
                                 height: height / 5,
@@ -440,6 +473,8 @@ class _HomePageState extends State<HomePage> {
                                         fontFamily: 'GilroyBold'),
                                   ),
                                   const Spacer(),
+
+                                  // show all nearby restaurants
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
@@ -459,6 +494,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               SizedBox(height: height / 55),
 
+                              // show 20 nearby restaurants
                               nearbyRestaurants.length == 0
                                   ? Center(
                                       child: Column(

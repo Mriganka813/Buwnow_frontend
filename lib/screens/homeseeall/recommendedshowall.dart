@@ -46,6 +46,7 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
     getCategorydata();
   }
 
+  // get category info
   getCategorydata() async {
     setState(() {
       isLoading = true;
@@ -61,6 +62,7 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
     });
   }
 
+  // this is for pagination
   void _scrollListener() async {
     if (isLoadingMore) return;
     if (scrollController.position.pixels ==
@@ -109,6 +111,8 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
+
+            // shops
             : GridView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.all(10),
