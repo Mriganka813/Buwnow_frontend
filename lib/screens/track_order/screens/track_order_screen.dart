@@ -146,219 +146,223 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "Order ID : $orderId",
-                    style: TextStyle(
-                      color: notifier.getblackcolor,
-                      fontFamily: 'GilroyBold',
-                      fontSize: height / 55,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    top: 16.0,
-                  ),
-                  child: Text(
-                    "Orders",
-                    style: TextStyle(
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Order ID : $orderId",
+                      style: TextStyle(
                         color: notifier.getblackcolor,
-                        fontSize: height / 45,
-                        fontFamily: 'GilroyBold'),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      height: height / 2,
-                      width: width / 7,
-                      child: IconStepper(
-                        direction: Axis.vertical,
-                        enableNextPreviousButtons: false,
-                        enableStepTapping: false,
-                        stepColor: Colors.green,
-                        activeStepBorderColor: notifier.getwhite,
-                        activeStepBorderWidth: 0.0,
-                        activeStepBorderPadding: 0.0,
-                        lineColor: Colors.green,
-                        lineLength: height / 11,
-                        lineDotRadius: 2.0,
-                        stepRadius: height / 50,
-                        icons: [
-                          Icon(
-                              (ispending)
-                                  ? Icons.check
-                                  : Icons.radio_button_checked,
-                              color: notifier.getwhite),
-                          Icon(
-                              (isconfirm)
-                                  ? Icons.check
-                                  : Icons.radio_button_checked,
-                              color: notifier.getwhite),
-                          Icon(
-                              (isontheway)
-                                  ? Icons.check
-                                  : Icons.radio_button_checked,
-                              color: notifier.getwhite),
-                          Icon(
-                              (isdeliver)
-                                  ? Icons.check
-                                  : Icons.radio_button_checked,
-                              color: notifier.getwhite),
-                        ],
+                        fontFamily: 'GilroyBold',
+                        fontSize: height / 55,
                       ),
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: height / 40,
-                                  ),
-                                  title: Text(
-                                    statusList[index],
-                                    style: TextStyle(
-                                        color: notifier.getblackcolor,
-                                        fontSize: height / 45,
-                                        fontFamily: 'GilroyBold'),
-                                  ),
-                                  subtitle: Text(
-                                    'We are preparing your order',
-                                    style: TextStyle(
-                                        color: notifier.getgrey,
-                                        fontSize: height / 55,
-                                        fontFamily: 'GilroyMedium'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16.0,
+                      right: 16.0,
+                      top: 16.0,
+                    ),
+                    child: Text(
+                      "Orders",
+                      style: TextStyle(
+                          color: notifier.getblackcolor,
+                          fontSize: height / 45,
+                          fontFamily: 'GilroyBold'),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: height / 2,
+                        width: width / 7,
+                        child: IconStepper(
+                          direction: Axis.vertical,
+                          enableNextPreviousButtons: false,
+                          enableStepTapping: false,
+                          stepColor: Colors.green,
+                          activeStepBorderColor: notifier.getwhite,
+                          activeStepBorderWidth: 0.0,
+                          activeStepBorderPadding: 0.0,
+                          lineColor: Colors.green,
+                          lineLength: height / 11,
+                          lineDotRadius: 2.0,
+                          stepRadius: height / 50,
+                          icons: [
+                            Icon(
+                                (ispending)
+                                    ? Icons.check
+                                    : Icons.radio_button_checked,
+                                color: notifier.getwhite),
+                            Icon(
+                                (isconfirm)
+                                    ? Icons.check
+                                    : Icons.radio_button_checked,
+                                color: notifier.getwhite),
+                            Icon(
+                                (isontheway)
+                                    ? Icons.check
+                                    : Icons.radio_button_checked,
+                                color: notifier.getwhite),
+                            Icon(
+                                (isdeliver)
+                                    ? Icons.check
+                                    : Icons.radio_button_checked,
+                                color: notifier.getwhite),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: height / 40,
+                                    ),
+                                    title: Text(
+                                      statusList[index],
+                                      style: TextStyle(
+                                          color: notifier.getblackcolor,
+                                          fontSize: height / 45,
+                                          fontFamily: 'GilroyBold'),
+                                    ),
+                                    subtitle: Text(
+                                      'We are preparing your order',
+                                      style: TextStyle(
+                                          color: notifier.getgrey,
+                                          fontSize: height / 55,
+                                          fontFamily: 'GilroyMedium'),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              // Text(
-                              //   '10:00 AM',
-                              //   style: TextStyle(
-                              //       color: notifier.getred,
-                              //       fontSize: height / 55,
-                              //       fontFamily: 'GilroyMedium'),
-                              // ),
-                            ],
-                          );
-                        },
+                                // Text(
+                                //   '10:00 AM',
+                                //   style: TextStyle(
+                                //       color: notifier.getred,
+                                //       fontSize: height / 55,
+                                //       fontFamily: 'GilroyMedium'),
+                                // ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-
-                // if product is delivered then
-                if (isdeliver)
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        _showDialog(prodId);
-                      },
-                      child: button(notifier.getred, notifier.getwhite,
-                          'Rate Product', width / 1.1),
-                    ),
+                    ],
                   ),
-                SizedBox(
-                  height: height / 40,
-                ),
-                // Center(
-                //   child: button(notifier.getred, notifier.getwhite, 'Return',
-                //       width / 1.1),
-                // ),
-                SizedBox(
-                  height: height / 40,
-                ),
 
-                SizedBox(
-                  height: height / 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  // if product is delivered then
+                  if (isdeliver)
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushNamed(PayNow.routeName);
+                          _showDialog(prodId);
                         },
                         child: button(notifier.getred, notifier.getwhite,
-                            'Pay Now', width / 2.3),
+                            'Rate Product', width / 1.1),
                       ),
                     ),
-                    SizedBox(
-                      width: width / 20,
-                    ),
-                    trip.orderId != null
-                        ? Center(
-                            child: GestureDetector(
-                                onTap: () async {
-                                  print(order[0].status);
-                                  if (order[0].status != 'WAITING FOR DRIVER') {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              TrackOrder(order: trip),
-                                        ));
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            elevation: 0.0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            title: Text("Alert"),
-                                            content: Text(
-                                                "Driver has not been assigned yet"),
-                                            actions: [
-                                              TextButton(
-                                                child: Text("OK"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  }
-                                },
-                                child: button(
-                                    notifier.getred,
-                                    notifier.getwhite,
-                                    'Track Order',
-                                    width / 2.3)),
-                          )
-                        : Container()
-                  ],
-                ),
-                SizedBox(
-                  height: height / 40,
-                ),
-                trip.driverNumber != null
-                    ? InkWell(
-                        onTap: () => _launchDialer(trip.driverNumber!),
-                        child: Center(
+                  SizedBox(
+                    height: height / 40,
+                  ),
+                  // Center(
+                  //   child: button(notifier.getred, notifier.getwhite, 'Return',
+                  //       width / 1.1),
+                  // ),
+                  // SizedBox(
+                  //   height: height / 40,
+                  // ),
+
+                  // SizedBox(
+                  //   height: height / 40,
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(PayNow.routeName);
+                          },
                           child: button(notifier.getred, notifier.getwhite,
-                              'Call Driver', width / 1.1),
-                        ))
-                    : Container()
-              ],
+                              'Pay Now', width / 2.3),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width / 20,
+                      ),
+                      trip.orderId != null
+                          ? Center(
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    print(order[0].status);
+                                    if (order[0].status !=
+                                        'WAITING FOR DRIVER') {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TrackOrder(order: trip),
+                                          ));
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              elevation: 0.0,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                              title: Text("Alert"),
+                                              content: Text(
+                                                  "Driver has not been assigned yet"),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text("OK"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  },
+                                  child: button(
+                                      notifier.getred,
+                                      notifier.getwhite,
+                                      'Track Order',
+                                      width / 2.3)),
+                            )
+                          : Container()
+                    ],
+                  ),
+                  SizedBox(
+                    height: height / 40,
+                  ),
+                  trip.driverNumber != null
+                      ? InkWell(
+                          onTap: () => _launchDialer(trip.driverNumber!),
+                          child: Center(
+                            child: button(notifier.getred, notifier.getwhite,
+                                'Call Driver', width / 1.1),
+                          ))
+                      : Container()
+                ],
+              ),
             ),
     );
   }
