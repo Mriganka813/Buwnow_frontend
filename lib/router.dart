@@ -128,7 +128,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       final args = routeSettings.arguments as Map<String, dynamic>;
       final name = args['name'];
       final phone = args['phone'];
-      final additional = args['phone'];
+      final additional = args['additional'];
 
       return MaterialPageRoute(
           settings: routeSettings,
