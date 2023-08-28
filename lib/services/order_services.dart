@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:buynow/models/consumer_adrress.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/constants/const.dart';
 
@@ -15,40 +16,20 @@ class OrderServices {
   // order place
   orderPlace({
     required BuildContext context,
-    required String name,
-    required String state,
-    required String city,
-    required String phoneNo,
-    required String pincode,
-    required String streetAddress,
-    required String latitude,
-    required String longitude,
-    required String additional,
+    required ConsumerAddress orderDetail,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       final http.Response res = await http.post(
         Uri.parse('${Const.apiV1Url}/consumer/order/placeorder'),
-        body: {
-          'name': name,
-          'country': 'India',
-          'state': state,
-          'city': city,
-          'phoneNumber': phoneNo,
-          'pinCode': pincode,
-          'streetAddress': streetAddress,
-          'additionalInfo': additional,
-          'landmark': '',
-          'latitude': latitude,
-          'longitude': longitude,
-        },
+        body: orderDetail.toJson(),
         headers: {'Authorization': '${userProvider.token}'},
       );
 
       print(res.statusCode);
       print(res.body);
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
     }
   }
 

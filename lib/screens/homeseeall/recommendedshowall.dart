@@ -17,15 +17,15 @@ class RecommendedSeeall extends StatefulWidget {
 
 class _RecommendedSeeallState extends State<RecommendedSeeall> {
   late ColorNotifier notifier;
-  bool isLoading = false;
-  String category = '';
-  List<NearbyRestorentModel> categoryData = [];
+  bool _isLoading = false;
+  String _category = '';
+  List<NearbyRestorentModel> _categoryData = [];
   final scrollController = ScrollController();
 
-  bool isLoadingMore = false;
-  int page = 1;
+  bool _isLoadingMore = false;
+  int _page = 1;
 
-  final CategoryProductServices categoryProductServices =
+  final CategoryProductServices _categoryProductServices =
       CategoryProductServices();
 
   getdarkmodepreviousstate() async {
@@ -49,31 +49,31 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
   // get category info
   getCategorydata() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     Future.delayed(Duration.zero, () async {
-      category = ModalRoute.of(context)!.settings.arguments as String;
-      categoryData = categoryData +
-          await categoryProductServices.getCategoryProducts(
-              context, category, page);
+      _category = ModalRoute.of(context)!.settings.arguments as String;
+      _categoryData = _categoryData +
+          await _categoryProductServices.getCategoryProducts(
+              context, _category, _page);
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     });
   }
 
   // this is for pagination
   void _scrollListener() async {
-    if (isLoadingMore) return;
+    if (_isLoadingMore) return;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      page++;
+      _page++;
       setState(() {
-        isLoadingMore = true;
+        _isLoadingMore = true;
       });
       await getCategorydata();
       setState(() {
-        isLoadingMore = false;
+        _isLoadingMore = false;
       });
     }
   }
@@ -100,14 +100,14 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
             ),
           ),
           title: Text(
-            category,
+            _category,
             style: TextStyle(
                 color: notifier.getblackcolor,
                 fontSize: height / 45,
                 fontFamily: 'GilroyBold'),
           ),
         ),
-        body: categoryData.length == 0
+        body: _categoryData.length == 0
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -117,9 +117,9 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
                 shrinkWrap: true,
                 padding: EdgeInsets.all(10),
                 controller: scrollController,
-                itemCount: isLoadingMore
-                    ? categoryData.length + 1
-                    : categoryData.length,
+                itemCount: _isLoadingMore
+                    ? _categoryData.length + 1
+                    : _categoryData.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisExtent: height / 4.3,
@@ -127,15 +127,15 @@ class _RecommendedSeeallState extends State<RecommendedSeeall> {
                   mainAxisSpacing: height / 80,
                 ),
                 itemBuilder: (context, index) {
-                  if (index < categoryData.length) {
-                    final name = categoryData[index].businessName;
-                    final address = categoryData[index].address!.locality! +
+                  if (index < _categoryData.length) {
+                    final name = _categoryData[index].businessName;
+                    final address = _categoryData[index].address!.locality! +
                         "," +
-                        categoryData[index].address!.city!;
-                    final id = categoryData[index].sId;
-                    final category = categoryData[index].businessType;
-                    final image = categoryData[index].image ?? '';
-                    final discount = categoryData[index].discount;
+                        _categoryData[index].address!.city!;
+                    final id = _categoryData[index].sId;
+                    final category = _categoryData[index].businessType;
+                    final image = _categoryData[index].image ?? '';
+                    final discount = _categoryData[index].discount;
                     return CusttomRecommended(
                       bgimage: image,
                       adressredto: address,

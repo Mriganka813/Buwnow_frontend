@@ -78,7 +78,12 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
         print(cltime);
 
         // Synchronize with an NTP server
-        DateTime currentTime = await NTP.now();
+        DateTime currentTime;
+        try {
+          currentTime = await NTP.now();
+        } catch (e) {
+          currentTime = DateTime.now();
+        }
 
         if (currentTime.hour < optime.hour ||
             (currentTime.hour == optime.hour &&

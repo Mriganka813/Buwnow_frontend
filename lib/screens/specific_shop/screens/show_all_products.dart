@@ -31,15 +31,15 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
   TabController? controller;
   final scrollController = ScrollController();
 
-  bool isLoading = false;
-  List<Product> products = [];
+  bool _isLoading = false;
+  List<Product> _products = [];
 
-  bool isLoadingMore = false;
-  int page = 1;
+  bool _isLoadingMore = false;
+  int _page = 1;
 
-  final SpecificShopDetails shopDetails = SpecificShopDetails();
-  CartServices cartServices = CartServices();
-  List<CartItem> cartData = [];
+  final SpecificShopDetails _shopDetails = SpecificShopDetails();
+  CartServices _cartServices = CartServices();
+  List<CartItem> _cartData = [];
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,7 +52,7 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
   }
 
   getCartData() async {
-    cartData = await cartServices.getCartItems(context);
+    _cartData = await _cartServices.getCartItems(context);
   }
 
   @override
@@ -69,32 +69,32 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
   // get shop products
   getShopDetails() {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     Future.delayed(Duration.zero, () async {
-      products = products +
-          await shopDetails.getShopProducts(context, widget.shopId, page);
-      if (products.length == 0) {
+      _products = _products +
+          await _shopDetails.getShopProducts(context, widget.shopId, _page);
+      if (_products.length == 0) {
         showSnackBar('No products found');
       }
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     });
   }
 
   // this is for pagination
   void _scrollListener() async {
-    if (isLoadingMore) return;
+    if (_isLoadingMore) return;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      page++;
+      _page++;
       setState(() {
-        isLoadingMore = true;
+        _isLoadingMore = true;
       });
       await getShopDetails();
       setState(() {
-        isLoadingMore = false;
+        _isLoadingMore = false;
       });
     }
   }
@@ -129,16 +129,17 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
               fontFamily: 'GilroyBold'),
         ),
       ),
-      body: products.length == 0
+      body: _products.length == 0
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
-              itemCount: isLoadingMore ? products.length + 1 : products.length,
+              itemCount:
+                  _isLoadingMore ? _products.length + 1 : _products.length,
               controller: scrollController,
               shrinkWrap: true,
               physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                if (index < products.length) {
-                  final product = products[index];
+                if (index < _products.length) {
+                  final product = _products[index];
                   final prodId = product.sId;
                   final discount = product.discount ?? 0;
                   final prodName = product.name;
@@ -157,7 +158,7 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                       }
                       Navigator.of(context).pushNamed(
                         SearchProductDetailsScreen.routeName,
-                        arguments: products[index],
+                        arguments: _products[index],
                       );
                     },
                     child: Padding(
@@ -180,9 +181,9 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
                           }
 
                           // if cart has items and ensure that current item is not of different seller
-                          if (cartData.length > 0) {
-                            if (widget.shopId == cartData[0].sellerId) {
-                              await cartServices.addToCart(
+                          if (_cartData.length > 0) {
+                            if (widget.shopId == _cartData[0].sellerId) {
+                              await _cartServices.addToCart(
                                   context, prodId!, '1');
                               showSnackBar('Item added successfully.');
                             } else {
@@ -193,7 +194,8 @@ class _SpecificAllProductScreenState extends State<SpecificAllProductScreen>
 
                             // if cart has no items
                           } else {
-                            await cartServices.addToCart(context, prodId!, '1');
+                            await _cartServices.addToCart(
+                                context, prodId!, '1');
                             showSnackBar('Item added successfully.');
                           }
                           Navigator.of(context)

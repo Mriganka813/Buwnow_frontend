@@ -26,12 +26,12 @@ class _SearchProductDetailsScreenState
     extends State<SearchProductDetailsScreen> {
   late ColorNotifier notifier;
 
-  final CartServices cartServices = CartServices();
-  List<CartItem> cartData = [];
+  final CartServices _cartServices = CartServices();
+  List<CartItem> _cartData = [];
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
-  int userQuantity = 1;
+  int _userQuantity = 1;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -53,11 +53,11 @@ class _SearchProductDetailsScreenState
   // get cart data
   getCartData() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-    cartData = await cartServices.getCartItems(context);
+    _cartData = await _cartServices.getCartItems(context);
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -65,21 +65,21 @@ class _SearchProductDetailsScreenState
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Product;
     final prodId = args.sId;
-    final prodName = args.name;
+    // final prodName = args.name;
     final int price = args.sellingPrice!.toInt();
     final quantity = args.quantity.toString();
-    final returnPeriod = args.returnPeriod;
-    final desc = 'No description available';
+    // final returnPeriod = args.returnPeriod;
+    // final desc = 'No description available';
     final String image = args.image ?? '';
-    final sellerName = args.sellerName ?? '';
+    // final sellerName = args.sellerName ?? '';
     final sellerId = args.user ?? '';
-    final category = '';
-    final address = '';
-    final String rating =
-        args.rating!.isEmpty ? 'No ratings' : args.rating![0].toString();
+    // final category = '';
+    // final address = '';
+    // final String rating =
+    //     args.rating!.isEmpty ? 'No ratings' : args.rating![0].toString();
 
     // calculate discounted price
-    final discount = args.discount ?? 0;
+    final int discount = args.discount!;
     final discountPrice = (price * discount) / 100;
     final priceAfterDiscount = price - discountPrice;
 
@@ -89,7 +89,7 @@ class _SearchProductDetailsScreenState
 
     return SafeArea(
         child: Scaffold(
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -116,32 +116,35 @@ class _SearchProductDetailsScreenState
                       ),
                   buttonArrow(context),
                   scroll(
-                      prodName!,
-                      sellerName,
-                      priceAfterDiscount.toInt(),
-                      quantity,
-                      returnPeriod!,
-                      desc,
-                      sellerId,
-                      category,
-                      address,
-                      rating),
+                    // prodName!,
+                    // sellerName,
+                    // priceAfterDiscount.toInt(),
+                    // quantity,
+                    // returnPeriod!,
+                    // desc,
+                    // sellerId,
+                    // category,
+                    // address,
+                    // rating
+                    args,
+                    priceAfterDiscount,
+                  ),
                 ],
               ),
             ),
       bottomNavigationBar: InkWell(
         onTap: () async {
           // check quantity is available or not
-          if (userQuantity > int.parse(quantity)) {
+          if (_userQuantity > int.parse(quantity)) {
             _showMyDialog('quantity not available');
             return;
           }
 
           // if cart has items and ensure that current item is of different seller
-          if (cartData.length > 0) {
-            if (sellerId == cartData[0].sellerId) {
-              await cartServices.addToCart(
-                  context, prodId!, userQuantity.toString());
+          if (_cartData.length > 0) {
+            if (sellerId == _cartData[0].sellerId) {
+              await _cartServices.addToCart(
+                  context, prodId!, _userQuantity.toString());
               showSnackBar('Item added successfully.');
               Navigator.of(context).pushNamed(OrderConformation.routeName);
             } else {
@@ -151,8 +154,8 @@ class _SearchProductDetailsScreenState
 
             // if cart has no items
           } else {
-            await cartServices.addToCart(
-                context, prodId!, userQuantity.toString());
+            await _cartServices.addToCart(
+                context, prodId!, _userQuantity.toString());
 
             showSnackBar('Item added successfully.');
             Navigator.of(context).pushNamed(OrderConformation.routeName);
@@ -202,16 +205,18 @@ class _SearchProductDetailsScreenState
   }
 
   scroll(
-    String prodName,
-    String sellerName,
-    int price,
-    String totalQuantity,
-    int returnPeriod,
-    String desc,
-    String sellerId,
-    String category,
-    String address,
-    String rating,
+    // String prodName,
+    // String sellerName,
+    // int price,
+    // String totalQuantity,
+    // int returnPeriod,
+    // String desc,
+    // String sellerId,
+    // String category,
+    // String address,
+    // String rating,
+    Product product,
+    double priceAfterDiscount,
   ) {
     TextStyle heading = TextStyle(
         color: notifier.getblackcolor,
@@ -255,7 +260,7 @@ class _SearchProductDetailsScreenState
                   ),
                 ),
                 Text(
-                  prodName,
+                  product.name!,
                   style: heading,
                 ),
                 Row(
@@ -268,12 +273,12 @@ class _SearchProductDetailsScreenState
                         Navigator.of(context).pushNamed(
                             SpecificAllProductScreen.routeName,
                             arguments: {
-                              'id': sellerId,
-                              'name': sellerName,
+                              'id': product.user,
+                              'name': product.sellerName,
                             });
                       },
                       child: Text(
-                        '~ by $sellerName',
+                        '~ by ${product.sellerName}',
                         textAlign: TextAlign.right,
                         style: TextStyle(
                             color: notifier.getred,
@@ -289,7 +294,7 @@ class _SearchProductDetailsScreenState
                 Row(
                   children: [
                     Text(
-                      "₹${price.toInt()}",
+                      "₹${priceAfterDiscount.toInt()}",
                       style: TextStyle(
                           color: notifier.getblackcolor,
                           fontSize: height / 45,
@@ -305,7 +310,7 @@ class _SearchProductDetailsScreenState
                   height: height / 100,
                 ),
                 Text(
-                  'Available quantity: $totalQuantity',
+                  'Available quantity: ${product.quantity}',
                   style: text,
                 ),
                 SizedBox(
@@ -337,14 +342,14 @@ class _SearchProductDetailsScreenState
                         minValue: 1,
                         maxValue: 10,
                         itemWidth: width / 18,
-                        value: userQuantity,
+                        value: _userQuantity,
                         axis: Axis.horizontal,
                         itemHeight: 30,
                         selectedTextStyle:
                             const TextStyle(fontSize: 25, color: Colors.black),
                         onChanged: (changedValue) {
                           setState(() {
-                            userQuantity = changedValue;
+                            _userQuantity = changedValue;
                           });
                         },
                       ),
@@ -359,7 +364,7 @@ class _SearchProductDetailsScreenState
                   height: height / 100,
                 ),
                 Text(
-                  '$returnPeriod days Return Policy',
+                  '${product.returnPeriod} days Return Policy',
                   style: text,
                 ),
                 SizedBox(
@@ -369,7 +374,9 @@ class _SearchProductDetailsScreenState
                 Row(
                   children: [
                     Text(
-                      '$rating',
+                      product.rating!.isEmpty
+                          ? 'No ratings'
+                          : product.rating![0].toString(),
                       style: text.copyWith(color: notifier.getred),
                     ),
                     Icon(
@@ -405,7 +412,7 @@ class _SearchProductDetailsScreenState
                   height: height / 80,
                 ),
                 Text(
-                  desc,
+                  'No description available',
                   style: text,
                 ),
                 SizedBox(

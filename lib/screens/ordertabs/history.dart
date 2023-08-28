@@ -23,12 +23,12 @@ class Historytabs extends StatefulWidget {
 class _HistorytabsState extends State<Historytabs> {
   late ColorNotifier notifier;
 
-  bool isLoading = false;
-  final OrderServices orderServices = OrderServices();
-  List<Order> orderHistory = [];
-  int orderLength = 0;
+  bool _isLoading = false;
+  final OrderServices _orderServices = OrderServices();
+  List<Order> _orderHistory = [];
+  int _orderLength = 0;
 
-  final phoneController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,27 +51,33 @@ class _HistorytabsState extends State<Historytabs> {
   // get orders history
   getOrderHistory() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-    orderHistory = await orderServices.orderHistory();
-    orderLength = orderHistory.length;
+    _orderHistory = await _orderServices.orderHistory();
+    _orderLength = _orderHistory.length;
 
-    if (orderLength == 0) {
+    if (_orderLength == 0) {
       showSnackBar('No Orders');
       return;
     }
 
     if (mounted)
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
   }
 
   getItemsLength() {
-    for (int i = 0; i < orderHistory.length; i++) {
-      List<Items>? items = orderHistory[i].items;
-      orderLength += items!.length;
+    for (int i = 0; i < _orderHistory.length; i++) {
+      List<Items>? items = _orderHistory[i].items;
+      _orderLength += items!.length;
     }
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,7 +87,7 @@ class _HistorytabsState extends State<Historytabs> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getwhite,
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -93,13 +99,13 @@ class _HistorytabsState extends State<Historytabs> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: orderLength,
+                        itemCount: _orderLength,
                         itemBuilder: (context, index) {
-                          final order = orderHistory[index];
+                          final order = _orderHistory[index];
                           final orderId = order.sId;
                           final date =
                               order.createdAt.toString().substring(0, 10);
-                          final List<Items>? items = orderHistory[index].items;
+                          final List<Items>? items = _orderHistory[index].items;
                           final phoneNo = order.sellerNum;
 
                           return Column(
@@ -109,28 +115,22 @@ class _HistorytabsState extends State<Historytabs> {
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, i) {
-                                  final prodId = items[i].productId;
+                                  // final prodId = items[i].productId;
                                   final qty = items[i].quantity!.toInt();
-                                  final prodName = items[i].productName;
+                                  // final prodName = items[i].productName;
                                   final prodPrice =
                                       items[i].productPrice!.toInt();
                                   final totalAmount = qty * prodPrice;
-                                  final status = items[i].status;
-                                  final prodImage = items[i].productImage ?? '';
-                                  final sellerId = items[i].sellerId;
+                                  // final status = items[i].status;
+                                  // final prodImage = items[i].productImage ?? '';
+                                  // final sellerId = items[i].sellerId;
 
                                   return historyItem(
                                     orderId!,
                                     date,
-                                    qty,
-                                    prodName!,
-                                    prodPrice,
                                     totalAmount,
-                                    status!,
-                                    prodId!,
                                     phoneNo!,
-                                    prodImage,
-                                    sellerId!,
+                                    items[i],
                                   );
                                 },
                               )
@@ -188,15 +188,16 @@ class _HistorytabsState extends State<Historytabs> {
   Widget historyItem(
     String orderId,
     String date,
-    int qty,
-    String prodName,
-    int prodPrice,
+    // int qty,
+    // String prodName,
+    // int prodPrice,
     int totalAmount,
-    String status,
-    String prodId,
+    // String status,
+    // String prodId,
     String phoneNo,
-    String image,
-    String sellerId,
+    // String image,
+    // String sellerId,
+    Items items,
   ) {
     return Column(
       children: [
@@ -240,28 +241,29 @@ class _HistorytabsState extends State<Historytabs> {
             Provider.of<UserProvider>(context, listen: false)
                 .setTotalPriceOfCartItems(totalAmount);
             Provider.of<UserProvider>(context, listen: false)
-                .setSellerId(sellerId);
+                .setSellerId(items.sellerId!);
 
             SharedPreferences prefs = await SharedPreferences.getInstance();
             String? token = prefs.getString('cuteToken');
 
             if (token == null) {
-              await phoneDialog(prodId, orderId, status, context);
+              await phoneDialog(
+                  items.productId!, orderId, items.status!, context);
             } else {
               Navigator.of(context)
                   .pushNamed(TrackOrderScreen.routeName, arguments: {
-                'prodId': prodId,
+                'prodId': items.productId,
                 'orderId': orderId,
-                'status': status,
+                'status': items.status,
               });
             }
           },
           child: CusttomDeliverdOrder(
             id: '',
-            image: image,
-            txt: prodName,
-            rate: '₹' + prodPrice.toString(),
-            qty: qty,
+            image: items.productImage ?? '',
+            txt: items.productName!,
+            rate: '₹' + items.productPrice.toString(),
+            qty: items.quantity!,
             totalAmount: totalAmount.toString(),
           ),
         ),
@@ -271,7 +273,7 @@ class _HistorytabsState extends State<Historytabs> {
             SizedBox(width: width / 20),
 
             // status button
-            estbutton(status, false),
+            estbutton(items.status!, false),
             Spacer(),
 
             GestureDetector(
@@ -333,7 +335,7 @@ class _HistorytabsState extends State<Historytabs> {
                   height: 20.0,
                 ),
                 TextField(
-                  controller: phoneController,
+                  controller: _phoneController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Enter Your phone number',
@@ -352,7 +354,7 @@ class _HistorytabsState extends State<Historytabs> {
                       onTap: () async {
                         CuteServices cuteServices = CuteServices();
                         int statuscode = await cuteServices.cuteLogin(
-                            context, phoneController.text);
+                            context, _phoneController.text);
 
                         if (statuscode == 200) {
                           Navigator.of(ctx).pushNamed(

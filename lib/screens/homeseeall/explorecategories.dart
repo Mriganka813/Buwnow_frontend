@@ -32,7 +32,7 @@ class _CategoriesState extends State<Categories> {
   }
 
   // category images
-  List<String> catImages = [
+  List<String> _catImages = [
     'assets/food.png',
     'assets/shopping_bag.png',
     'assets/medicine.png',
@@ -95,7 +95,7 @@ class _CategoriesState extends State<Categories> {
                       border: Border.all(color: notifire.getwhite),
                     ),
                     child: ExploreCategories(
-                      catImages[index],
+                      _catImages[index],
                       catName[index],
                       height / 10,
                     ),

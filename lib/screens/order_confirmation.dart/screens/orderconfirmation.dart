@@ -2,9 +2,7 @@ import 'package:buynow/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/custtomscreens/custtombutton.dart';
 import 'package:buynow/screens/yourorder/deliveryadrees.dart';
-import 'package:buynow/services/address_services.dart';
 import 'package:buynow/services/cart_services.dart';
-import 'package:buynow/services/order_services.dart';
 import 'package:buynow/utils/enstring.dart';
 import 'package:buynow/utils/mediaqury.dart';
 import 'package:buynow/utils/notifirecolor.dart';
@@ -23,10 +21,9 @@ class OrderConformation extends StatefulWidget {
 class _OrderConformationState extends State<OrderConformation> {
   late ColorNotifier notifier;
 
-  final CartServices cartServices = CartServices();
-  final OrderServices orderServices = OrderServices();
-  final AddressServices addressServices = AddressServices();
-  List<CartItem> cartData = [];
+  final CartServices _cartServices = CartServices();
+  // final AddressServices _addressServices = AddressServices();
+  List<CartItem> _cartData = [];
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -40,7 +37,7 @@ class _OrderConformationState extends State<OrderConformation> {
 
   String address = '';
 
-  bool isLoading = false;
+  bool _isLoading = false;
   int subTotal = 0;
 
   @override
@@ -54,14 +51,14 @@ class _OrderConformationState extends State<OrderConformation> {
   getCartData() async {
     if (mounted) {
       setState(() {
-        isLoading = true;
+        _isLoading = true;
       });
     }
 
-    cartData = await cartServices.getCartItems(context);
+    _cartData = await _cartServices.getCartItems(context);
 
     // calculate total from all cart items
-    cartData.forEach(
+    _cartData.forEach(
       (product) => subTotal += int.parse(product.discountedPrice.toString()) *
           int.parse(product.qty.toString()),
     );
@@ -70,20 +67,20 @@ class _OrderConformationState extends State<OrderConformation> {
 
     if (mounted) {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     }
   }
 
   // navigate to map page
   orderNow() async {
-    if (cartData.length == 0) {
+    if (_cartData.length == 0) {
       return;
     }
 
     // set seller id for get seller upi details at payment page
     Provider.of<UserProvider>(context, listen: false)
-        .setSellerId(cartData[0].sellerId!);
+        .setSellerId(_cartData[0].sellerId!);
     Navigator.of(context).pushNamed(AddressUpdates.routeName);
   }
 
@@ -115,7 +112,7 @@ class _OrderConformationState extends State<OrderConformation> {
           ),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -202,7 +199,7 @@ class _OrderConformationState extends State<OrderConformation> {
                   SizedBox(height: height / 50),
 
                   // show cart items
-                  cartData.length == 0
+                  _cartData.length == 0
                       ? Container(
                           height: height / 4,
                           width: width,
@@ -218,71 +215,57 @@ class _OrderConformationState extends State<OrderConformation> {
                         )
                       : ListView.builder(
                           shrinkWrap: true,
-                          itemCount: cartData.length,
+                          itemCount: _cartData.length,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final name = cartData[index].name;
-                            final price = cartData[index].discountedPrice!;
-                            final quantity = cartData[index].qty!;
+                            final name = _cartData[index].name;
+                            final price = _cartData[index].discountedPrice!;
+                            final quantity = _cartData[index].qty!;
                             final totalAmount = price * quantity;
-                            final id = cartData[index].productId;
-                            final String image = cartData[index].image!;
+                            final id = _cartData[index].productId;
+                            final String image = _cartData[index].image!;
 
                             return Column(
                               children: [
                                 Dismissible(
                                     key: ValueKey(DateTime.now()),
-                                    background: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                            alignment: Alignment.centerLeft,
-                                            padding: const EdgeInsets.only(
-                                                right: 20),
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 4),
-                                            child: const Icon(
-                                              Icons.delete,
-                                              size: 40,
-                                              color: Colors.white,
-                                            ),
+                                    background: Container(
+                                      width: width,
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.only(
+                                          right: 20, left: 20),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 4),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Icon(
+                                            Icons.delete,
+                                            size: 40,
+                                            color: Colors.white,
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                            alignment: Alignment.centerRight,
-                                            padding: const EdgeInsets.only(
-                                                right: 20),
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 4),
-                                            child: const Icon(
-                                              Icons.delete,
-                                              size: 40,
-                                              color: Colors.white,
-                                            ),
+                                          const Icon(
+                                            Icons.delete,
+                                            size: 40,
+                                            color: Colors.white,
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                     confirmDismiss: (direction) {
                                       return _showDialog();
                                     },
                                     onDismissed: (direction) async {
-                                      await cartServices.removeFromCart(
+                                      await _cartServices.removeFromCart(
                                           context, id!);
-                                      cartData.removeAt(index);
+                                      _cartData.removeAt(index);
 
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
-                                      if (cartData.length == 0) {
+                                      if (_cartData.length == 0) {
                                         prefs.remove('lat');
                                         prefs.remove('long');
                                       }
@@ -389,7 +372,7 @@ class _OrderConformationState extends State<OrderConformation> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: button(
-            cartData.length == 0 ? notifier.getgrey : notifier.getred,
+            _cartData.length == 0 ? notifier.getgrey : notifier.getred,
             notifier.getwhite,
             "Order now",
             width / 1.1,

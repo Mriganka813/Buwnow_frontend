@@ -23,10 +23,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late ColorNotifier notifier;
-  final searchController = TextEditingController();
-  bool isLoading = false;
-  final SearchServices searchServices = SearchServices();
-  List<dynamic> list = [];
+  final _searchController = TextEditingController();
+  bool _isLoading = false;
+  final SearchServices _searchServices = SearchServices();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -87,20 +86,20 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void submit() async {
-    final searchText = searchController.text.trim();
+    final searchText = _searchController.text.trim();
     if (searchText.isEmpty) {
       showSnackBar('Please enter city or country.');
       return;
     }
     if (mounted) {
       setState(() {
-        isLoading = true;
+        _isLoading = true;
       });
     }
 
     //
     Provider.of<UserProvider>(context, listen: false).setKeyword(searchText);
-    await searchServices.sendCityName(searchText, context);
+    await _searchServices.sendCityName(searchText, context);
 
     //
     Navigator.of(context)
@@ -110,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .then((value) {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          _isLoading = false;
         });
       }
     });
@@ -119,7 +118,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     super.dispose();
-    searchController.dispose();
+    _searchController.dispose();
   }
 
   @override
@@ -154,7 +153,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 notifier.getblackcolor,
                 width / 1.13,
                 notifier.getwhite,
-                searchController,
+                _searchController,
               ),
               SizedBox(
                 height: height / 20,
@@ -171,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: isLoading
+      bottomNavigationBar: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),

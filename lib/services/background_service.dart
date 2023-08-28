@@ -87,7 +87,7 @@ void onStart(ServiceInstance service) async {
     for (int i = 0; i < latestOrder.length; i++) {
       final order = latestOrder[i];
       if (order.items![0].status == 'pending') {
-        pendingOrder.add(latestOrder[i].sId!);
+        pendingOrder.add(order.sId!);
       }
     }
 

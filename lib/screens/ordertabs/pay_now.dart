@@ -19,11 +19,11 @@ class PayNow extends StatefulWidget {
 
 class _PayNowState extends State<PayNow> {
   late ColorNotifier notifier;
-  bool isLoading = false;
-  UPIModel upi = UPIModel();
-  UPIServices upiServices = UPIServices();
+  bool _isLoading = false;
+  UPIModel _upi = UPIModel();
+  UPIServices _upiServices = UPIServices();
 
-  var myupiDetails;
+  var _myupiDetails;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,19 +43,19 @@ class _PayNowState extends State<PayNow> {
 
   getUpiDetails() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-    upi = await upiServices.getUpiDetails(context);
+    _upi = await _upiServices.getUpiDetails(context);
     int amount = Provider.of<UserProvider>(context, listen: false).subtotal;
-    myupiDetails = UPIDetails(
-      upiID: upi.upi!,
-      payeeName: upi.businessName!,
+    _myupiDetails = UPIDetails(
+      upiID: _upi.upi!,
+      payeeName: _upi.businessName!,
       amount: amount.toDouble(),
       transactionNote: 'Testing payment',
     );
 
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -94,7 +94,7 @@ class _PayNowState extends State<PayNow> {
           ),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -107,7 +107,7 @@ class _PayNowState extends State<PayNow> {
 
                   // qr code image
                   UPIPaymentQRCode(
-                    upiDetails: myupiDetails,
+                    upiDetails: _myupiDetails,
                     size: 300,
                     embeddedImagePath: 'assets/buynow.png',
                     embeddedImageSize: const Size(60, 60),
@@ -127,7 +127,7 @@ class _PayNowState extends State<PayNow> {
 
                       // to copy upi id
                       SelectableText(
-                        '${myupiDetails.upiID}',
+                        '${_myupiDetails.upiID}',
                         style: greenStyle,
                       )
                     ],

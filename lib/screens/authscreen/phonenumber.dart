@@ -1,3 +1,4 @@
+import 'package:buynow/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/constants/utils.dart';
 import 'package:buynow/custtomscreens/custtombutton.dart';
@@ -20,14 +21,11 @@ class PhoneNumber extends StatefulWidget {
 class _PhoneNumberState extends State<PhoneNumber> {
   late ColorNotifier notifier;
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  bool isChecked = false;
-  bool isLoading = false;
-
-  late int currentIndex;
-  late DateTime currentBackPressTime;
+  bool _isChecked = false;
+  bool _isLoading = false;
 
   final AuthServices authServices = AuthServices();
 
@@ -39,13 +37,13 @@ class _PhoneNumberState extends State<PhoneNumber> {
   @override
   void dispose() {
     super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
   }
 
   void signIn() async {
-    final email = emailController.text.trim().toLowerCase();
-    final password = passwordController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
+    final password = _passwordController.text.trim();
 
     // validation
     if (email.isEmpty) {
@@ -59,22 +57,26 @@ class _PhoneNumberState extends State<PhoneNumber> {
     // enable loading indicator
     if (mounted) {
       setState(() {
-        isLoading = true;
+        _isLoading = true;
       });
     }
+
+    User user = User(
+      email: email,
+      password: password,
+    );
 
     // login user
     authServices
         .signInUser(
       context: context,
-      email: email,
-      password: password,
+      user: user,
     )
         .then((value) {
       if (mounted) {
         // disable loading indicator
         setState(() {
-          isLoading = false;
+          _isLoading = false;
         });
       }
     });
@@ -178,7 +180,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
                 width / 1.13,
                 Icons.email_rounded,
                 notifier.getbgfildcolor,
-                emailController,
+                _emailController,
                 false),
             SizedBox(height: height / 40),
             Row(
@@ -203,7 +205,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
                 width / 1.13,
                 Icons.lock,
                 notifier.getbgfildcolor,
-                passwordController,
+                _passwordController,
                 true),
 
             // remember me check box
@@ -219,10 +221,10 @@ class _PhoneNumberState extends State<PhoneNumber> {
                       ),
                     ),
                     activeColor: notifier.getred,
-                    value: isChecked,
+                    value: _isChecked,
                     onChanged: (bool? value) {
                       setState(() {
-                        isChecked = value ?? false;
+                        _isChecked = value ?? false;
                       });
                     },
                   ),
@@ -268,7 +270,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
               onTap: () {
                 signIn();
               },
-              child: isLoading
+              child: _isLoading
                   ? CircularProgressIndicator()
                   : button(
                       notifier.getred,

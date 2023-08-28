@@ -1,5 +1,4 @@
 import 'package:buynow/constants/utils.dart';
-import 'package:buynow/models/upi.dart';
 import 'package:buynow/providers/user_provider.dart';
 import 'package:buynow/screens/payment_details/screens/show_qr_screen.dart';
 
@@ -14,7 +13,6 @@ import '../../../models/new_trip_input.dart';
 import '../../../models/vehicle.dart';
 
 import '../../../services/trip_services.dart';
-import '../../../services/upi_services.dart';
 import '../../../utils/enstring.dart';
 import '../../../utils/mediaqury.dart';
 import '../../../utils/notifirecolor.dart';
@@ -36,15 +34,15 @@ class PaymentDetailsScreen extends StatefulWidget {
 
 class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
   late ColorNotifier notifier;
-  bool isLoading = false;
+  bool _isLoading = false;
   // int _groupValue = -1;
-  int deliveryGroupValue = -1;
-  int deliveryCharge = 0;
-  List<Vehicle> vehicles = [];
+  int _deliveryGroupValue = -1;
+  int _deliveryCharge = 0;
+  List<Vehicle> _vehicles = [];
   int total = 0;
 
-  UPIServices upiServices = UPIServices();
-  UPIModel upi = UPIModel();
+  // UPIServices _upiServices = UPIServices();
+  // UPIModel _upi = UPIModel();
 
   // static const MethodChannel _channel = MethodChannel('upi_payment');
 
@@ -159,7 +157,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
     //     '$long' +
     //     '${provider.consumerLatitude}' +
     //     '${provider.consumerLongitude}');
-    vehicles = await deliveryServices.deliveryFairCharges(
+    _vehicles = await deliveryServices.deliveryFairCharges(
         double.parse(lat),
         double.parse(long),
         provider.consumerLatitude!,
@@ -167,9 +165,9 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
         context);
 
     // store it for creating new trip in background after accepting by the shopkeeper
-    await prefs.setString('serviceAreaId', vehicles[0].serviceAreaId!);
-    await prefs.setString('vehicleId', vehicles[0].id!);
-    await prefs.setDouble('price', vehicles[0].price!);
+    await prefs.setString('serviceAreaId', _vehicles[0].serviceAreaId!);
+    await prefs.setString('vehicleId', _vehicles[0].id!);
+    await prefs.setDouble('price', _vehicles[0].price!);
   }
 
   @override
@@ -179,7 +177,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     final provider = Provider.of<UserProvider>(context, listen: false);
 
-    total = provider.subtotal + deliveryCharge;
+    total = provider.subtotal + _deliveryCharge;
 
     return Scaffold(
       appBar: AppBar(
@@ -202,7 +200,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
           ),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -248,7 +246,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                     ),
                     const Spacer(),
                     Text(
-                      '₹${deliveryCharge}',
+                      '₹${_deliveryCharge}',
                       style: TextStyle(
                         color: notifier.getgrey,
                         fontSize: height / 50,
@@ -302,14 +300,14 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                 ),
                 SizedBox(height: height / 30),
                 chashtype(
-                    '₹${deliveryCharge}',
+                    '₹${_deliveryCharge}',
                     "assets/motorcycle.png",
                     height / 29,
                     0,
                     Radio(
                       activeColor: notifier.getred,
                       value: 0,
-                      groupValue: deliveryGroupValue,
+                      groupValue: _deliveryGroupValue,
                       onChanged: (value) async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
@@ -321,17 +319,17 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                               'Please remove items from cart and add them again.');
                           return;
                         }
-                        deliveryGroupValue = 0;
+                        _deliveryGroupValue = 0;
 
                         await deliveryChargeCalculation();
-                        vehicles = vehicles
+                        _vehicles = _vehicles
                             .where((vh) => vh.name == 'Motorcycle')
                             .toList();
-                        print("vehicles=$vehicles");
-                        deliveryCharge = vehicles[0].price!.toDouble().ceil();
+                        print("vehicles=$_vehicles");
+                        _deliveryCharge = _vehicles[0].price!.toDouble().ceil();
 
                         setState(() {
-                          deliveryGroupValue = value as int;
+                          _deliveryGroupValue = value as int;
                         });
                       },
                     ),
@@ -407,7 +405,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
             ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          if (deliveryCharge == 0) {
+          if (_deliveryCharge == 0) {
             showSnackBar('Please choose vehicle');
             return;
           }

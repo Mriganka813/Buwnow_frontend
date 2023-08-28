@@ -33,18 +33,18 @@ class SearchProductListScreen extends StatefulWidget {
 class _SearchProductListScreenState extends State<SearchProductListScreen> {
   late ColorNotifier notifier;
   final scrollController = ScrollController();
-  final SearchProductServices searchProductServices = SearchProductServices();
+  final SearchProductServices _searchProductServices = SearchProductServices();
 
-  List<Product> prodList = [];
-  bool isLoadingMore = false;
+  List<Product> _prodList = [];
+  bool _isLoadingMore = false;
 
-  CartServices cartServices = CartServices();
-  List<CartItem> cartData = [];
+  CartServices _cartServices = CartServices();
+  List<CartItem> _cartData = [];
 
-  final SearchServices searchServices = SearchServices();
-  List<NearbyRestorentModel> productShop = [];
+  final SearchServices _searchServices = SearchServices();
+  List<NearbyRestorentModel> _productShop = [];
 
-  int page = 1;
+  int _page = 1;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -69,20 +69,20 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   // get shop details for opening and closing time
   getShopDetails() async {
     final location = Provider.of<UserProvider>(context, listen: false).result;
-    productShop = await searchServices.sendCityName(location, context);
+    _productShop = await _searchServices.sendCityName(location, context);
   }
 
   // get cart data for restricted the added items of different seller
   getCartData() async {
-    cartData = await cartServices.getCartItems(context);
+    _cartData = await _cartServices.getCartItems(context);
   }
 
   // get product details
   goToProductDetails(BuildContext context, int idx) async {
     NearbyRestorentModel? shopdetail;
     try {
-      shopdetail = productShop
-          .firstWhere((element) => prodList[idx].user == element.sId);
+      shopdetail = _productShop
+          .firstWhere((element) => _prodList[idx].user == element.sId);
     } catch (e) {
       shopdetail = null;
     }
@@ -126,14 +126,14 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
     }
 
     Navigator.of(context).pushNamed(SearchProductDetailsScreen.routeName,
-        arguments: prodList[idx]);
+        arguments: _prodList[idx]);
   }
 
   Future<void> fetchSearchedProducts() async {
-    prodList = prodList +
-        await searchProductServices.getProducts(widget.title, context, page);
-    print("searched products: $prodList");
-    if (prodList.length == 0) {
+    _prodList = _prodList +
+        await _searchProductServices.getProducts(widget.title, context, _page);
+    print("searched products: $_prodList");
+    if (_prodList.length == 0) {
       showSnackBar('No products found');
     }
     setState(() {});
@@ -141,16 +141,16 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
   // this is for pagination
   void _scrollListener() async {
-    if (isLoadingMore) return;
+    if (_isLoadingMore) return;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      page++;
+      _page++;
       setState(() {
-        isLoadingMore = true;
+        _isLoadingMore = true;
       });
       await fetchSearchedProducts();
       setState(() {
-        isLoadingMore = false;
+        _isLoadingMore = false;
       });
     }
   }
@@ -183,7 +183,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                 fontFamily: 'GilroyBold'),
           ),
         ),
-        body: prodList.length == 0
+        body: _prodList.length == 0
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -192,11 +192,11 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                 padding: EdgeInsets.all(8),
                 physics: AlwaysScrollableScrollPhysics(),
                 itemCount:
-                    isLoadingMore ? prodList.length + 1 : prodList.length,
+                    _isLoadingMore ? _prodList.length + 1 : _prodList.length,
                 controller: scrollController,
                 itemBuilder: (context, index) {
-                  if (index < prodList.length) {
-                    final product = prodList[index];
+                  if (index < _prodList.length) {
+                    final product = _prodList[index];
 
                     final discount = product.discount ?? 0;
 
@@ -215,20 +215,20 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                           ),
                           FoodItem(
                             i: index,
-                            prodName: prodList[index].name!,
+                            prodName: _prodList[index].name!,
                             priceAfterDiscount: priceAfterDiscount.toInt(),
-                            prodPrice: prodList[index].sellingPrice!,
-                            sellerName: prodList[index].sellerName ?? '',
+                            prodPrice: _prodList[index].sellingPrice!,
+                            sellerName: _prodList[index].sellerName ?? '',
                             desc: 'No description available',
                             notifier: notifier,
-                            image: prodList[index].image ?? '',
+                            image: _prodList[index].image ?? '',
                             onAddTap: () async {
                               // if cart has items and ensure that current item is not of different seller
-                              if (cartData.length > 0) {
-                                if (prodList[index].user ==
-                                    cartData[0].sellerId) {
-                                  await cartServices.addToCart(
-                                      context, prodList[index].sId!, '1');
+                              if (_cartData.length > 0) {
+                                if (_prodList[index].user ==
+                                    _cartData[0].sellerId) {
+                                  await _cartServices.addToCart(
+                                      context, _prodList[index].sId!, '1');
                                   showSnackBar('Item added successfully.');
                                   Navigator.of(context)
                                       .pushNamed(OrderConformation.routeName);
@@ -239,8 +239,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
                                 // if cart has no items.
                               } else {
-                                await cartServices.addToCart(
-                                    context, prodList[index].sId!, '1');
+                                await _cartServices.addToCart(
+                                    context, _prodList[index].sId!, '1');
                                 showSnackBar('Item added successfully.');
                                 Navigator.of(context)
                                     .pushNamed(OrderConformation.routeName);

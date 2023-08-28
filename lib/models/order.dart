@@ -90,7 +90,7 @@ class Items {
     productId = json['productId'];
     productName = json['productName'];
     productPrice = json['productPrice'];
-    productImage = json['productImage'];
+    productImage = json['productImage'] ?? '';
     quantity = json['quantity'];
     status = json['status'];
     sellerId = json['sellerId'];

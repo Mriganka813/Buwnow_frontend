@@ -5,7 +5,7 @@ class ConsumerAddress {
   String? state;
   String? city;
   String? country;
-  int? phoneNumber;
+  String? phoneNumber;
   String? pinCode;
   String? streetAddress;
   String? additionalInfo;
@@ -30,11 +30,12 @@ class ConsumerAddress {
     name = json['name'];
     state = json['state'];
     city = json['city'];
+    country = 'India';
     phoneNumber = json['phoneNumber'];
     pinCode = json['pinCode'];
     streetAddress = json['streetAddress'];
     additionalInfo = json['additionalInfo'];
-    landmark = json['landmark'];
+    landmark = '';
     latitude = json['latitude'];
     longitude = json['longitude'];
   }
@@ -44,11 +45,12 @@ class ConsumerAddress {
     data['name'] = this.name;
     data['state'] = this.state;
     data['city'] = this.city;
+    data['country'] = 'India';
     data['phoneNumber'] = this.phoneNumber;
     data['pinCode'] = this.pinCode;
     data['streetAddress'] = this.streetAddress;
     data['additionalInfo'] = this.additionalInfo;
-    data['landmark'] = this.landmark;
+    data['landmark'] = '';
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     return data;

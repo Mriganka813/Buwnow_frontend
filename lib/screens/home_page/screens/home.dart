@@ -9,17 +9,13 @@ import 'package:buynow/screens/bottombar/profilesetting.dart';
 import 'package:buynow/screens/homeseeall/explorecategories.dart';
 import 'package:buynow/screens/homeseeall/nearbyrestorent.dart';
 import 'package:buynow/screens/search_screen/screens/search_screen.dart';
-import 'package:buynow/services/all_nearby_restaurants_services.dart';
 import 'package:buynow/services/search_by_city_services.dart';
-import 'package:buynow/services/user_services.dart';
 import 'package:buynow/utils/enstring.dart';
 import 'package:buynow/utils/mediaqury.dart';
 import 'package:buynow/utils/notifirecolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../services/category_products_services.dart';
-import '../../../services/search_product_services.dart';
 import '../../homeseeall/recommendedshowall.dart';
 import '../widgets/custom_text_field.dart';
 
@@ -33,20 +29,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ColorNotifier notifier;
-  final searchController = TextEditingController();
-  bool isLoading = false;
-  final UserServices userServices = UserServices();
-  final SearchServices searchServices = SearchServices();
-  final RestaurantServices restaurantServices = RestaurantServices();
-  final SearchProductServices searchProductServices = SearchProductServices();
-  final CategoryProductServices categoryProductServices =
-      CategoryProductServices();
+  final _searchController = TextEditingController();
+  bool _isLoading = false;
+  final SearchServices _searchServices = SearchServices();
 
-  List<dynamic> prodList = [];
-  List<NearbyRestorentModel> nearbyRestaurants = [];
+  List<dynamic> _prodList = [];
+  List<NearbyRestorentModel> _nearbyRestaurants = [];
 
   // category name
-  List<String> catName = [
+  List<String> _catName = [
     'Food',
     'Grocery',
     'Medical',
@@ -56,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // category images
-  List<String> catImages = [
+  List<String> _catImages = [
     'assets/food.png',
     'assets/shopping_bag.png',
     'assets/medicine.png',
@@ -85,15 +76,15 @@ class _HomePageState extends State<HomePage> {
   // get nearby reataurants
   getNearByRestaurants() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     // get location provided by user at the beginning
     final location =
         await Provider.of<UserProvider>(context, listen: false).result;
-    nearbyRestaurants = await searchServices.sendCityName(location, context);
+    _nearbyRestaurants = await _searchServices.sendCityName(location, context);
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -115,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getbgcolor,
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -197,11 +188,11 @@ class _HomePageState extends State<HomePage> {
                               customTextField(
                                 wi: width / 1.13,
                                 textbgcolor: notifier.getbgfildcolor,
-                                controller: searchController,
+                                controller: _searchController,
                                 textcolor: notifier.getblackcolor,
                                 name1: LanguageEn.searchfordish,
                                 context: context,
-                                prodList: prodList,
+                                prodList: _prodList,
                                 onSubmit: (value) async {
                                   if (value.isEmpty) {
                                     showSnackBar('Search Something.');
@@ -278,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
                                         Categories.routeName,
-                                        arguments: catName,
+                                        arguments: _catName,
                                       );
                                     },
                                     child: Text(
@@ -304,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                                   itemBuilder: (context, index) {
                                     return InkWell(
                                       onTap: () {
-                                        goToCategories(catName[index]);
+                                        goToCategories(_catName[index]);
                                       },
                                       child: Row(
                                         children: [
@@ -315,8 +306,8 @@ class _HomePageState extends State<HomePage> {
                                               : SizedBox(
                                                   width: width / 60,
                                                 ),
-                                          ExploreCategories(catImages[index],
-                                              catName[index], height / 9),
+                                          ExploreCategories(_catImages[index],
+                                              _catName[index], height / 9),
                                         ],
                                       ),
                                     );
@@ -495,7 +486,7 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(height: height / 55),
 
                               // show 20 nearby restaurants
-                              nearbyRestaurants.length == 0
+                              _nearbyRestaurants.length == 0
                                   ? Center(
                                       child: Column(
                                         children: [
@@ -516,9 +507,9 @@ class _HomePageState extends State<HomePage> {
                                       shrinkWrap: true,
                                       padding: EdgeInsets.zero,
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: nearbyRestaurants.length,
+                                      itemCount: _nearbyRestaurants.length,
                                       itemBuilder: (context, index) {
-                                        final nr = nearbyRestaurants[index];
+                                        final nr = _nearbyRestaurants[index];
 
                                         return Column(
                                           children: [

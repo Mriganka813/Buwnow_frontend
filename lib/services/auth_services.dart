@@ -17,25 +17,10 @@ class AuthServices {
   // sign up user
   Future<void> signUpUser({
     required BuildContext context,
-    required String email,
-    required String password,
-    required String name,
-    required String phoneNo,
-    required String address,
+    required User user,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      User user = User(
-        id: '',
-        name: name,
-        email: email,
-        password: password,
-        address: '',
-        role: 'user',
-        token: '',
-        phoneNo: phoneNo,
-      );
-
       // buynow registration
       final http.Response res = await http.post(
           Uri.parse('${Const.apiV1Url}/consumer/register'),
@@ -48,11 +33,11 @@ class AuthServices {
       final http.Response cuteSignup = await http.post(
         Uri.parse('http://65.0.7.20:8004/auth/signup'),
         body: {
-          'username': name,
+          'username': user.name,
           'password': 'qwertyuiop',
           'roleType': 'CUSTOMER',
-          'phoneNum': phoneNo,
-          'address': address,
+          'phoneNum': user.phoneNo,
+          'address': user.address,
         },
       );
 
@@ -105,17 +90,13 @@ class AuthServices {
 
   Future<void> signInUser({
     required BuildContext context,
-    required String email,
-    required String password,
+    required User user,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       final http.Response res = await http.post(
           Uri.parse('${Const.apiV1Url}/consumer/login'),
-          body: jsonEncode({
-            'email': email,
-            'password': password,
-          }),
+          body: user.toJson(),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           });
@@ -174,7 +155,7 @@ class AuthServices {
       userProvider.setToken(token!);
       userProvider.setId(id!);
     } catch (e) {
-      showSnackBar(e.toString());
+      // showSnackBar(e.toString());
     }
   }
 

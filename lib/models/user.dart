@@ -1,24 +1,24 @@
 import 'dart:convert';
 
 class User {
-  final String id;
-  final String name;
-  final String email;
-  final String phoneNo;
-  final String password;
-  final String address;
-  final String role;
-  final String token;
+  String? id;
+  String? name;
+  String? email;
+  String? phoneNo;
+  String? password;
+  String? address;
+  String? role;
+  String? token;
 
   User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phoneNo,
-    required this.password,
-    required this.address,
-    required this.role,
-    required this.token,
+    this.id,
+    this.name,
+    this.email,
+    this.phoneNo,
+    this.password,
+    this.address,
+    this.role,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {

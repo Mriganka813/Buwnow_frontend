@@ -19,13 +19,13 @@ class ProfileSetting extends StatefulWidget {
 class _ProfileSettingState extends State<ProfileSetting> {
   late ColorNotifier notifier;
 
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
 
-  final UserServices userServices = UserServices();
-  bool isLoading = false;
+  final UserServices _userServices = UserServices();
+  bool _isLoading = false;
 
-  Map<String, dynamic> map = {};
+  Map<String, dynamic> _map = {};
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -47,17 +47,17 @@ class _ProfileSettingState extends State<ProfileSetting> {
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
-    emailController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
   }
 
   getUserData() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-    map = await userServices.getUserDetails(context);
+    _map = await _userServices.getUserDetails(context);
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -68,7 +68,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
     notifier = Provider.of<ColorNotifier>(context, listen: true);
     return Scaffold(
       backgroundColor: notifier.getred,
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -149,12 +149,12 @@ class _ProfileSettingState extends State<ProfileSetting> {
 
                       // show user name and user can update his name
                       Customtextfild.textField(
-                          map['name'] ?? '',
+                          _map['name'] ?? '',
                           notifier.getblackcolor,
                           width / 1.13,
                           Icons.person,
                           notifier.getbgfildcolor,
-                          nameController,
+                          _nameController,
                           false),
                       SizedBox(height: height / 25),
                       // Customtextfild.textField(
@@ -169,27 +169,27 @@ class _ProfileSettingState extends State<ProfileSetting> {
 
                       // show user email and user can update his email
                       Customtextfild.textField(
-                          map['email'] ?? '',
+                          _map['email'] ?? '',
                           notifier.getblackcolor,
                           width / 1.13,
                           Icons.email,
                           notifier.getbgfildcolor,
-                          emailController,
+                          _emailController,
                           false),
                       SizedBox(height: height / 4.3),
 
                       // update user name and email
                       GestureDetector(
                           onTap: () async {
-                            final name = nameController.text.trim();
-                            final email = emailController.text.trim();
+                            final name = _nameController.text.trim();
+                            final email = _emailController.text.trim();
 
                             if (name.isEmpty || email.isEmpty) {
                               showSnackBar(
                                   'Please fill all the fields or press back button');
                               return;
                             }
-                            await userServices
+                            await _userServices
                                 .updateUserDetails(context, name, email)
                                 .then((value) {
                               showSnackBar('updated');

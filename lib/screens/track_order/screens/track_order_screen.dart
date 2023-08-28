@@ -22,17 +22,17 @@ class TrackOrderScreen extends StatefulWidget {
 
 class _TrackOrderScreenState extends State<TrackOrderScreen> {
   late ColorNotifier notifier;
-  int? ratingLength;
-  bool ispending = false;
-  bool isconfirm = false;
-  bool isontheway = false;
-  bool isdeliver = false;
+  int? _ratingLength;
+  bool _ispending = false;
+  bool _isconfirm = false;
+  bool _isontheway = false;
+  bool _isdeliver = false;
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
-  ProductServices productServices = ProductServices();
-  TripServices getAllTripsService = TripServices();
-  List<TripModel> order = [];
+  ProductServices _productServices = ProductServices();
+  TripServices _getAllTripsService = TripServices();
+  List<TripModel> _order = [];
 
   TripServices tripService = TripServices();
 
@@ -57,25 +57,25 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   // get all trips
   getAllTrips() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     await tripService.getNewToken().then((value) async {
-      order = await getAllTripsService.getAllTrips('activeOrder');
+      _order = await _getAllTripsService.getAllTrips('activeOrder');
     });
 
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
-  List statusList = [
+  List _statusList = [
     'Order pending',
     'Order confirmed',
     'Order dispatched',
     'Order delivered',
   ];
 
-  List statusIndex = [
+  List _statusIndex = [
     'pending',
     'confirmed',
     'on the way',
@@ -94,7 +94,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
     final status = args['status'].toString().toLowerCase();
     final prodId = args['prodId'].toString();
 
-    TripModel? trip = order.firstWhere(
+    TripModel? trip = _order.firstWhere(
       (element) => element.orderId == orderId,
       orElse: () {
         return TripModel();
@@ -102,20 +102,20 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
     );
 
     //
-    if (statusIndex.indexOf(status) < 1) {
-      ispending = true;
-    } else if (statusIndex.indexOf(status) < 2) {
-      ispending = true;
-      isconfirm = true;
-    } else if (statusIndex.indexOf(status) < 3) {
-      ispending = true;
-      isconfirm = true;
-      isontheway = true;
-    } else if (statusIndex.indexOf(status) < 4) {
-      ispending = true;
-      isconfirm = true;
-      isontheway = true;
-      isdeliver = true;
+    if (_statusIndex.indexOf(status) < 1) {
+      _ispending = true;
+    } else if (_statusIndex.indexOf(status) < 2) {
+      _ispending = true;
+      _isconfirm = true;
+    } else if (_statusIndex.indexOf(status) < 3) {
+      _ispending = true;
+      _isconfirm = true;
+      _isontheway = true;
+    } else if (_statusIndex.indexOf(status) < 4) {
+      _ispending = true;
+      _isconfirm = true;
+      _isontheway = true;
+      _isdeliver = true;
     }
 
     return Scaffold(
@@ -142,7 +142,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
               fontFamily: 'GilroyBold'),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -194,22 +194,22 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                           stepRadius: height / 50,
                           icons: [
                             Icon(
-                                (ispending)
+                                (_ispending)
                                     ? Icons.check
                                     : Icons.radio_button_checked,
                                 color: notifier.getwhite),
                             Icon(
-                                (isconfirm)
+                                (_isconfirm)
                                     ? Icons.check
                                     : Icons.radio_button_checked,
                                 color: notifier.getwhite),
                             Icon(
-                                (isontheway)
+                                (_isontheway)
                                     ? Icons.check
                                     : Icons.radio_button_checked,
                                 color: notifier.getwhite),
                             Icon(
-                                (isdeliver)
+                                (_isdeliver)
                                     ? Icons.check
                                     : Icons.radio_button_checked,
                                 color: notifier.getwhite),
@@ -233,7 +233,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                                       vertical: height / 40,
                                     ),
                                     title: Text(
-                                      statusList[index],
+                                      _statusList[index],
                                       style: TextStyle(
                                           color: notifier.getblackcolor,
                                           fontSize: height / 45,
@@ -263,17 +263,6 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     ],
                   ),
 
-                  // if product is delivered then
-                  if (isdeliver)
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          _showDialog(prodId);
-                        },
-                        child: button(notifier.getred, notifier.getwhite,
-                            'Rate Product', width / 1.1),
-                      ),
-                    ),
                   SizedBox(
                     height: height / 40,
                   ),
@@ -307,8 +296,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                           ? Center(
                               child: GestureDetector(
                                   onTap: () async {
-                                    print(order[0].status);
-                                    if (order[0].status !=
+                                    print(_order[0].status);
+                                    if (_order[0].status !=
                                         'WAITING FOR DRIVER') {
                                       Navigator.push(
                                           context,
@@ -347,7 +336,22 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                                       'Track Order',
                                       width / 2.3)),
                             )
-                          : Container()
+                          :
+                          // if product is delivered then
+                          _isdeliver
+                              ? Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _showDialog(prodId);
+                                    },
+                                    child: button(
+                                        notifier.getred,
+                                        notifier.getwhite,
+                                        'Rate Product',
+                                        width / 2.3),
+                                  ),
+                                )
+                              : Container()
                     ],
                   ),
                   SizedBox(
@@ -360,7 +364,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                             child: button(notifier.getred, notifier.getwhite,
                                 'Call Driver', width / 1.1),
                           ))
-                      : Container()
+                      : Container(),
                 ],
               ),
             ),
@@ -441,8 +445,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   color: notifier.getstarcolor,
                 ),
                 onRatingUpdate: (rating) {
-                  ratingLength = rating.toInt();
-                  print(ratingLength);
+                  _ratingLength = rating.toInt();
+                  print(_ratingLength);
                 },
                 glow: false,
               ),
@@ -454,12 +458,12 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   Spacer(),
                   GestureDetector(
                       onTap: () async {
-                        if (ratingLength == null) {
+                        if (_ratingLength == null) {
                           return;
                         }
                         print(prodId); //64b7e5e42aef5e451d77e252
-                        await productServices.rating(
-                            prodId, context, ratingLength!);
+                        await _productServices.rating(
+                            prodId, context, _ratingLength!);
                         Navigator.of(context).pop();
                       },
                       child: dailogbutton(

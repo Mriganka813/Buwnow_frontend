@@ -1,3 +1,4 @@
+import 'package:buynow/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:buynow/constants/utils.dart';
 import 'package:buynow/custtomscreens/custtombutton.dart';
@@ -19,16 +20,16 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   late ColorNotifier notifier;
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  final addressController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _addressController = TextEditingController();
 
-  final authServices = AuthServices();
+  final _authServices = AuthServices();
 
-  bool isChecked = false;
-  bool isLoading = false;
+  bool _isChecked = false;
+  bool _isLoading = false;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -49,19 +50,19 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    passwordController.dispose();
-    addressController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _addressController.dispose();
   }
 
   void signUp() {
-    final name = nameController.text.trim();
-    final email = emailController.text.trim().toLowerCase();
-    final phoneNo = phoneController.text.trim();
-    final password = passwordController.text.trim();
-    final address = addressController.text.trim();
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
+    final phoneNo = _phoneController.text.trim();
+    final password = _passwordController.text.trim();
+    final address = _addressController.text.trim();
 
     // validation
     if (name.isEmpty || name.length < 4) {
@@ -82,24 +83,28 @@ class _CreateAccountState extends State<CreateAccount> {
     }
     if (mounted) {
       setState(() {
-        isLoading = true;
+        _isLoading = true;
       });
     }
 
-    // user registration
-    authServices
-        .signUpUser(
+    User user = User(
       name: name,
       email: email,
       phoneNo: phoneNo,
       password: password,
-      context: context,
       address: address,
+    );
+
+    // user registration
+    _authServices
+        .signUpUser(
+      user: user,
+      context: context,
     )
         .then((value) {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          _isLoading = false;
         });
       }
     });
@@ -175,7 +180,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 width / 1.13,
                 Icons.person,
                 notifier.getbgfildcolor,
-                nameController,
+                _nameController,
                 false),
             SizedBox(height: height / 40),
             Row(
@@ -200,7 +205,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 width / 1.13,
                 Icons.email,
                 notifier.getbgfildcolor,
-                emailController,
+                _emailController,
                 false),
             SizedBox(height: height / 40),
             Row(
@@ -225,7 +230,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 width / 1.13,
                 Icons.call,
                 notifier.getbgfildcolor,
-                phoneController,
+                _phoneController,
                 false),
             SizedBox(height: height / 40),
             Row(
@@ -250,7 +255,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 width / 1.13,
                 Icons.lock,
                 notifier.getbgfildcolor,
-                passwordController,
+                _passwordController,
                 true),
             SizedBox(height: height / 40),
             Row(
@@ -275,7 +280,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 width / 1.13,
                 Icons.location_city,
                 notifier.getbgfildcolor,
-                addressController,
+                _addressController,
                 false),
             SizedBox(height: height / 15),
 
@@ -284,7 +289,7 @@ class _CreateAccountState extends State<CreateAccount> {
               onTap: () {
                 signUp();
               },
-              child: isLoading
+              child: _isLoading
                   ? CircularProgressIndicator()
                   : button(
                       notifier.getred,

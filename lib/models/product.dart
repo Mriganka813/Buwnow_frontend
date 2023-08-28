@@ -48,7 +48,7 @@ class Product {
     rating = json['rating'];
     clicks = json['clicks'];
     user = json['user'];
-    discount = json['discount'];
+    discount = json['discount'] ?? 0;
     sellerName = json['sellerName'];
     expiryDate = json['expiryDate'];
     createdAt = json['createdAt'];

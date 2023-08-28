@@ -23,11 +23,11 @@ class OrderDetailsScreen extends StatefulWidget {
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   late ColorNotifier notifier;
 
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final additionalController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _additionalController = TextEditingController();
 
-  CuteServices cuteServices = CuteServices();
+  CuteServices _cuteServices = CuteServices();
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,9 +46,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   orderConfirmed() async {
-    final name = nameController.text.trim();
-    final phone = phoneController.text.trim();
-    final additional = additionalController.text.trim();
+    final name = _nameController.text.trim();
+    final phone = _phoneController.text.trim();
+    final additional = _additionalController.text.trim();
 
     // validation
     if (name.isEmpty) {
@@ -60,7 +60,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
 
     // cute login(for token) for calculating delivery charge
-    int statuscode = await cuteServices.cuteLogin(context, phone);
+    int statuscode = await _cuteServices.cuteLogin(context, phone);
 
     if (statuscode > 300) {
       return;
@@ -76,8 +76,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
-    phoneController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
   }
 
   @override
@@ -144,7 +144,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               width / 1.1,
               Icons.abc,
               notifier.getbgfildcolor,
-              nameController,
+              _nameController,
               false),
           SizedBox(
             height: height / 50,
@@ -157,7 +157,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               width / 1.1,
               Icons.phone,
               notifier.getbgfildcolor,
-              phoneController,
+              _phoneController,
               false),
           SizedBox(
             height: height / 50,
@@ -186,7 +186,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             color: Colors.grey.shade300,
             child: TextField(
               maxLines: 7,
-              controller: additionalController,
+              controller: _additionalController,
             ),
           )
         ]),

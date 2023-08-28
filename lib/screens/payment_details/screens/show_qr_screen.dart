@@ -1,3 +1,4 @@
+import 'package:buynow/models/consumer_adrress.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
@@ -30,13 +31,14 @@ class ShowQRScreen extends StatefulWidget {
 
 class _ShowQRScreenState extends State<ShowQRScreen> {
   late ColorNotifier notifier;
-  bool isLoading = false;
-  UPIModel upi = UPIModel();
-  UPIServices upiServices = UPIServices();
+  bool _isLoading = false;
+  UPIModel _upi = UPIModel();
+  UPIServices _upiServices = UPIServices();
 
-  final OrderServices orderServices = OrderServices();
+  final OrderServices _orderServices = OrderServices();
+  ConsumerAddress orderDetail = ConsumerAddress();
 
-  var myupiDetails;
+  var _myupiDetails;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
@@ -56,19 +58,19 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
 
   getUpiDetails() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-    upi = await upiServices.getUpiDetails(context);
+    _upi = await _upiServices.getUpiDetails(context);
     int amount = Provider.of<UserProvider>(context, listen: false).subtotal;
-    myupiDetails = UPIDetails(
-      upiID: upi.upi!,
-      payeeName: upi.businessName!,
+    _myupiDetails = UPIDetails(
+      upiID: _upi.upi!,
+      payeeName: _upi.businessName!,
       amount: amount.toDouble(),
       transactionNote: 'Testing payment',
     );
 
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -78,19 +80,22 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
     print(lat.toString());
     print(long.toString());
 
+    orderDetail = ConsumerAddress(
+        name: widget.name,
+        state: first.administrativeArea.toString(),
+        city: first.subAdministrativeArea.toString(),
+        phoneNumber: widget.phone,
+        pinCode: first.postalCode.toString(),
+        streetAddress: first.street.toString(),
+        latitude: lat.toString(),
+        longitude: long.toString(),
+        additionalInfo: widget.additional);
+
     // order place
     showSnackBar('your order is sending to seller');
-    await orderServices.orderPlace(
+    await _orderServices.orderPlace(
       context: context,
-      name: widget.name,
-      state: first.administrativeArea.toString(),
-      city: first.subAdministrativeArea.toString(),
-      phoneNo: widget.phone,
-      pincode: first.postalCode.toString(),
-      streetAddress: first.street.toString(),
-      latitude: lat.toString(),
-      longitude: long.toString(),
-      additional: widget.additional,
+      orderDetail: orderDetail,
     );
 
     // initialize background service
@@ -152,7 +157,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
           ),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -166,7 +171,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
 
                     // qr code image
                     UPIPaymentQRCode(
-                      upiDetails: myupiDetails,
+                      upiDetails: _myupiDetails,
                       size: 200,
                       embeddedImagePath: 'assets/buynow.png',
                       embeddedImageSize: const Size(60, 60),
@@ -184,7 +189,7 @@ class _ShowQRScreenState extends State<ShowQRScreen> {
                           style: blackStyle,
                         ),
                         SelectableText(
-                          '${myupiDetails.upiID}',
+                          '${_myupiDetails.upiID}',
                           style: greenStyle,
                         )
                       ],
