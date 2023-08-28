@@ -31,7 +31,7 @@ class ConsumerAddress {
     state = json['state'];
     city = json['city'];
     country = 'India';
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber'].toString();
     pinCode = json['pinCode'];
     streetAddress = json['streetAddress'];
     additionalInfo = json['additionalInfo'];
