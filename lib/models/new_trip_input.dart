@@ -10,6 +10,7 @@ class NewTripInput {
     this.orderId,
     this.amount,
     this.isPaid = true,
+    this.sellerNum,
   });
 
   double? price;
@@ -22,6 +23,7 @@ class NewTripInput {
   String? orderId;
   int? amount;
   bool isPaid;
+  String? sellerNum;
 
   Map<String, dynamic> toMap() => {
         "pickup": {
@@ -39,7 +41,8 @@ class NewTripInput {
         "businessName": businessName,
         "orderId": orderId,
         "amount": amount,
-        "isPaid": isPaid
+        "isPaid": isPaid,
+        "sellerNum": sellerNum
       };
 
   // index 0 = lat, index 1 = long

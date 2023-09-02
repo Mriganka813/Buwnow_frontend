@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:buynow/screens/authscreen/phonenumber.dart';
 import 'package:buynow/services/background_service.dart';
 import 'package:buynow/services/push_notification.dart';
+import 'package:buynow/utils/mediaqury.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +64,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late ColorNotifier notifier;
   AuthServices authServices = AuthServices();
   String? test;
 
@@ -76,12 +80,47 @@ class _MyAppState extends State<MyApp> {
     if (update.updateAvailability == UpdateAvailability.updateNotAvailable) {
       return;
     }
-    if (update.immediateUpdateAllowed) {
-      await InAppUpdate.startFlexibleUpdate();
-      await InAppUpdate.completeFlexibleUpdate();
-      return;
-    }
+    // if (update.immediateUpdateAllowed) {
+    //   await InAppUpdate.startFlexibleUpdate();
+    //   await InAppUpdate.completeFlexibleUpdate();
+    //   return;
+    // }
     await InAppUpdate.performImmediateUpdate();
+
+    showUpdateRequiredDialog();
+  }
+
+  void showUpdateRequiredDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        height = MediaQuery.of(context).size.height;
+        return AlertDialog(
+          backgroundColor: notifier.getbgcolor,
+          title: Text(
+            'Update Required',
+            style: TextStyle(
+              color: notifier.getblackcolor,
+              fontSize: height / 30,
+              fontFamily: 'GilroyBold',
+            ),
+          ),
+          content: Text('Please update the app to continue using it.'),
+          actions: [
+            TextButton(
+              child: Text('Exit App'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // exit(0);
+                // You might want to exit the app here.
+                SystemNavigator.pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -128,6 +128,7 @@ void onStart(ServiceInstance service) async {
           orderId: confirmedOrder.sId,
           amount: orderAmount,
           isPaid: confirmedOrder.isPaid!,
+          sellerNum: confirmedOrder.sellerNum.toString(),
         );
 
         print(newTrip.toMap());

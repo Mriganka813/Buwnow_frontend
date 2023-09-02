@@ -42,6 +42,9 @@ class TripServices {
       }
       order = orderType == "activeOrder" ? _waitingorder : _pastorder;
       order = order.reversed.toList();
+      for (var e in order) {
+        print(e.status);
+      }
     }).onError((error, stackTrace) {
       print(error);
       showSnackBar('No trips available');

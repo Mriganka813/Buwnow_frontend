@@ -65,8 +65,8 @@ class _CusttomRestorentState extends State<CusttomRestorent> {
           return;
         }
 
-        DateTime optime = DateFormat.Hm().parse(widget.openTime ?? '10:00');
-        DateTime cltime = DateFormat.Hm().parse(widget.closeTime ?? '22:00');
+        DateTime optime = DateFormat.Hm().parse(widget.openTime ?? '10:15');
+        DateTime cltime = DateFormat.Hm().parse(widget.closeTime ?? '23:30');
 
         // final ophour = optime.hour;
         // final opminute = optime.minute;

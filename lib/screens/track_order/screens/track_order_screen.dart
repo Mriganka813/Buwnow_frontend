@@ -95,9 +95,12 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
     final prodId = args['prodId'].toString();
 
     TripModel? trip = _order.firstWhere(
-      (element) => element.orderId == orderId,
+      (element) {
+        print('trip:${element.orderId}');
+        return element.orderId == orderId;
+      },
       orElse: () {
-        return TripModel();
+        return TripModel(orderId: null);
       },
     );
 
@@ -296,9 +299,9 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                           ? Center(
                               child: GestureDetector(
                                   onTap: () async {
-                                    print(_order[0].status);
-                                    if (_order[0].status !=
-                                        'WAITING FOR DRIVER') {
+                                    print('trip1:${trip.orderId}');
+                                    print(trip.status);
+                                    if (trip.status != 'WAITING FOR DRIVER') {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
